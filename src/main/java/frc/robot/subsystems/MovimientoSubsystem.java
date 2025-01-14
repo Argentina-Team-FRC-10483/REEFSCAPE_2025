@@ -28,10 +28,10 @@ public class MovimientoSubsystem extends SubsystemBase {
     // set up differential drive class
     drive = new DifferentialDrive(MotorMovimientoIzquierdoLider, MotorMovimientoDerechoLider);
 
-    MotorMovimientoIzquierdoLider.setCANTimeout(250);
-    MotorMovimientoDerechoLider.setCANTimeout(250);
-    MotorMovimientoIzquierdoSeguidor.setCANTimeout(250);
-    MotorMovimientoDerechoSeguidor.setCANTimeout(250);
+    MotorMovimientoIzquierdoLider.setCANTimeout(DriveConstants.CAN_TIMEOUT);
+    MotorMovimientoDerechoLider.setCANTimeout(DriveConstants.CAN_TIMEOUT);
+    MotorMovimientoIzquierdoSeguidor.setCANTimeout(DriveConstants.CAN_TIMEOUT);
+    MotorMovimientoDerechoSeguidor.setCANTimeout(DriveConstants.CAN_TIMEOUT);
 
     SparkMaxConfig config = new SparkMaxConfig();
     config.voltageCompensation(12);
