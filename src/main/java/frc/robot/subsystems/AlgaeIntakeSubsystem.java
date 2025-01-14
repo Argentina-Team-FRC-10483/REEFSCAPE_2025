@@ -26,7 +26,7 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
 
     }
 
-    public void andarRodillo(double adelante, double atras){
-        rodilloMotor.set(adelante - atras);
+    public void andarRodillo(double power){
+        rodilloMotor.set(power);
     }
 }

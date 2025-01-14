@@ -5,10 +5,14 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.AlgaeIntakeConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.MovimientoCommand;
+import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.MovimientoSubsystem;
 
 /**
@@ -22,9 +26,13 @@ public class RobotContainer {
 
   private final MovimientoSubsystem movimientoSubsystem = new MovimientoSubsystem();
 
+  private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
   // Control del conductor
   private final CommandXboxController driverController = new CommandXboxController(
       OperatorConstants.DRIVER_CONTROLLER_PORT);
+
+  // Triggers
+  private final Trigger xButton = driverController.a();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -48,12 +56,22 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+
+  driverController.a()
+    .whileTrue(new AlgaeIntakeCommand(() -> driverController.getHID().getAButtonPressed(), algaeIntakeSubsystem, 1));
+
+    driverController.b()
+    .whileTrue(new AlgaeIntakeCommand(() -> driverController.getHID().getAButtonPressed(), algaeIntakeSubsystem, -1));
+
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
     () -> -driverController.getLeftY() *
         (driverController.getHID().getRightBumperButton() ? 1 : 0.5),
     () -> -driverController.getRightX(),
     movimientoSubsystem));
   }
+
+
+  
 
   public Command getAutonomousCommand() {
     return null;
