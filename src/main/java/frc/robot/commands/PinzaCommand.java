@@ -3,38 +3,30 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.PinzaSubsystem;
+import frc.robot.Constants.JoystickMappings;
 
 public class PinzaCommand extends Command{
     private final Joystick joystick = new Joystick(0);  
 
     private final  PinzaSubsystem PS;
 
-    boolean apertura = joystick.getRawButton(6);
-    double succion = joystick.getRawAxis(2);
-    double expulsar = joystick.getRawAxis(3); 
+    boolean apertura = joystick.getRawButton(JoystickMappings.PinzaButtonApertura_ID);
+    double succion = joystick.getRawAxis(JoystickMappings.PinzaAxisSuccion_ID);
+    double expulsar = joystick.getRawAxis(JoystickMappings.PinzaAxisExpulsar_ID); 
 
     public PinzaCommand(PinzaSubsystem accion){
         PS = accion;
         addRequirements(PS);
     }
 
-    public double validacionApertura(boolean producto){
-        if (producto == true){
-            return 0.0;
-        }
-        else{
-            return 1.0;
-        }
-    }
-
     @Override
     public void initialize() {
-        PS.aperturaPinza(1);
+        PS.EstadoPinza = apertura;
     }
 
     @Override
     public void execute() {
-        PS.aperturaPinza(validacionApertura(apertura));
+        PS.EstadoPinza = apertura;
         PS.traslado(succion);
     }
 
