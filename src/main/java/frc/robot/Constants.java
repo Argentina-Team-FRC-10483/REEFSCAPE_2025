@@ -15,4 +15,11 @@ public final class Constants {
   public static final class OperatorConstants {
     public static final int DRIVER_CONTROLLER_PORT = 0;
   }
+
+  public static final class AlgaeIntakeConstants {
+    public static final int RodilloMotor_ID = 5;
+    public static final int RodilloMotor_LIMITE = 60;
+    public static final double RodilloMotor_CompVolt = 10;
+    public static final double RodilloMotor_ValorExp = 0.44;
+  }
 }
