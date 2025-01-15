@@ -26,6 +26,12 @@ public final class Constants {
     public static final int PinzaMotorArticulacionCentral_ID = 10;
     public static final int PinzaMotorRodilloIzquierdo_ID = 9;
     public static final int PinzaMotorRodilloDerecho_ID = 8;
+  }
 
+  public static final class AlgaeIntakeConstants {
+    public static final int RodilloMotor_ID = 5;
+    public static final int RodilloMotor_LIMITE = 60;
+    public static final double RodilloMotor_CompVolt = 10;
+    public static final double RodilloMotor_ValorExp = 0.44;
   }
 }
