@@ -57,11 +57,12 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
 
-  driverController.a()
-    .whileTrue(new AlgaeIntakeCommand(() -> driverController.getHID().getAButtonPressed(), algaeIntakeSubsystem, 1));
+   driverController.a()
+   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 1));
 
-    driverController.b()
-    .whileTrue(new AlgaeIntakeCommand(() -> driverController.getHID().getAButtonPressed(), algaeIntakeSubsystem, -1));
+   driverController.b()
+   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1));
+
 
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
     () -> -driverController.getLeftY() *

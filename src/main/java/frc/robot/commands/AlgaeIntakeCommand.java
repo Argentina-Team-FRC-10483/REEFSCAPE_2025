@@ -8,13 +8,11 @@ import frc.robot.subsystems.AlgaeIntakeSubsystem;
 
 public class AlgaeIntakeCommand extends Command{
     private final double power;
-    private final BooleanSupplier button;
 
     private final AlgaeIntakeSubsystem algaeIntakeSubsystem;
 
-    public AlgaeIntakeCommand(BooleanSupplier button, AlgaeIntakeSubsystem algaeIntakeSubsystem, double power){
+    public AlgaeIntakeCommand(AlgaeIntakeSubsystem algaeIntakeSubsystem, double power){
         this.power = power;
-        this.button = button;
         this.algaeIntakeSubsystem = algaeIntakeSubsystem;
 
         addRequirements(this.algaeIntakeSubsystem);
@@ -36,6 +34,6 @@ public class AlgaeIntakeCommand extends Command{
 
   @Override
   public boolean isFinished() {
-    return !this.button.getAsBoolean();
+    return false;
   }
 }
