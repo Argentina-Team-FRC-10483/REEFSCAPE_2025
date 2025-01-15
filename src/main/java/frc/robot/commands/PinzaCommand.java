@@ -9,7 +9,7 @@ public class PinzaCommand extends Command{
 
     private final  PinzaSubsystem PS;
 
-    boolean apertura = joystick.getRawButton(4);
+    boolean apertura = joystick.getRawButton(6);
     double succion = joystick.getRawAxis(2);
     double expulsar = joystick.getRawAxis(3);
 
@@ -35,7 +35,9 @@ public class PinzaCommand extends Command{
 
     @Override
     public void execute() {
+        PS.aperturaPinza(validacionApertura(apertura));
         PS.traslado(succion);
+        System.out.println("V");
     }
 
     @Override
