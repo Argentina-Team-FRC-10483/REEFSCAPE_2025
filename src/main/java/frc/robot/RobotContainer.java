@@ -29,8 +29,6 @@ public class RobotContainer {
   private final CommandXboxController driverController = new CommandXboxController(
       OperatorConstants.DRIVER_CONTROLLER_PORT);
 
-  // Triggers
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -67,9 +65,6 @@ public class RobotContainer {
     () -> -driverController.getRightX(),
     movimientoSubsystem));
   }
-
-
-  
 
   public Command getAutonomousCommand() {
     return null;

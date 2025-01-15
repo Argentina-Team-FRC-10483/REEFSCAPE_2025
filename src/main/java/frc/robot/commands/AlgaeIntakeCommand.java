@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 
@@ -16,7 +15,7 @@ public class AlgaeIntakeCommand extends Command{
         addRequirements(this.algaeIntakeSubsystem);
     }
 
-    @Override
+  @Override
     public void initialize() {
   }
 
