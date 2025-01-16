@@ -9,9 +9,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
+import frc.robot.commands.ClabJointComman;
 import frc.robot.commands.MovimientoCommand;
+import frc.robot.commands.ClabCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.MovimientoSubsystem;
+import frc.robot.subsystems.ClabSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -25,6 +28,8 @@ public class RobotContainer {
   private final MovimientoSubsystem movimientoSubsystem = new MovimientoSubsystem();
 
   private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
+
+  private final ClabSubsystem clabSubsystem = new ClabSubsystem();
   // Control del conductor
   private final CommandXboxController driverController = new CommandXboxController(
       OperatorConstants.DRIVER_CONTROLLER_PORT);
@@ -58,6 +63,12 @@ public class RobotContainer {
    driverController.b()
    .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1));
 
+   driverController.rightBumper().onTrue(new ClabJointComman(clabSubsystem, true));
+   driverController.rightBumper().onFalse(new ClabJointComman(clabSubsystem, false));
+   driverController.leftTrigger().whileTrue(new ClabCommand (clabSubsystem, 1));
+   driverController.leftTrigger().whileTrue(new ClabCommand (clabSubsystem, -1));
+   driverController.rightTrigger().whileTrue(new ClabCommand (clabSubsystem, 1));
+   driverController.rightTrigger().whileTrue(new ClabCommand (clabSubsystem, -1));
 
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
     () -> -driverController.getLeftY() *

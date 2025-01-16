@@ -4,19 +4,19 @@ import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PinzaConstants;
 
-public class PinzaSubsystem extends SubsystemBase{
+public class ClabSubsystem extends SubsystemBase{            
     
     private final Spark articulacion = new Spark(PinzaConstants.PinzaMotorArticulacionCentral_ID);
     private final Spark motorLeft = new Spark(PinzaConstants.PinzaMotorRodilloIzquierdo_ID);
     private final Spark motorRight = new Spark(PinzaConstants.PinzaMotorRodilloDerecho_ID);
 
-    public boolean EstadoPinza = false;
+    public boolean ClabState = false;
 
     public void aperturaPinza(double estado){
-        if (!EstadoPinza){
+        if (!ClabState){
             articulacion.set(-1);
         }
-        else if (EstadoPinza){
+        else if (ClabState){
             articulacion.set(1);
         }
         else{
@@ -24,7 +24,7 @@ public class PinzaSubsystem extends SubsystemBase{
         }
     }
 
-    public void traslado(double direccion){
+    public void translation (double direccion){
         motorLeft.set(direccion);
         motorRight.set(direccion);
     }
