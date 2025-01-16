@@ -6,23 +6,23 @@ import frc.robot.Constants.PinzaConstants;
 
 public class ClabSubsystem extends SubsystemBase{            
     
-    private final Spark articulacion = new Spark(PinzaConstants.PinzaMotorArticulacionCentral_ID);
+    private final Spark joint = new Spark(PinzaConstants.PinzaMotorArticulacionCentral_ID);
     private final Spark motorLeft = new Spark(PinzaConstants.PinzaMotorRodilloIzquierdo_ID);
     private final Spark motorRight = new Spark(PinzaConstants.PinzaMotorRodilloDerecho_ID);
 
     public boolean ClabState = false;
 
-    public void aperturaPinza(double estado){
+    public void aperturaPinza(){
         if (!ClabState){
-            articulacion.set(1);
+            joint.set(1);
         }
         else{
-            articulacion.set(0);
+            joint.set(0);
         }
     }
 
-    public void translation (double direccion){
-        motorLeft.set(direccion);
-        motorRight.set(direccion);
+    public void translation (double direction){
+        motorLeft.set(direction);
+        motorRight.set(direction);
     }
 }
