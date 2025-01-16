@@ -14,9 +14,6 @@ public class ClabSubsystem extends SubsystemBase{
 
     public void aperturaPinza(double estado){
         if (!ClabState){
-            articulacion.set(-1);
-        }
-        else if (ClabState){
             articulacion.set(1);
         }
         else{

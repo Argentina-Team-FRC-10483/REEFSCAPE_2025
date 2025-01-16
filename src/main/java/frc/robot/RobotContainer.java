@@ -65,10 +65,8 @@ public class RobotContainer {
 
    driverController.rightBumper().onTrue(new ClabJointComman(clabSubsystem, true));
    driverController.rightBumper().onFalse(new ClabJointComman(clabSubsystem, false));
-   driverController.leftTrigger().whileTrue(new ClabCommand (clabSubsystem, 1));
-   driverController.leftTrigger().whileTrue(new ClabCommand (clabSubsystem, -1));
+   driverController.leftTrigger().whileTrue(new ClabCommand (clabSubsystem, -1)); 
    driverController.rightTrigger().whileTrue(new ClabCommand (clabSubsystem, 1));
-   driverController.rightTrigger().whileTrue(new ClabCommand (clabSubsystem, -1));
 
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
     () -> -driverController.getLeftY() *
