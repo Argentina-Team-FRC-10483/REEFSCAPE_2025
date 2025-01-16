@@ -15,6 +15,9 @@ public final class Constants {
   public static final class OperatorConstants {
     public static final int DRIVER_CONTROLLER_PORT = 0;
   }
+  public static final class ArmConstants {
+    public static final int ArmMotorShoulder_ID = 7;
+  }
   public static final class PinzaConstants {
   
     public static final int PinzaMotorArticulacionCentral_ID = 10;
