@@ -74,12 +74,13 @@ public class RobotContainer {
         (driverController.getHID().getRightBumperButton() ? 1 : 0.5),
     () -> -driverController.getRightX(),
     movimientoSubsystem));
-  }
 
-  operadorController.a().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L1));
-  operadorController.b().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L2));
-  operadorController.y().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L3));
-  operadorController.x().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L4));
+    operadorController.a().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L1));
+    operadorController.b().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L2));
+    operadorController.y().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L3));
+    operadorController.x().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L4));
+
+  }
 
   public Command getAutonomousCommand() {
     return null;
