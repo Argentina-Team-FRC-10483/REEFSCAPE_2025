@@ -58,6 +58,11 @@ public class RobotContainer {
    driverController.b()
    .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1));
 
+   driverController.x()
+   .whileTrue(new EngancheCommand(engancheSubsystem, 1));
+
+   driverController.y()
+   .whileTrue(new EngancheCommand(engancheSubsystem, -1));
 
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
     () -> -driverController.getLeftY() *

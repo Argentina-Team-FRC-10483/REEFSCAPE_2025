@@ -1,19 +1,23 @@
+package frc.robot.subsystems;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.EngancheContants;
+
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 public class EngancheSubsystem extends SubsystemBase {
-    private final SparkMax MotorEnganche;
+    private SparkMax motorEnganche;
 
-    public void Enganche {
-        MotorEnganche = new SparkMax(EngancheContants.MotorEnganche_ID,MotorType.);
+    public void Enganche() {
+        motorEnganche = new SparkMax(EngancheContants.MotorEnganche_ID,MotorType.kBrushless);
     }
-    public void Enganche(double vel) {
-        MotorEnganche.set(vel);
+    public void enganchar(double vel) {
+        motorEnganche.set(vel);
     }
 
     @Override
-    public void periodic() {
+    public void periodic() { 
      
     }
 
