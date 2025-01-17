@@ -9,10 +9,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
+import frc.robot.commands.ArmCommand;
 import frc.robot.commands.ClabJointComman;
 import frc.robot.commands.MovimientoCommand;
 import frc.robot.commands.ClabCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.MovimientoSubsystem;
 import frc.robot.subsystems.ClabSubsystem;
 
@@ -30,6 +32,9 @@ public class RobotContainer {
   private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
 
   private final ClabSubsystem clabSubsystem = new ClabSubsystem();
+
+  private final ArmSubsystem armSubsystem = new ArmSubsystem();
+
   // Control del conductor
   private final CommandXboxController driverController = new CommandXboxController(
       OperatorConstants.DRIVER_CONTROLLER_PORT);
@@ -56,17 +61,29 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+  // ---------SISTEMA DE RECOLECCION---------- 
+
+  //  Sistema de recoleccion TRASERO 
 
    driverController.a()
    .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 1));
-
+ 
    driverController.b()
    .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1));
 
-   driverController.rightBumper().onTrue(new ClabJointComman(clabSubsystem, true));
-   driverController.rightBumper().onFalse(new ClabJointComman(clabSubsystem, false));
-   driverController.leftTrigger().whileTrue(new ClabCommand (clabSubsystem, -1)); 
-   driverController.rightTrigger().whileTrue(new ClabCommand (clabSubsystem, 1));
+  //  Sistema de recoleccion DELANTERO 
+
+   operadorController.rightBumper().onTrue(new ClabJointComman(clabSubsystem, true));
+   operadorController.rightBumper().onFalse(new ClabJointComman(clabSubsystem, false));
+   operadorController.rightTrigger().whileTrue(new ClabCommand (clabSubsystem, 1));
+   operadorController.leftTrigger().whileTrue(new ClabCommand (clabSubsystem, -1)); 
+  
+   armSubsystem.setDefaultCommand(new ArmCommand(
+    armSubsystem,
+    () -> -operadorController.getLeftY()));
+  
+
+  // ---------SISTEMA DE MOVIMIENTO---------- 
 
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
     () -> -driverController.getLeftY() *
