@@ -9,8 +9,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
+import frc.robot.commands.EngancheCommand;
 import frc.robot.commands.MovimientoCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
+import frc.robot.subsystems.EngancheSubsystem;
 import frc.robot.subsystems.MovimientoSubsystem;
 
 /**
@@ -26,6 +28,8 @@ public class RobotContainer {
 
   private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
   // Control del conductor
+  private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
+  
   private final CommandXboxController driverController = new CommandXboxController(
       OperatorConstants.DRIVER_CONTROLLER_PORT);
 
