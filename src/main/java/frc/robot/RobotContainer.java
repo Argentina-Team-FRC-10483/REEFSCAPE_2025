@@ -53,10 +53,10 @@ public class RobotContainer {
    */
 
    driverController.a()
-   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 1));
+   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 1)); // Crea comando de andar rodillo con 1 de velocidad con el botón a
 
    driverController.b()
-   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1));
+   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1)); // Crea comando de andar rodillo con -1 de velocidad con el botón b
 
 
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(

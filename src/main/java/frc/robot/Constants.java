@@ -22,4 +22,8 @@ public final class Constants {
     public static final double RodilloMotor_CompVolt = 10;
     public static final double RodilloMotor_ValorExp = 0.44;
   }
+
+  public static final class DebugConstants {
+    public static final long DEBUG_INTERVAL_MS = 3000;
+  }
 }
