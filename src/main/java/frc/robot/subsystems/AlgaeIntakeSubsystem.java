@@ -43,12 +43,6 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
      */
     @Override
     public void periodic(){
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - debugTimeAlgaeIntakeSub >= DebugConstants.DEBUG_INTERVAL_MS) {
-            debugTimeAlgaeIntakeSub = currentTime; // Actualiza el tiempo del último mensaje
-            System.out.println("AlgaeIntakeSubsystem está operativo. Potencia actual del rodillo: " + rodilloMotor.get());
-        }
-
         SmartDashboard.putNumber("Potencia rodillo", rodilloMotor.get());
     }
 
