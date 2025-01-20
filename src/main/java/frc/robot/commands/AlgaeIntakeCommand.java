@@ -34,7 +34,6 @@ public class AlgaeIntakeCommand extends Command {
      */
     @Override
     public void initialize() {
-        System.out.println("AlgaeIntakeCommand inicializado. Potencia: " + power);
     }
 
     /**
@@ -44,13 +43,6 @@ public class AlgaeIntakeCommand extends Command {
     public void execute() {
         // Mover el rodillo con la potencia especificada.
         algaeIntakeSubsystem.andarRodillo(power);
-        
-        // Mensaje de debugging para monitorear la potencia aplicada.
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - debugTimeAlgaeIntakeCommand >= DebugConstants.DEBUG_INTERVAL_MS) {
-          debugTimeAlgaeIntakeCommand = currentTime; // Actualiza el tiempo del último mensaje.
-          System.out.println("Ejecutando AlgaeIntakeCommand con potencia: " + power);
-    }
     }
 
     /**
@@ -61,9 +53,6 @@ public class AlgaeIntakeCommand extends Command {
     public void end(boolean isInterrupted) {
         // Detener el rodillo al finalizar el comando.
         algaeIntakeSubsystem.andarRodillo(0);
-        
-        // Mensaje de debugging para indicar que el comando ha finalizado.
-        System.out.println("AlgaeIntakeCommand finalizado. Interrumpido: " + isInterrupted);
     }
 
     /**
