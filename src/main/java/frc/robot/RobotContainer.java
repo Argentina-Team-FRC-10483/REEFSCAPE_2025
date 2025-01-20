@@ -100,6 +100,8 @@ public class RobotContainer {
     () -> -driverController.getRightX(),
     movimientoSubsystem));
 
+  // ---------SISTEMA DE ELEVACION---------- 
+
     operadorController.a().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L1));
     operadorController.b().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L2));
     operadorController.y().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L3));
