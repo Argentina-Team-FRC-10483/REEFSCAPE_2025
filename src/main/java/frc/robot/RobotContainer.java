@@ -12,8 +12,10 @@ import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.EngancheCommand;
 import frc.robot.commands.MovimientoCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
+import frc.robot.subsystems.ElevadorSubsystem;
 import frc.robot.subsystems.EngancheSubsystem;
 import frc.robot.subsystems.MovimientoSubsystem;
+import frc.robot.subsystems.StateMachine;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -26,12 +28,20 @@ public class RobotContainer {
 
   private final MovimientoSubsystem movimientoSubsystem = new MovimientoSubsystem();
 
+  private final ElevadorSubsystem elevadorSubsystem = new ElevadorSubsystem();
+
   private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
+
+  private final StateMachine stateMachine = new StateMachine(elevadorSubsystem);
   // Control del conductor
   private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
   
   private final CommandXboxController driverController = new CommandXboxController(
       OperatorConstants.DRIVER_CONTROLLER_PORT);
+
+    // Control del operador
+    private final CommandXboxController operadorController = new CommandXboxController(
+      OperatorConstants.OPERADOR_CONTROLLER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -73,6 +83,12 @@ public class RobotContainer {
         (driverController.getHID().getRightBumperButton() ? 1 : 0.5),
     () -> -driverController.getRightX(),
     movimientoSubsystem));
+
+    operadorController.a().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L1));
+    operadorController.b().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L2));
+    operadorController.y().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L3));
+    operadorController.x().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L4));
+
   }
 
   public Command getAutonomousCommand() {
