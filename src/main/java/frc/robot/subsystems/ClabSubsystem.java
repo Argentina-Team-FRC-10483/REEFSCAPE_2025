@@ -8,7 +8,6 @@ public class ClabSubsystem extends SubsystemBase{
     
     private final Spark joint = new Spark(PinzaConstants.PinzaMotorArticulacionCentral_ID);
     private final Spark motorLeft = new Spark(PinzaConstants.PinzaMotorRodilloIzquierdo_ID);
-    private final Spark motorRight = new Spark(PinzaConstants.PinzaMotorRodilloDerecho_ID);
 
     public boolean ClabState = false;
 
@@ -23,6 +22,5 @@ public class ClabSubsystem extends SubsystemBase{
 
     public void translation (double direction){
         motorLeft.set(direction);
-        motorRight.set(direction);
     }
 }
