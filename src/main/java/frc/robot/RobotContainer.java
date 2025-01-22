@@ -10,13 +10,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.ArmCommand;
-import frc.robot.commands.ClabJointComman;
+import frc.robot.commands.ClawJointComman;
 import frc.robot.commands.MovimientoCommand;
-import frc.robot.commands.ClabCommand;
+import frc.robot.commands.ClawCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.MovimientoSubsystem;
-import frc.robot.subsystems.ClabSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ElevadorSubsystem;
 import frc.robot.subsystems.StateMachine;
 
@@ -35,7 +35,7 @@ public class RobotContainer {
 
   private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
 
-  private final ClabSubsystem clabSubsystem = new ClabSubsystem();
+  private final ClawSubsystem ClawSubsystem = new ClawSubsystem();
 
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
 
@@ -82,10 +82,10 @@ public class RobotContainer {
 
   //  Sistema de recoleccion DELANTERO 
 
-   operadorController.rightBumper().onTrue(new ClabJointComman(clabSubsystem, true));
-   operadorController.rightBumper().onFalse(new ClabJointComman(clabSubsystem, false));
-   operadorController.rightTrigger().whileTrue(new ClabCommand (clabSubsystem, 1));
-   operadorController.leftTrigger().whileTrue(new ClabCommand (clabSubsystem, -1)); 
+   operadorController.rightBumper().onTrue(new ClawCommand (ClawSubsystem, true));
+   operadorController.rightBumper().onFalse(new ClawCommand (ClawSubsystem, false));
+   operadorController.rightTrigger().whileTrue(new ClawJointComman(ClawSubsystem, 1));
+   operadorController.leftTrigger().whileTrue (new ClawJointComman(ClawSubsystem, -1)); 
   
    armSubsystem.setDefaultCommand(new ArmCommand(
     armSubsystem,

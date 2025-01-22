@@ -1,28 +1,28 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ClabSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 
-public class ClabJointComman extends Command{
+public class ClawJointComman extends Command{
 
-    private final  ClabSubsystem CS;
+    private final  ClawSubsystem CS;
     
-    private final boolean size;
+    private final int size;
 
-    public ClabJointComman(ClabSubsystem clabsubsystem, Boolean apertura){
+    public ClawJointComman(ClawSubsystem Clawsubsystem, int apertura){
         size = apertura;
-        CS = clabsubsystem; 
+        CS = Clawsubsystem; 
         addRequirements(CS);
     }
 
     @Override
     public void initialize() {
-        CS.ClabState = size;
+        CS.clawState = size;
     }
 
     @Override
     public void execute() {
-        CS.ClabState = size;
+        CS.clawState = size;
     }
 
     @Override
@@ -32,6 +32,6 @@ public class ClabJointComman extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        CS.translation(0);
+        CS.clawState = 0;
     }
 }
