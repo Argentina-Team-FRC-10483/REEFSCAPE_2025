@@ -20,8 +20,8 @@ public class ClawSubsystem extends SubsystemBase{
         this.joint = new PWMSparkMax(PinzaConstants.PinzaMotorArticulacionCentral_ID);
         this.motorLeft = new PWMSparkMax(PinzaConstants.PinzaMotorRodilloIzquierdo_ID);
         this.motorRight = new PWMSparkMax(PinzaConstants.PinzaMotorRodilloDerecho_ID);
-        this.pidController = new PIDController(0.1, 0.0, 0.0);
-        this.pidController.setTolerance(2);
+        this.pidController = new PIDController(PinzaConstants.Kp, PinzaConstants.Ki, PinzaConstants.Kd);
+        this.pidController.setTolerance(PinzaConstants.Tolerance);
         this.clawState = 0;
         this.postion = 0.0;
     }

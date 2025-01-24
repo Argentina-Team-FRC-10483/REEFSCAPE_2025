@@ -82,9 +82,9 @@ public class RobotContainer {
 
   //  Sistema de recoleccion DELANTERO 
 
-   operadorController.rightBumper().onTrue(new ClawCommand (ClawSubsystem, true));
-   operadorController.rightBumper().onFalse(new ClawCommand (ClawSubsystem, false));
-   operadorController.rightTrigger().whileTrue(new ClawJointComman(ClawSubsystem, 1));
+   operadorController.button(4).onTrue(new ClawCommand (ClawSubsystem, true));
+   operadorController.button(2).onFalse(new ClawCommand (ClawSubsystem, false));
+   operadorController.leftBumper().onTrue(new ClawJointComman(ClawSubsystem, 1));
    operadorController.leftTrigger().whileTrue (new ClawJointComman(ClawSubsystem, -1)); 
   
    armSubsystem.setDefaultCommand(new ArmCommand(
