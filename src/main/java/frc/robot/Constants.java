@@ -28,6 +28,7 @@ public final class Constants {
     public static final int RodilloMotor_LIMITE = 60;
     public static final double RodilloMotor_CompVolt = 10;
     public static final double RodilloMotor_ValorExp = 0.44;
+    public static final int brazoRodilloMotor_ID = 7;
   }
   public static final class EngancheContants {
     public static final int MotorEnganche_ID = 6;

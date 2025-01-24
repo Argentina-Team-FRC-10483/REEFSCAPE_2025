@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AlgaInTakeArmCommand;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.EngancheCommand;
 import frc.robot.commands.MovimientoCommand;
@@ -66,11 +67,17 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
 
-   driverController.a()
+   driverController.rightBumper()
    .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 1));
 
-   driverController.b()
+   driverController.rightTrigger()
    .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1));
+
+   driverController.leftBumper()
+   .whileTrue(new AlgaInTakeArmCommand(algaeIntakeSubsystem, 1));
+
+   driverController.leftTrigger()
+   .whileTrue(new AlgaInTakeArmCommand(algaeIntakeSubsystem, -1));
 
    driverController.x()
    .whileTrue(new EngancheCommand(engancheSubsystem, 1));
