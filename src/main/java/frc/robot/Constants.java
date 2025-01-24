@@ -25,6 +25,9 @@ public final class Constants {
   public static final class ArmConstants {
     public static final int ArmMotorShoulder_ID = 7;
   }
+  public static final class WristConstants {
+    public static final int WristMotor_ID = 11;
+  }
   public static final class PinzaConstants {
     //Motores
     public static final int PinzaMotorArticulacionCentral_ID = 10;

@@ -1,7 +1,8 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PinzaConstants;
 
@@ -9,17 +10,17 @@ public class ClawSubsystem extends SubsystemBase{
     
     private final PIDController pidController; // Controlador PID para la articulación
 
-    private final PWMSparkMax joint;
-    private final PWMSparkMax motorLeft;
-    private final PWMSparkMax motorRight;
+    private final SparkMax joint;
+    private final SparkMax motorLeft;
+    private final SparkMax motorRight;
     
     public int clawState;
     private double postion;
 
     public ClawSubsystem(){
-        this.joint = new PWMSparkMax(PinzaConstants.PinzaMotorArticulacionCentral_ID);
-        this.motorLeft = new PWMSparkMax(PinzaConstants.PinzaMotorRodilloIzquierdo_ID);
-        this.motorRight = new PWMSparkMax(PinzaConstants.PinzaMotorRodilloDerecho_ID);
+        this.joint = new SparkMax(PinzaConstants.PinzaMotorArticulacionCentral_ID, MotorType.kBrushless);
+        this.motorLeft = new SparkMax(PinzaConstants.PinzaMotorRodilloIzquierdo_ID, MotorType.kBrushless);
+        this.motorRight = new SparkMax(PinzaConstants.PinzaMotorRodilloDerecho_ID, MotorType.kBrushless);
         this.pidController = new PIDController(PinzaConstants.Kp, PinzaConstants.Ki, PinzaConstants.Kd);
         this.pidController.setTolerance(PinzaConstants.Tolerance);
         this.clawState = 0;
