@@ -22,11 +22,13 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
     private long debugTimeAlgaeIntakeSub = 0;
 
     /**
-     * Constructor del subsistema. Configura el motor con los parámetros especificados en las constantes.
+     * Constructor del subsistema. Configura el motor con los parámetros
+     * especificados en las constantes.
      */
-    public AlgaeIntakeSubsystem(){
-        rodilloMotor = new SparkMax(AlgaeIntakeConstants.RodilloMotor_ID, MotorType.kBrushed); // Inicializa el SparkMax con su ID y tipo de motor (brushed)
-
+    public AlgaeIntakeSubsystem() {
+        rodilloMotor = new SparkMax(AlgaeIntakeConstants.RodilloMotor_ID, MotorType.kBrushed); // Inicializa el SparkMax
+                                                                                               // con su ID y tipo de
+                                                                                               // motor (brushed)
         // Configuración del motor usando un objeto SparkMaxConfig
         SparkMaxConfig rodilloMotorConfig = new SparkMaxConfig();
         rodilloMotorConfig.voltageCompensation(AlgaeIntakeConstants.RodilloMotor_CompVolt); // Compensación del voltaje
@@ -38,21 +40,23 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
         // Mensaje de debugging para confirmar la inicialización
         System.out.println("AlgaeIntakeSubsystem inicializado con ID: " + AlgaeIntakeConstants.RodilloMotor_ID);
     }
+
     /**
      * Método que se llama periódicamente
      */
     @Override
-    public void periodic(){
+    public void periodic() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - debugTimeAlgaeIntakeSub >= DebugConstants.DEBUG_INTERVAL_MS) {
             debugTimeAlgaeIntakeSub = currentTime; // Actualiza el tiempo del último mensaje
-            System.out.println("AlgaeIntakeSubsystem está operativo. Potencia actual del rodillo: " + rodilloMotor.get());
+            System.out
+                    .println("AlgaeIntakeSubsystem está operativo. Potencia actual del rodillo: " + rodilloMotor.get());
         }
 
         SmartDashboard.putNumber("Potencia rodillo", rodilloMotor.get());
     }
 
-    public void andarRodillo(double power){
+    public void andarRodillo(double power) {
         rodilloMotor.set(power);
     }
 }

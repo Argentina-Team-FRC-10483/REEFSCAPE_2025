@@ -1,16 +1,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.MovimientoSubsystem;
+import frc.robot.subsystems.MovementSubsystem;
 import java.util.function.DoubleSupplier;
 
 public class MovimientoCommand extends Command {
   private final DoubleSupplier xSpeed;
   private final DoubleSupplier zRotation;
-  private final MovimientoSubsystem driveSubsystem;
+  private final MovementSubsystem driveSubsystem;
 
   public MovimientoCommand(
-      DoubleSupplier xSpeed, DoubleSupplier zRotation, MovimientoSubsystem driveSubsystem) {
+      DoubleSupplier xSpeed, DoubleSupplier zRotation, MovementSubsystem driveSubsystem) {
     this.xSpeed = xSpeed;
     this.zRotation = zRotation;
     this.driveSubsystem = driveSubsystem;

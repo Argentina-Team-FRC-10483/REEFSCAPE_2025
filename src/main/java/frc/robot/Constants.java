@@ -3,10 +3,10 @@ package frc.robot;
 
 public final class Constants {
   public static final class DriveConstants {
-    public static final int MotorMovimientoIzquierdoLider_ID = 1;
-    public static final int MotorMovimientoIzquierdoSeguidor_ID = 2;
-    public static final int MotorMovimientoDerechoLider_ID = 3;
-    public static final int MotorMovimientoDerechoSeguidor_ID = 4;
+    public static final int MAIN_LEFT_ID = 1;
+    public static final int FOLLOW_LEFT_ID = 2;
+    public static final int MAIN_RIGHT_ID = 3;
+    public static final int FOLLOW_RIGHT_ID = 4;
 
     public static final int DRIVE_MOTOR_CURRENT_LIMIT = 60;
 
