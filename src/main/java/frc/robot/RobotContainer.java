@@ -9,10 +9,14 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
+import frc.robot.commands.ArmCommand;
 import frc.robot.commands.MovimientoCommand;
+import frc.robot.commands.ClawCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
-import frc.robot.subsystems.ElevadorSubsystem;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.MovimientoSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.ElevadorSubsystem;
 import frc.robot.subsystems.StateMachine;
 
 /**
@@ -29,6 +33,10 @@ public class RobotContainer {
   private final ElevadorSubsystem elevadorSubsystem = new ElevadorSubsystem();
 
   private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
+
+  private final ClawSubsystem ClawSubsystem = new ClawSubsystem();
+
+  private final ArmSubsystem armSubsystem = new ArmSubsystem();
 
   private final StateMachine stateMachine = new StateMachine(elevadorSubsystem);
   // Control del conductor
@@ -61,18 +69,34 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+  // ---------SISTEMA DE RECOLECCION---------- 
+
+  //  Sistema de recoleccion TRASERO 
 
    driverController.a()
    .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 1));
-
+ 
    driverController.b()
    .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1));
 
+  //  Sistema de recoleccion DELANTERO 
+    //Pinza
+   operadorController.button(2).whileTrue(new ClawCommand (ClawSubsystem, true));
+   operadorController.button(4).whileTrue(new ClawCommand (ClawSubsystem, false));
+   
+    //Brazo
+   armSubsystem.setDefaultCommand(new ArmCommand(
+    armSubsystem,
+    () -> -operadorController.getLeftY()));
+
+  // ---------SISTEMA DE MOVIMIENTO---------- 
 
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
     () -> -driverController.getLeftY(),
     () -> -driverController.getRightX(),
     movimientoSubsystem));
+
+  // ---------SISTEMA DE ELEVACION---------- 
 
     operadorController.a().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L1));
     operadorController.b().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L2));
