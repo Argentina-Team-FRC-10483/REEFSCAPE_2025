@@ -12,7 +12,6 @@ import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.ArmCommand;
 import frc.robot.commands.ClawJointComman;
 import frc.robot.commands.MovimientoCommand;
-import frc.robot.commands.WristCommand;
 import frc.robot.commands.ClawCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
@@ -20,7 +19,6 @@ import frc.robot.subsystems.MovimientoSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ElevadorSubsystem;
 import frc.robot.subsystems.StateMachine;
-import frc.robot.subsystems.WristSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -40,8 +38,6 @@ public class RobotContainer {
   private final ClawSubsystem ClawSubsystem = new ClawSubsystem();
 
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
-
-  private final WristSubsystem WristSubsystem = new WristSubsystem();
 
   private final StateMachine stateMachine = new StateMachine(elevadorSubsystem);
   // Control del conductor
@@ -96,13 +92,6 @@ public class RobotContainer {
    armSubsystem.setDefaultCommand(new ArmCommand(
     armSubsystem,
     () -> -operadorController.getLeftY()));
-
-    //Muñeca
-    operadorController.rightBumper().onTrue(new WristCommand(WristSubsystem, 1));
-    operadorController.rightBumper().onFalse(new WristCommand(WristSubsystem, 0));
-    operadorController.leftTrigger().whileTrue (new WristCommand(WristSubsystem, -1)); 
-
-
 
   // ---------SISTEMA DE MOVIMIENTO---------- 
 
