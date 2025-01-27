@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.ArmCommand;
-import frc.robot.commands.ClawJointComman;
 import frc.robot.commands.MovimientoCommand;
 import frc.robot.commands.ClawCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
@@ -84,9 +83,6 @@ public class RobotContainer {
     //Pinza
    operadorController.button(4).onTrue(new ClawCommand (ClawSubsystem, true));
    operadorController.button(2).onFalse(new ClawCommand (ClawSubsystem, false));
-   operadorController.leftBumper().onTrue(new ClawJointComman(ClawSubsystem, 1));
-   operadorController.leftBumper().onFalse(new ClawJointComman(ClawSubsystem, 0));
-   operadorController.leftTrigger().whileTrue (new ClawJointComman(ClawSubsystem, -1)); 
    
     //Brazo
    armSubsystem.setDefaultCommand(new ArmCommand(

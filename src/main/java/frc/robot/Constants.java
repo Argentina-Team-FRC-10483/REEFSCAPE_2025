@@ -30,16 +30,8 @@ public final class Constants {
   }
   public static final class PinzaConstants {
     //Motores
-    public static final int PinzaMotorArticulacionCentral_ID = 10;
     public static final int PinzaMotorRodilloIzquierdo_ID = 9;
     public static final int PinzaMotorRodilloDerecho_ID = 8;
-    //Constantes para el PID
-    public static final double Kp = 0.1;
-    public static final double Ki = 0.1;
-    public static final double Kd = 0.1;    
-    public static final double Tolerance = 2.0;
-    //Estado de la apertura de la pinza en porsentaje
-    
   }
 
   public static final class AlgaeIntakeConstants {
