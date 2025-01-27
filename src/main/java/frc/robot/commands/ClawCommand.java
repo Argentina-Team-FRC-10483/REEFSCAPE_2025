@@ -21,8 +21,8 @@ public class ClawCommand extends Command{
 
     @Override
     public void execute() {
-        CS.recoleccion(action ? 0.05 : 0);
-        CS.soltar(action ? 0 : -0.05);
+        CS.recoleccion(action ? 0.75 : 0);
+        CS.soltar(action ? 0 : -0.75);
 
         // bool ? : 
     }
