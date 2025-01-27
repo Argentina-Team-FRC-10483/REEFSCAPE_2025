@@ -86,8 +86,7 @@ public class RobotContainer {
    .whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
 
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
-    () -> -driverController.getLeftY() *
-        (driverController.getHID().getRightBumperButton() ? 1 : 0.5),
+    () -> -driverController.getLeftY(),
     () -> -driverController.getRightX(),
     movimientoSubsystem));
 
