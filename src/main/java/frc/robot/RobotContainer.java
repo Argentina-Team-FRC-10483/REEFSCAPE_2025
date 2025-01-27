@@ -68,22 +68,22 @@ public class RobotContainer {
    */
 
    driverController.rightBumper()
-   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 1));
+   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
 
    driverController.rightTrigger()
-   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1));
+   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.5));
 
    driverController.leftBumper()
-   .whileTrue(new AlgaInTakeArmCommand(algaeIntakeSubsystem, 1));
+   .whileTrue(new AlgaInTakeArmCommand(algaeIntakeSubsystem, 0.5));
 
    driverController.leftTrigger()
-   .whileTrue(new AlgaInTakeArmCommand(algaeIntakeSubsystem, -1));
+   .whileTrue(new AlgaInTakeArmCommand(algaeIntakeSubsystem, -0.5));
+
+   driverController.b()
+   .whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
 
    driverController.x()
-   .whileTrue(new EngancheCommand(engancheSubsystem, 1));
-
-   driverController.y()
-   .whileTrue(new EngancheCommand(engancheSubsystem, -1));
+   .whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
 
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
     () -> -driverController.getLeftY() *
