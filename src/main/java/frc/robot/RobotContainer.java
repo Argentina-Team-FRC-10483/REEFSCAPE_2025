@@ -92,8 +92,7 @@ public class RobotContainer {
   // ---------SISTEMA DE MOVIMIENTO---------- 
 
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
-    () -> -driverController.getLeftY() *
-        (driverController.getHID().getRightBumperButton() ? 1 : 0.5),
+    () -> -driverController.getLeftY(),
     () -> -driverController.getRightX(),
     movimientoSubsystem));
 
