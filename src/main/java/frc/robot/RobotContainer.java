@@ -9,11 +9,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
+import frc.robot.commands.ElevadorCommand;
 import frc.robot.commands.MovimientoCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.ElevadorSubsystem;
 import frc.robot.subsystems.MovimientoSubsystem;
-import frc.robot.subsystems.StateMachine;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -30,7 +30,6 @@ public class RobotContainer {
 
   private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
 
-  private final StateMachine stateMachine = new StateMachine(elevadorSubsystem);
   // Control del conductor
   private final CommandXboxController driverController = new CommandXboxController(
       OperatorConstants.DRIVER_CONTROLLER_PORT);
@@ -61,6 +60,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+    
 
    driverController.a()
    .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 1));
@@ -68,16 +68,15 @@ public class RobotContainer {
    driverController.b()
    .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1));
 
-
+        elevadorSubsystem.setDefaultCommand(
+        new ElevadorCommand(
+            elevadorSubsystem,
+            operadorController.getLeftY()));
+            
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
     () -> -driverController.getLeftY(),
     () -> -driverController.getRightX(),
     movimientoSubsystem));
-
-    operadorController.a().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L1));
-    operadorController.b().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L2));
-    operadorController.y().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L3));
-    operadorController.x().onTrue(stateMachine.tryState(StateMachine.RobotState.PREP_CORAL_L4));
 
   }
 
