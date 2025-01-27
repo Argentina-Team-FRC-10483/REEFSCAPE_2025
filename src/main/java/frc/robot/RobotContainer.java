@@ -81,8 +81,8 @@ public class RobotContainer {
 
   //  Sistema de recoleccion DELANTERO 
     //Pinza
-   operadorController.button(4).onTrue(new ClawCommand (ClawSubsystem, true));
-   operadorController.button(2).onFalse(new ClawCommand (ClawSubsystem, false));
+   operadorController.button(2).whileTrue(new ClawCommand (ClawSubsystem, true));
+   operadorController.button(4).whileTrue(new ClawCommand (ClawSubsystem, false));
    
     //Brazo
    armSubsystem.setDefaultCommand(new ArmCommand(

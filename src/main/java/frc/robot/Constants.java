@@ -30,7 +30,7 @@ public final class Constants {
   }
   public static final class PinzaConstants {
     //Motores
-    public static final int PinzaMotorRodilloIzquierdo_ID = 9;
+    public static final int PinzaMotorRodilloCentral_ID = 9;
     public static final int PinzaMotorRodilloDerecho_ID = 8;
   }
 

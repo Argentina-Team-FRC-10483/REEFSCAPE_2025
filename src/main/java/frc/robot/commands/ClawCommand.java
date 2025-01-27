@@ -15,24 +15,16 @@ public class ClawCommand extends Command{
         addRequirements(CS);
     }
 
-    public int direction(boolean interuptor){
-        if (interuptor) {
-            int adelante = 1;
-            return adelante;
-        }
-        else{
-            int atras = 0;
-            return atras;
-        }
-    }
-
     @Override
     public void initialize() {
     }
 
     @Override
     public void execute() {
-        CS.translation(direction(action));
+        CS.recoleccion(action ? 0.05 : 0);
+        CS.soltar(action ? 0 : -0.05);
+
+        // bool ? : 
     }
 
     @Override
@@ -42,6 +34,7 @@ public class ClawCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        CS.translation(0);
+        CS.recoleccion(0);
+        CS.soltar(0);
     }
 }
