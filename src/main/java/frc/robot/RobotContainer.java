@@ -9,11 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
-import frc.robot.commands.ElevadorCommand;
-import frc.robot.commands.MovimientoCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
-import frc.robot.subsystems.ElevadorSubsystem;
-import frc.robot.subsystems.MovimientoSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -24,19 +20,11 @@ import frc.robot.subsystems.MovimientoSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private final MovimientoSubsystem movimientoSubsystem = new MovimientoSubsystem();
-
-  private final ElevadorSubsystem elevadorSubsystem = new ElevadorSubsystem();
-
   private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
 
   // Control del conductor
   private final CommandXboxController driverController = new CommandXboxController(
       OperatorConstants.DRIVER_CONTROLLER_PORT);
-
-    // Control del operador
-    private final CommandXboxController operadorController = new CommandXboxController(
-      OperatorConstants.OPERADOR_CONTROLLER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -63,20 +51,10 @@ public class RobotContainer {
     
 
    driverController.a()
-   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 1));
+   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.7));
 
    driverController.b()
-   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1));
-
-        elevadorSubsystem.setDefaultCommand(
-        new ElevadorCommand(
-            elevadorSubsystem,
-            operadorController.getLeftY()));
-            
-  movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
-    () -> -driverController.getLeftY(),
-    () -> -driverController.getRightX(),
-    movimientoSubsystem));
+   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.7));
 
   }
 
