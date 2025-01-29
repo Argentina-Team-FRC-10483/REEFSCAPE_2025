@@ -13,7 +13,7 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
     private final SparkMax rodilloMotor;
 
     public AlgaeIntakeSubsystem(){
-        rodilloMotor = new SparkMax(AlgaeIntakeConstants.RodilloMotor_ID, MotorType.kBrushed);
+        rodilloMotor = new SparkMax(AlgaeIntakeConstants.RodilloMotor_ID, MotorType.kBrushless);
 
         SparkMaxConfig rodilloMotorConfig = new SparkMaxConfig();
         rodilloMotorConfig.voltageCompensation(AlgaeIntakeConstants.RodilloMotor_CompVolt);
