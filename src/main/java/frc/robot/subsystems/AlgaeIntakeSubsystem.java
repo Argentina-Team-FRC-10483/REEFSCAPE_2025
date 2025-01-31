@@ -19,6 +19,7 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
         rodilloMotorConfig.voltageCompensation(AlgaeIntakeConstants.RodilloMotor_CompVolt);
         rodilloMotorConfig.smartCurrentLimit(AlgaeIntakeConstants.RodilloMotor_LIMITE);
         rodilloMotor.configure(rodilloMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
     }
 
     @Override
