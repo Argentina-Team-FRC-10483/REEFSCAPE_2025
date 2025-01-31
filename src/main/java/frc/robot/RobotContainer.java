@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.AlgaInTakeArmCommand;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.EngancheCommand;
 import frc.robot.commands.MovimientoCommand;
@@ -72,12 +71,6 @@ public class RobotContainer {
 
    driverController.rightTrigger()
    .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.5));
-
-   driverController.leftBumper()
-   .whileTrue(new AlgaInTakeArmCommand(algaeIntakeSubsystem, 0.5));
-
-   driverController.leftTrigger()
-   .whileTrue(new AlgaInTakeArmCommand(algaeIntakeSubsystem, -0.5));
 
    driverController.b()
    .whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
