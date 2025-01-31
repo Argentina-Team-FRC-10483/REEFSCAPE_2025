@@ -26,7 +26,7 @@ public class MovimientoCommand extends Command {
   // Runs every cycle while the command is scheduled (~50 times per second)
   @Override
   public void execute() {
-    driveSubsystem.driveArcade(xSpeed.getAsDouble(), zRotation.getAsDouble());
+    driveSubsystem.driveArcade(xSpeed.getAsDouble()*0.6, zRotation.getAsDouble()*0.6);
   }
 
   // Runs each time the command ends via isFinished or being interrupted.
