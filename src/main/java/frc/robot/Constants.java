@@ -31,7 +31,7 @@ public final class Constants {
   }
   public static final class EngancheContants {
     public static final int MotorEnganche_ID = 6;
-    public static final int MotorEnganche_LIMITE = 60;
+    public static final int MotorEnganche_LIMITE = 40;
     public static final double MotorEnganche_CompVolt = 10;
     public static final double MotorEnganche_ValorExp = 0.44;
   }  
