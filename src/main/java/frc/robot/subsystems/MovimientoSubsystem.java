@@ -9,6 +9,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DeadZone;
 import frc.robot.Constants.DriveConstants;
 
 public class MovimientoSubsystem extends SubsystemBase {
@@ -28,7 +29,6 @@ public class MovimientoSubsystem extends SubsystemBase {
 
     // set up differential drive class
     drive = new DifferentialDrive(MotorMovimientoIzquierdoLider, MotorMovimientoDerechoLider);
-
     MotorMovimientoIzquierdoLider.setCANTimeout(DriveConstants.CAN_TIMEOUT);
     MotorMovimientoDerechoLider.setCANTimeout(DriveConstants.CAN_TIMEOUT);
     MotorMovimientoIzquierdoSeguidor.setCANTimeout(DriveConstants.CAN_TIMEOUT);
@@ -60,5 +60,7 @@ public class MovimientoSubsystem extends SubsystemBase {
   // sets the speed of the drive motors
   public void driveArcade(double xSpeed, double zRotation) {
     drive.arcadeDrive(xSpeed, zRotation);
+    SmartDashboard.putNumber("Giro", zRotation);
+    SmartDashboard.putNumber("Velocidad", xSpeed);
   }
 }

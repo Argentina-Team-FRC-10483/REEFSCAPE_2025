@@ -29,4 +29,8 @@ public final class Constants {
     public static final int CURRENT_LIMIT = 40;
     public static final double VOLTAGE_COMPENSATION = 12.0;
   }
+  public static final class DeadZone {
+    public static final double ElevadorDeadZone = 0.15;
+    public static final double MovimientoDeadZone = 0.05;
+  }
 }
