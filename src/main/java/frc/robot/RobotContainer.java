@@ -9,10 +9,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
-import frc.robot.commands.ElevadorCommand;
-import frc.robot.commands.EngancheCommand;
 import frc.robot.commands.MovimientoCommand;
+import frc.robot.commands.ClawCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ElevadorSubsystem;
 import frc.robot.subsystems.EngancheSubsystem;
 import frc.robot.subsystems.MovimientoSubsystem;
@@ -31,6 +32,10 @@ public class RobotContainer {
   private final ElevadorSubsystem elevadorSubsystem = new ElevadorSubsystem();
 
   private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
+
+  private final ClawSubsystem ClawSubsystem = new ClawSubsystem();
+
+  private final ArmSubsystem armSubsystem = new ArmSubsystem();
 
   // Control del conductor
   private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
@@ -64,31 +69,21 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-    
 
-   driverController.rightBumper()
-   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
-
-   driverController.rightTrigger()
-   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.5));
+   driverController.a()
+   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 1));
 
    driverController.b()
-   .whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
+   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1));
 
-
-   elevadorSubsystem.setDefaultCommand(
-        new ElevadorCommand(
-        elevadorSubsystem,
-    () ->  operadorController.getLeftY()));
-
-   driverController.x()
-   .whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
 
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
     () -> -driverController.getLeftY()*0.5,
     () ->  driverController.getLeftTriggerAxis()*0.5,
     () -> -driverController.getRightX()*0.5,
     movimientoSubsystem));
+
+  // ---------SISTEMA DE ELEVACION---------- 
 
   }
 
