@@ -48,7 +48,7 @@ public class MovimientoCommand extends Command {
       this.acel += .10 * deltaTime;
       if(this.acel > 0.5) this.acel = 0.5;
     }
-    else if (this.acel > 0) {
+    else if (!bumper.getAsBoolean() && this.acel > 0) {
       this.acel -= .10 * deltaTime;
       if(this.acel < 0) this.acel = 0;
     }
