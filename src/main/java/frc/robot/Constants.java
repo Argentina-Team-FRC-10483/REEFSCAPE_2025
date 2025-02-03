@@ -22,13 +22,20 @@ public final class Constants {
     public static final double RodilloMotor_CompVolt = 10;
     public static final double RodilloMotor_ValorExp = 0.44;
   }
+  public static final class EngancheContants {
+    public static final int MotorEnganche_ID = 6;
+    public static final int MotorEnganche_LIMITE = 40;
+    public static final double MotorEnganche_CompVolt = 10;
+    public static final double MotorEnganche_ValorExp = 0.44;
+  }  
+
   public static final class ElevadorConstants {
     public static final int MotorElevadorIzquierdoLider_ID = 6;
     public static final int MotorElevadorDerechoSeguidor_ID = 7;
-
     public static final int CURRENT_LIMIT = 40;
     public static final double VOLTAGE_COMPENSATION = 12.0;
   }
+  
   public static final class DeadZone {
     public static final double ElevadorDeadZone = 0.15;
     public static final double MovimientoDeadZone = 0.05;
