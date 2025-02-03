@@ -1,23 +1,29 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DeadZone;
 import frc.robot.subsystems.MovimientoSubsystem;
+
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class MovimientoCommand extends Command {
   private final DoubleSupplier xSpeed;
   private final DoubleSupplier zRotation;
-  private final DoubleSupplier aceleracion;
+  private final BooleanSupplier bumper;
   private final MovimientoSubsystem driveSubsystem;
+  private double lastTime;
+  private double acel;
 
   public MovimientoCommand(
-      DoubleSupplier xSpeed, DoubleSupplier aceleracion, DoubleSupplier zRotation, MovimientoSubsystem driveSubsystem) {
+      DoubleSupplier xSpeed, BooleanSupplier bumper, DoubleSupplier zRotation, MovimientoSubsystem driveSubsystem) {
     this.xSpeed = xSpeed;
-    this.aceleracion = aceleracion;
+    this.bumper = bumper;
     this.zRotation = zRotation;
     this.driveSubsystem = driveSubsystem;
+    this.lastTime = Timer.getFPGATimestamp();
 
     addRequirements(this.driveSubsystem);
   }
@@ -34,8 +40,12 @@ public class MovimientoCommand extends Command {
   @Override
   public void execute() {
     double velocidad = xSpeed.getAsDouble();
-    double acel = aceleracion.getAsDouble();
     double giro = zRotation.getAsDouble();
+
+    double deltaTime = Timer.getFPGATimestamp() - lastTime;
+
+    if(bumper.getAsBoolean()) this.acel += 1.0 * deltaTime;
+    else this.acel -= 1.0 * deltaTime;
 
     velocidad = aplicarDeadZone(velocidad, DeadZone.MovimientoDeadZone);
     giro = aplicarDeadZone(giro, DeadZone.MovimientoDeadZone);
@@ -54,7 +64,9 @@ public class MovimientoCommand extends Command {
       giro = giro + acel;
     } else if (giro != 0){
       giro = giro - acel;
-    } 
+    }
+
+    this.lastTime = Timer.getFPGATimestamp();
 
     driveSubsystem.driveArcade(velocidad, giro);
   }

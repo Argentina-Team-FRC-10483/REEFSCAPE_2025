@@ -86,7 +86,7 @@ public class RobotContainer {
 
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
     () -> -driverController.getLeftY()*0.5,
-    () ->  driverController.getLeftTriggerAxis()*0.5,
+    () ->  driverController.getHID().getLeftBumperButton(),
     () -> -driverController.getRightX()*0.5,
     movimientoSubsystem));
 
