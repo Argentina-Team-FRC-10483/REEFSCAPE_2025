@@ -1,12 +1,5 @@
 package frc.robot;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.signals.GravityTypeValue;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.units.Units;
-
 public final class Constants {
   public static final class DriveConstants {
     public static final int MotorMovimientoIzquierdoLider_ID = 1;
@@ -40,34 +33,22 @@ public final class Constants {
     public static final double RodilloMotor_CompVolt = 10;
     public static final double RodilloMotor_ValorExp = 0.44;
   }
-  public static class constElevator {
-    public static TalonFXConfiguration ELEVATOR_CONFIG = new TalonFXConfiguration();
-    static {
-      ELEVATOR_CONFIG.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-      ELEVATOR_CONFIG.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+  public static final class EngancheContants {
+    public static final int MotorEnganche_ID = 6;
+    public static final int MotorEnganche_LIMITE = 40;
+    public static final double MotorEnganche_CompVolt = 10;
+    public static final double MotorEnganche_ValorExp = 0.44;
+  }  
 
-      ELEVATOR_CONFIG.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-      ELEVATOR_CONFIG.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Units.Inches.of(66).in(Units.Inches);
-      ELEVATOR_CONFIG.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-      ELEVATOR_CONFIG.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Units.Inches.of(0)
-          .in(Units.Inches);
-
-      ELEVATOR_CONFIG.Slot0.GravityType = GravityTypeValue.Elevator_Static;
-      // Elevator motors will provide feedback in INCHES the carriage has moved
-      ELEVATOR_CONFIG.Feedback.SensorToMechanismRatio = 0.4545;
-      ELEVATOR_CONFIG.Slot0.kG = 0.3;
-      ELEVATOR_CONFIG.Slot0.kS = 0.4;
-      // ELEVATOR_CONFIG.Slot0.kP = 1;
-      ELEVATOR_CONFIG.Slot0.kP = 0.3;
-    }
-
-    public static final Distance CORAL_L1_HEIGHT = Units.Inches.of(9.039062);
-    public static final Distance CORAL_L2_HEIGHT = Units.Inches.of(17.946289);
-    public static final Distance CORAL_L3_HEIGHT = Units.Inches.of(33.742188);
-    public static final Distance CORAL_L4_HEIGHT = Units.Inches.of(58.888916);
+  public static final class ElevadorConstants {
+    public static final int MotorElevadorIzquierdoLider_ID = 6;
+    public static final int MotorElevadorDerechoSeguidor_ID = 7;
+    public static final int CURRENT_LIMIT = 40;
+    public static final double VOLTAGE_COMPENSATION = 12.0;
   }
-  public static class mapElevator {
-    public static final int MOTOR_ELEVADOR_IZQUIERDO_SEGUIDOR_CAN = 50;
-    public static final int MOTOR_ELEVADOR_DERECHO_LIDER_CAN = 51;
+  
+  public static final class DeadZone {
+    public static final double ElevadorDeadZone = 0.15;
+    public static final double MovimientoDeadZone = 0.05;
   }
 }
