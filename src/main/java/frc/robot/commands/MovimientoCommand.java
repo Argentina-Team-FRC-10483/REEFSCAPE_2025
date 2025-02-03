@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -9,11 +10,14 @@ import frc.robot.subsystems.MovimientoSubsystem;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import javax.security.auth.login.FailedLoginException;
+
 public class MovimientoCommand extends Command {
   private final DoubleSupplier xSpeed;
   private final DoubleSupplier zRotation;
   private final BooleanSupplier bumper;
   private final MovimientoSubsystem driveSubsystem;
+  private final SlewRateLimiter Filter = new SlewRateLimiter(0.5); 
   private double lastTime;
   private double acel;
 
@@ -34,6 +38,8 @@ public class MovimientoCommand extends Command {
     SmartDashboard.putNumber("Giro", 0);
     SmartDashboard.putNumber("Velocidad", 0);
     SmartDashboard.putNumber("Aceleracion", 0);
+    SmartDashboard.putNumber("Velocidad Total", 0);
+
   }
 
   // Runs every cycle while the command is scheduled (~50 times per second)
@@ -44,14 +50,18 @@ public class MovimientoCommand extends Command {
 
     double deltaTime = Timer.getFPGATimestamp() - lastTime;
 
-    if(bumper.getAsBoolean() && this.acel != 0.5) {
+    if ((velocidad != 0.5) && (velocidad != -0.5)){
+      this.acel = 0;
+    }
+    else if((bumper.getAsBoolean() && this.acel != 0.5)) {
       this.acel += .10 * deltaTime;
       if(this.acel > 0.5) this.acel = 0.5;
     }
-    else if (!bumper.getAsBoolean() && this.acel > 0) {
+    else if ((!bumper.getAsBoolean() && this.acel > 0)) {
       this.acel -= .10 * deltaTime;
       if(this.acel < 0) this.acel = 0;
     }
+    
 
     velocidad = aplicarDeadZone(velocidad, DeadZone.MovimientoDeadZone);
     giro = aplicarDeadZone(giro, DeadZone.MovimientoDeadZone);
@@ -59,6 +69,8 @@ public class MovimientoCommand extends Command {
     SmartDashboard.putNumber("Giro", giro);
     SmartDashboard.putNumber("Velocidad", velocidad);
     SmartDashboard.putNumber("Aceleracion", acel);
+    SmartDashboard.putNumber("Velocidad Total", velocidad+acel);
+
 
     if (velocidad > 0){
       velocidad = velocidad + acel;
@@ -74,7 +86,7 @@ public class MovimientoCommand extends Command {
 
     this.lastTime = Timer.getFPGATimestamp();
 
-    driveSubsystem.driveArcade(velocidad, giro);
+    driveSubsystem.driveArcade(Filter.calculate(velocidad), giro);
   }
   public double aplicarDeadZone(double input, double deadZone) {
     double output = input;
