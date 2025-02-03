@@ -44,8 +44,14 @@ public class MovimientoCommand extends Command {
 
     double deltaTime = Timer.getFPGATimestamp() - lastTime;
 
-    if(bumper.getAsBoolean()) this.acel += 1.0 * deltaTime;
-    else this.acel -= 1.0 * deltaTime;
+    if(bumper.getAsBoolean() && this.acel != 0.5) {
+      this.acel += .10 * deltaTime;
+      if(this.acel > 0.5) this.acel = 0.5;
+    }
+    else if (this.acel > 0) {
+      this.acel -= .10 * deltaTime;
+      if(this.acel < 0) this.acel = 0;
+    }
 
     velocidad = aplicarDeadZone(velocidad, DeadZone.MovimientoDeadZone);
     giro = aplicarDeadZone(giro, DeadZone.MovimientoDeadZone);
