@@ -50,7 +50,7 @@ public class MovimientoCommand extends Command {
 
     double deltaTime = Timer.getFPGATimestamp() - lastTime;
 
-    if ((velocidad != 0.5) && (velocidad != -0.5)){
+    if(((velocidad != 0.5) && (velocidad != -0.5)) || ((giro != 0.5) && (giro != -0.5))){
       this.acel = 0;
     }
     else if((bumper.getAsBoolean() && this.acel != 0.5)) {
@@ -71,18 +71,9 @@ public class MovimientoCommand extends Command {
     SmartDashboard.putNumber("Aceleracion", acel);
     SmartDashboard.putNumber("Velocidad Total", velocidad+acel);
 
+    velocidad = (velocidad != 0) ? velocidad - acel : velocidad + acel;
 
-    if (velocidad > 0){
-      velocidad = velocidad + acel;
-    } else if (velocidad != 0){
-      velocidad = velocidad - acel;
-    }
-
-    if (giro > 0){
-      giro = giro + acel;
-    } else if (giro != 0){
-      giro = giro - acel;
-    }
+    giro = (giro != 0) ? giro - acel : giro + acel;
 
     this.lastTime = Timer.getFPGATimestamp();
 
