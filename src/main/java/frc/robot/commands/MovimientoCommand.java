@@ -17,7 +17,7 @@ public class MovimientoCommand extends Command {
   private final DoubleSupplier zRotation;
   private final BooleanSupplier bumper;
   private final MovimientoSubsystem driveSubsystem;
-  private final SlewRateLimiter Filter = new SlewRateLimiter(0.5); 
+  private final SlewRateLimiter Filter = new SlewRateLimiter(0.5);
   private double lastTime;
   private double acel;
 
@@ -38,6 +38,7 @@ public class MovimientoCommand extends Command {
     SmartDashboard.putNumber("Giro", 0);
     SmartDashboard.putNumber("Velocidad", 0);
     SmartDashboard.putNumber("Aceleracion", 0);
+    SmartDashboard.putNumber("Velocidad Total", 0 );
     SmartDashboard.putNumber("Velocidad Total", 0);
 
   }
@@ -47,6 +48,8 @@ public class MovimientoCommand extends Command {
   public void execute() {
     double velocidad = xSpeed.getAsDouble();
     double giro = zRotation.getAsDouble();
+    // double giroL = (giro > 0) ? giro*1 : giro*-1;
+    // double giroR;
 
     double deltaTime = Timer.getFPGATimestamp() - lastTime;
 
@@ -69,6 +72,7 @@ public class MovimientoCommand extends Command {
     SmartDashboard.putNumber("Giro", giro);
     SmartDashboard.putNumber("Velocidad", velocidad);
     SmartDashboard.putNumber("Aceleracion", acel);
+    SmartDashboard.putNumber("Giro Total", giro+acel);
     SmartDashboard.putNumber("Velocidad Total", velocidad+acel);
 
     if (velocidad > 0){
@@ -78,14 +82,19 @@ public class MovimientoCommand extends Command {
     }
     
     if (giro > 0){
-      giro = giro + acel;
+      giro = Filter.calculate(giro + acel);
     } else if (giro != 0){
-      giro = giro - acel;
+      giro = Filter.calculate(giro - acel);
     }
 
     this.lastTime = Timer.getFPGATimestamp();
-
-    driveSubsystem.driveArcade(Filter.calculate(velocidad), giro);
+    if (giro > 0){
+      driveSubsystem.driveArcade(Filter.calculate(velocidad), giro);
+      driveSubsystem.curvatureArcade(velocidad, giro);
+    }else{
+      driveSubsystem.curvatureArcade(velocidad, giro);
+    }
+    
   }
   public double aplicarDeadZone(double input, double deadZone) {
     double output = input;
