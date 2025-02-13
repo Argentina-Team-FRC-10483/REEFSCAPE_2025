@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DeadZone;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.MovimientoSubsystem;
 
 import java.util.function.BooleanSupplier;
@@ -31,16 +32,14 @@ public class MovimientoCommand extends Command {
 
     addRequirements(this.driveSubsystem);
   }
-
   // Runs each time the command is scheduled.
   @Override
   public void initialize() {
     SmartDashboard.putNumber("Giro", 0);
     SmartDashboard.putNumber("Velocidad", 0);
     SmartDashboard.putNumber("Aceleracion", 0);
-    SmartDashboard.putNumber("Velocidad Total", 0 );
+    SmartDashboard.putNumber("Giro Total", 0 );
     SmartDashboard.putNumber("Velocidad Total", 0);
-
   }
 
   // Runs every cycle while the command is scheduled (~50 times per second)
@@ -48,53 +47,49 @@ public class MovimientoCommand extends Command {
   public void execute() {
     double velocidad = xSpeed.getAsDouble();
     double giro = zRotation.getAsDouble();
-    // double giroL = (giro > 0) ? giro*1 : giro*-1;
-    // double giroR;
 
     double deltaTime = Timer.getFPGATimestamp() - lastTime;
 
-    if(((velocidad != 0.5) && (velocidad != -0.5)) && ((giro != 0.5) && (giro != -0.5))){
-      this.acel = 0;
+    if(velocidad != DriveConstants.AXIS_VELOCIDAD_LIMIT && velocidad != -DriveConstants.AXIS_VELOCIDAD_LIMIT &&
+    giro != DriveConstants.AXIS_GIRO_LIMIT && giro != -DriveConstants.AXIS_GIRO_LIMIT){
+      this.acel = DriveConstants.DEAD_POINT;
     }
-    else if((bumper.getAsBoolean() && this.acel != 0.5)) {
-      this.acel += .10 * deltaTime;
-      if(this.acel > 0.5) this.acel = 0.5;
+    else if(bumper.getAsBoolean() && this.acel != DriveConstants.BUMPER_ACEL_LIMIT) {
+      this.acel += DriveConstants.ACEL_AUMENTO * deltaTime;
+      if(this.acel > DriveConstants.BUMPER_ACEL_LIMIT) this.acel = DriveConstants.BUMPER_ACEL_LIMIT;
     }
-    else if ((!bumper.getAsBoolean() && this.acel > 0)) {
-      this.acel -= .10 * deltaTime;
-      if(this.acel < 0) this.acel = 0;
+    else if (!bumper.getAsBoolean() && this.acel > DriveConstants.DEAD_POINT) {
+      this.acel -= DriveConstants.ACEL_AUMENTO * deltaTime;
+      if(this.acel < DriveConstants.DEAD_POINT) this.acel = DriveConstants.DEAD_POINT;
     }
-    
 
     velocidad = aplicarDeadZone(velocidad, DeadZone.MovimientoDeadZone);
     giro = aplicarDeadZone(giro, DeadZone.MovimientoDeadZone);
 
+    SmartDashboard.putNumber("Tiempo", deltaTime);
     SmartDashboard.putNumber("Giro", giro);
     SmartDashboard.putNumber("Velocidad", velocidad);
     SmartDashboard.putNumber("Aceleracion", acel);
     SmartDashboard.putNumber("Giro Total", giro+acel);
     SmartDashboard.putNumber("Velocidad Total", velocidad+acel);
 
-    if (velocidad > 0){
-      velocidad = velocidad + acel;
-    } else if (velocidad != 0){
-      velocidad = velocidad - acel;
+    if (velocidad > DriveConstants.DEAD_POINT){
+      velocidad = Filter.calculate(velocidad + acel);
+    } else if ((velocidad == DriveConstants.DEAD_POINT) ||
+     (velocidad <= DriveConstants.AXIS_VELOCIDAD_LIMIT) || (velocidad >= -DriveConstants.AXIS_VELOCIDAD_LIMIT)){
+      velocidad = Filter.calculate(velocidad - acel);
     }
-    
-    if (giro > 0){
-      giro = Filter.calculate(giro + acel);
-    } else if (giro != 0){
+  if (giro > DriveConstants.DEAD_ZONE && giro < -DriveConstants.DEAD_ZONE){
+    if (giro > DriveConstants.DEAD_POINT){
+      giro += Filter.calculate(giro + acel);
+    }else if (giro == DriveConstants.DEAD_POINT || 
+    giro <= DriveConstants.AXIS_GIRO_LIMIT || giro >= -DriveConstants.AXIS_GIRO_LIMIT){
       giro = Filter.calculate(giro - acel);
     }
-
+  }
     this.lastTime = Timer.getFPGATimestamp();
-    if (giro > 0){
-      driveSubsystem.driveArcade(Filter.calculate(velocidad), giro);
-      driveSubsystem.curvatureArcade(velocidad, giro);
-    }else{
-      driveSubsystem.curvatureArcade(velocidad, giro);
-    }
     
+    driveSubsystem.driveArcade(velocidad, giro);
   }
   public double aplicarDeadZone(double input, double deadZone) {
     double output = input;
