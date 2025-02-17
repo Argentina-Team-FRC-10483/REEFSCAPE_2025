@@ -117,6 +117,20 @@ public class MovimientoSubsystem extends SubsystemBase {
   }
 
   public void driveRobotRelative(ChassisSpeeds speeds) {
-    driveArcade(speeds.vxMetersPerSecond, speeds.omegaRadiansPerSecond);
+    double maxSpeed = 0.5; // Default in case GUI settings fail
+
+    try {
+        RobotConfig config = RobotConfig.fromGUISettings();
+        maxSpeed = config.moduleConfig.maxDriveVelocityMPS; // Get speed limit from GUI
+    } catch (Exception e) {
+        DriverStation.reportError("Failed to get max speed from GUI, using default", e.getStackTrace());
+    }
+
+    // Scale the speeds
+    double xSpeed = Math.min(speeds.vxMetersPerSecond, maxSpeed);
+    double zRotation = Math.min(speeds.omegaRadiansPerSecond, maxSpeed);
+
+    drive.arcadeDrive(xSpeed, zRotation);
+
   }
 }
