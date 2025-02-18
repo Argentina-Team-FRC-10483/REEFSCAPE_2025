@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
+import frc.robot.commands.AutoDriveCommand;
 import frc.robot.commands.ElevadorCommand;
 import frc.robot.commands.EngancheCommand;
 import frc.robot.commands.MovimientoCommand;
@@ -75,6 +76,8 @@ public class RobotContainer {
    driverController.b()
    .whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
 
+   driverController.y().whileTrue(new AutoDriveCommand(movimientoSubsystem, 10));
+
 
    elevadorSubsystem.setDefaultCommand(
         new ElevadorCommand(
@@ -89,10 +92,9 @@ public class RobotContainer {
     () ->  driverController.getLeftTriggerAxis()*0.5,
     () -> -driverController.getRightX()*0.5,
     movimientoSubsystem));
-
   }
 
   public Command getAutonomousCommand() {
-    return null;
+    return new AutoDriveCommand(movimientoSubsystem, 10);
   }
 }

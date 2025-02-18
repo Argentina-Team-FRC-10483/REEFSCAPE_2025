@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import java.util.Set;
+
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -17,12 +20,18 @@ public class MovimientoSubsystem extends SubsystemBase {
   private final SparkMax MotorMovimientoDerechoLider;
   private final SparkMax MotorMovimientoDerechoSeguidor;
 
+  private final RelativeEncoder leftEncoder;
+  private final RelativeEncoder rightEncoder;
+
   private final DifferentialDrive drive;
+
+  final double kDriveTickAMetros = (15.24 * Math.PI * 1.0 / 100.0) / 2.1;
 
   public MovimientoSubsystem() {
     // create brushed motors for drive
     MotorMovimientoIzquierdoLider = new SparkMax(DriveConstants.MotorMovimientoIzquierdoLider_ID, MotorType.kBrushed);
-    MotorMovimientoIzquierdoSeguidor = new SparkMax(DriveConstants.MotorMovimientoIzquierdoSeguidor_ID, MotorType.kBrushed);
+    MotorMovimientoIzquierdoSeguidor = new SparkMax(DriveConstants.MotorMovimientoIzquierdoSeguidor_ID,
+        MotorType.kBrushed);
     MotorMovimientoDerechoLider = new SparkMax(DriveConstants.MotorMovimientoDerechoLider_ID, MotorType.kBrushed);
     MotorMovimientoDerechoSeguidor = new SparkMax(DriveConstants.MotorMovimientoDerechoSeguidor_ID, MotorType.kBrushed);
 
@@ -49,6 +58,9 @@ public class MovimientoSubsystem extends SubsystemBase {
     // so that postive values drive both sides forward
     config.inverted(true);
     MotorMovimientoIzquierdoLider.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    this.leftEncoder = MotorMovimientoIzquierdoLider.getEncoder();
+    this.rightEncoder = MotorMovimientoDerechoLider.getEncoder();
   }
 
   @Override
@@ -56,7 +68,21 @@ public class MovimientoSubsystem extends SubsystemBase {
     SmartDashboard.putData(drive);
   }
 
-  // sets the speed of the drive motors
+  // Set drive speeds using DifferentialDrive (tank drive)
+  public void setDriveSpeed(double leftSpeed, double rightSpeed) {
+    drive.tankDrive(leftSpeed, rightSpeed);
+  }
+
+  // Get encoder positions (converted to meters)
+  public double getLeftEncoderPosition() {
+    return leftEncoder.getPosition() * kDriveTickAMetros;
+  }
+
+  public double getRightEncoderPosition() {
+    return rightEncoder.getPosition() * kDriveTickAMetros;
+  }
+
+  // Arcade drive method (single joystick for forward/backward and rotation)
   public void driveArcade(double xSpeed, double zRotation) {
     drive.arcadeDrive(xSpeed, zRotation);
   }
