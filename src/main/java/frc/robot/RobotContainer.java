@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
+import frc.robot.commands.ArmCommand;
 import frc.robot.commands.MovimientoCommand;
 import frc.robot.commands.ClawCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
@@ -29,16 +30,16 @@ public class RobotContainer {
 
   private final MovimientoSubsystem movimientoSubsystem = new MovimientoSubsystem();
 
-  private final ElevadorSubsystem elevadorSubsystem = new ElevadorSubsystem();
+  // private final ElevadorSubsystem elevadorSubsystem = new ElevadorSubsystem();
 
   private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
 
-  private final ClawSubsystem ClawSubsystem = new ClawSubsystem();
+  // private final ClawSubsystem ClawSubsystem = new ClawSubsystem();
 
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
 
   // Control del conductor
-  private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
+  // private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
   
   private final CommandXboxController driverController = new CommandXboxController(
       OperatorConstants.DRIVER_CONTROLLER_PORT);
@@ -76,6 +77,9 @@ public class RobotContainer {
    driverController.b()
    .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1));
 
+  armSubsystem.setDefaultCommand(new ArmCommand(
+    () -> -operadorController.getRightY()*0.5,
+    armSubsystem));
 
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
     () -> -driverController.getLeftY()*0.5,

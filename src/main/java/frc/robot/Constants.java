@@ -50,5 +50,6 @@ public final class Constants {
   public static final class DeadZone {
     public static final double ElevadorDeadZone = 0.15;
     public static final double MovimientoDeadZone = 0.05;
+    public static final double BrazoDeadZone = 0.1;
   }
 }
