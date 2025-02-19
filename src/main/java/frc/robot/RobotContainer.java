@@ -65,7 +65,7 @@ public class RobotContainer {
     driverController.b()
         .whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
 
-    driverController.y().onTrue(new AutoDriveCommand(movimientoSubsystem, 10));
+    driverController.y().onTrue(new AutoDriveCommand(movimientoSubsystem, 3));
 
     driverController.a().onTrue(new AutoDriveCommand(movimientoSubsystem, 0));
 
@@ -85,6 +85,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new AutoDriveCommand(movimientoSubsystem, 10);
+    return new AutoDriveCommand(movimientoSubsystem, 3);
   }
 }

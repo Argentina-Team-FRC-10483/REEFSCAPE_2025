@@ -3,6 +3,7 @@ package frc.robot.commands;
 import frc.robot.subsystems.MovimientoSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutoDriveCommand extends Command {
     private final MovimientoSubsystem driveSubsystem;
@@ -48,7 +49,10 @@ public class AutoDriveCommand extends Command {
         double outputSpeed = kP * error + kI * errorSum + kD * errorRate;
 
         driveSubsystem.setDriveSpeed(outputSpeed, outputSpeed);
-
+        SmartDashboard.putNumber("Left sensor position", leftSensorPosition);
+        SmartDashboard.putNumber("Right sensor position", rightSensorPosition);
+        SmartDashboard.putNumber("Error", error);
+        SmartDashboard.putNumber("Setpoint", setpoint);
         lastTimestamp = Timer.getFPGATimestamp();
         lastError = error;
     }
