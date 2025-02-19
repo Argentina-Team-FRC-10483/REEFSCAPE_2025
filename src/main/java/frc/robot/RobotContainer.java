@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.AutoDriveCommand;
@@ -65,7 +64,7 @@ public class RobotContainer {
     driverController.b()
         .whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
 
-    driverController.y().onTrue(new AutoDriveCommand(movimientoSubsystem, 3));
+    driverController.leftBumper().onTrue(new AutoDriveCommand(movimientoSubsystem, 3));
 
     driverController.a().onTrue(new AutoDriveCommand(movimientoSubsystem, 0));
 
@@ -85,6 +84,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new AutoDriveCommand(movimientoSubsystem, 3);
+    return new AutoDriveCommand(movimientoSubsystem, 5);
   }
 }

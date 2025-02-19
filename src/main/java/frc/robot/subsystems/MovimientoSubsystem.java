@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.Set;
-
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -20,8 +18,8 @@ public class MovimientoSubsystem extends SubsystemBase {
   private final SparkMax MotorMovimientoDerechoLider;
   private final SparkMax MotorMovimientoDerechoSeguidor;
 
-  private final RelativeEncoder leftEncoder;
-  private final RelativeEncoder rightEncoder;
+  public final RelativeEncoder leftEncoder;
+  public final RelativeEncoder rightEncoder;
 
   private final DifferentialDrive drive;
 
@@ -79,7 +77,7 @@ public class MovimientoSubsystem extends SubsystemBase {
   }
 
   public double getRightEncoderPosition() {
-    return rightEncoder.getPosition() * kDriveTickAMetros;
+    return -(rightEncoder.getPosition() * kDriveTickAMetros);
   }
 
   // Arcade drive method (single joystick for forward/backward and rotation)

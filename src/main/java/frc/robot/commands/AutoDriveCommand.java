@@ -4,7 +4,7 @@ import frc.robot.subsystems.MovimientoSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+    
 public class AutoDriveCommand extends Command {
     private final MovimientoSubsystem driveSubsystem;
     private final double setpoint;
@@ -12,10 +12,10 @@ public class AutoDriveCommand extends Command {
     private double lastTimestamp = 0;
     private double lastError = 0;
 
-    private final double kP = 0.1;
+    private final double kP = 0.2;
     private final double kI = 0.05;
-    private final double iLimit = 1;
-    private final double kD = 0;
+    private final double iLimit = 1.5;
+    private final double kD = 0.01;
 
     public AutoDriveCommand(MovimientoSubsystem movimientoSubsystem, double setpoint) {
         this.driveSubsystem = movimientoSubsystem;
@@ -26,8 +26,8 @@ public class AutoDriveCommand extends Command {
     @Override
     public void initialize() {
         // Reset encoders
-        driveSubsystem.getLeftEncoderPosition();
-        driveSubsystem.getRightEncoderPosition();
+        driveSubsystem.leftEncoder.setPosition(0);
+        driveSubsystem.rightEncoder.setPosition(0);
         errorSum = 0;
         lastTimestamp = Timer.getFPGATimestamp();
         lastError = 0;
@@ -35,8 +35,8 @@ public class AutoDriveCommand extends Command {
 
     @Override
     public void execute() {
-        double leftSensorPosition = driveSubsystem.getLeftEncoderPosition();
-        double rightSensorPosition = driveSubsystem.getRightEncoderPosition();
+        double leftSensorPosition = driveSubsystem.getLeftEncoderPosition() ;
+        double rightSensorPosition = driveSubsystem.getRightEncoderPosition() ;
 
         double error = setpoint - ((leftSensorPosition + rightSensorPosition) / 2);
         double dt = Timer.getFPGATimestamp() - lastTimestamp;
@@ -49,6 +49,7 @@ public class AutoDriveCommand extends Command {
         double outputSpeed = kP * error + kI * errorSum + kD * errorRate;
 
         driveSubsystem.setDriveSpeed(outputSpeed, outputSpeed);
+        
         SmartDashboard.putNumber("Left sensor position", leftSensorPosition);
         SmartDashboard.putNumber("Right sensor position", rightSensorPosition);
         SmartDashboard.putNumber("Error", error);
