@@ -42,7 +42,7 @@ public final class Constants {
 
   public static final class ElevadorConstants {
     public static final int MotorElevadorIzquierdoLider_ID = 6;
-    public static final int MotorElevadorDerechoSeguidor_ID = 7;
+    public static final int MotorElevadorDerechoSeguidor_ID = 10;
     public static final int CURRENT_LIMIT = 40;
     public static final double VOLTAGE_COMPENSATION = 12.0;
   }

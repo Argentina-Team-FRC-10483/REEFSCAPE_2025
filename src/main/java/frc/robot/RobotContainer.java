@@ -29,16 +29,16 @@ public class RobotContainer {
 
   private final MovimientoSubsystem movimientoSubsystem = new MovimientoSubsystem();
 
-  private final ElevadorSubsystem elevadorSubsystem = new ElevadorSubsystem();
+  // private final ElevadorSubsystem elevadorSubsystem = new ElevadorSubsystem();
 
-  private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
+  // private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
 
-  private final ClawSubsystem ClawSubsystem = new ClawSubsystem();
+  // private final ClawSubsystem ClawSubsystem = new ClawSubsystem();
 
-  private final ArmSubsystem armSubsystem = new ArmSubsystem();
+  // private final ArmSubsystem armSubsystem = new ArmSubsystem();
 
-  // Control del conductor
-  private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
+  // // Control del conductor
+  // private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
   
   private final CommandXboxController driverController = new CommandXboxController(
       OperatorConstants.DRIVER_CONTROLLER_PORT);
@@ -70,11 +70,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
 
-   driverController.a()
-   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 1));
+  //  driverController.a()
+  //  .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 1));
 
-   driverController.b()
-   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1));
+  //  driverController.b()
+  //  .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1));
 
 
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
