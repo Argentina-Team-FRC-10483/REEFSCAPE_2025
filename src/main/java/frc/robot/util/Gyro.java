@@ -2,6 +2,7 @@ package frc.robot.util;
 
 import com.studica.frc.AHRS;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -34,6 +35,11 @@ public class Gyro {
         while(angle <= -180) angle += 360;
         while(angle > 180) angle -= 360;
 
+        return angle;
+    }
+
+    public Rotation2d getYawAngle2d() {
+        Rotation2d angle = navx.getRotation2d();
         return angle;
     }
 

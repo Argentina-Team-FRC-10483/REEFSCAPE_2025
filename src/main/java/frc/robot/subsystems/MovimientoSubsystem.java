@@ -7,19 +7,30 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.util.Gyro;
 
 public class MovimientoSubsystem extends SubsystemBase {
   private final SparkMax MotorMovimientoIzquierdoLider;
   private final SparkMax MotorMovimientoIzquierdoSeguidor;
   private final SparkMax MotorMovimientoDerechoLider;
   private final SparkMax MotorMovimientoDerechoSeguidor;
+  StructPublisher<Pose2d> posePublisher;
 
   public final RelativeEncoder leftEncoder;
   public final RelativeEncoder rightEncoder;
+  private final DifferentialDriveOdometry odometry;
+  private final Field2d field2d;
 
   private final DifferentialDrive drive;
 
@@ -59,11 +70,27 @@ public class MovimientoSubsystem extends SubsystemBase {
 
     this.leftEncoder = MotorMovimientoIzquierdoLider.getEncoder();
     this.rightEncoder = MotorMovimientoDerechoLider.getEncoder();
+    odometry = new DifferentialDriveOdometry(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition());
+    
+    field2d = new Field2d();
+    SmartDashboard.putData(field2d);
+    SmartDashboard.putData("Reset encoders", new InstantCommand(()->{
+      leftEncoder.setPosition(0);
+      rightEncoder.setPosition(0);
+      odometry.resetPose(new Pose2d());
+    }));
+    posePublisher = NetworkTableInstance.getDefault().getStructTopic("Pose", Pose2d.struct).publish();
+    
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putData(drive);
+    odometry.update(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition());
+    field2d.setRobotPose(odometry.getPoseMeters());
+    SmartDashboard.putNumber("Left sensor position", getLeftEncoderPosition());
+    SmartDashboard.putNumber("Right sensor position", getRightEncoderPosition());
+    posePublisher.accept(odometry.getPoseMeters());
   }
 
   // Set drive speeds using DifferentialDrive (tank drive)

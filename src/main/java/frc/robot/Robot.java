@@ -98,62 +98,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-
     /* Display 6-axis Processed Angle Data */
     SmartDashboard.putBoolean("IMU_Connected", ahrs.isConnected());
-    SmartDashboard.putBoolean("IMU_IsCalibrating", ahrs.isCalibrating());
-    SmartDashboard.putNumber("IMU_Yaw", ahrs.getYaw());
-    SmartDashboard.putNumber("IMU_Pitch", ahrs.getPitch());
-    SmartDashboard.putNumber("IMU_Roll", ahrs.getRoll());
-
-    SmartDashboard.putNumber("IMU_TotalYaw", ahrs.getAngle());
-    SmartDashboard.putNumber("IMU_YawRateDPS", ahrs.getRate());
-
-    /* Display Processed Acceleration Data (Linear Acceleration, Motion Detect) */
-
-    SmartDashboard.putNumber("IMU_Accel_X", ahrs.getWorldLinearAccelX());
-    SmartDashboard.putNumber("IMU_Accel_Y", ahrs.getWorldLinearAccelY());
-    SmartDashboard.putBoolean("IMU_IsMoving", ahrs.isMoving());
-    SmartDashboard.putBoolean("IMU_IsRotating", ahrs.isRotating());
-
-    /* Display estimates of velocity/displacement. Note that these values are */
-    /* not expected to be accurate enough for estimating robot position on a */
-    /* FIRST FRC Robotics Field, due to accelerometer noise and the compounding */
-    /* of these errors due to single (velocity) integration and especially */
-    /* double (displacement) integration. */
-
-    SmartDashboard.putNumber("Velocity_X", ahrs.getVelocityX());
-    SmartDashboard.putNumber("Velocity_Y", ahrs.getVelocityY());
-    SmartDashboard.putNumber("Displacement_X", ahrs.getDisplacementX());
-    SmartDashboard.putNumber("Displacement_Y", ahrs.getDisplacementY());
-
-    /* Display Raw Gyro/Accelerometer/Magnetometer Values */
-    /* NOTE: These values are not normally necessary, but are made available */
-    /* for advanced users. Before using this data, please consider whether */
-    /* the processed data (see above) will suit your needs. */
-
-    SmartDashboard.putNumber("RawGyro_X", ahrs.getRawGyroX());
-    SmartDashboard.putNumber("RawGyro_Y", ahrs.getRawGyroY());
-    SmartDashboard.putNumber("RawGyro_Z", ahrs.getRawGyroZ());
-    SmartDashboard.putNumber("RawAccel_X", ahrs.getRawAccelX());
-    SmartDashboard.putNumber("RawAccel_Y", ahrs.getRawAccelY());
-    SmartDashboard.putNumber("RawAccel_Z", ahrs.getRawAccelZ());
-    SmartDashboard.putNumber("RawMag_X", ahrs.getRawMagX());
-    SmartDashboard.putNumber("RawMag_Y", ahrs.getRawMagY());
-    SmartDashboard.putNumber("RawMag_Z", ahrs.getRawMagZ());
-    SmartDashboard.putNumber("IMU_Temp_C", ahrs.getTempC());
-    SmartDashboard.putNumber("IMU_Timestamp", ahrs.getLastSensorTimestamp());
-
-    /* Omnimount Yaw Axis Information */
-    /* For more info, see http://navx-mxp.kauailabs.com/installation/omnimount */
-    AHRS.BoardYawAxis yaw_axis = ahrs.getBoardYawAxis();
-    SmartDashboard.putString("YawAxisDirection", yaw_axis.up ? "Up" : "Down");
-    SmartDashboard.putNumber("YawAxis", yaw_axis.board_axis.getValue());
-
-    /* Connectivity Debugging Support */
-    SmartDashboard.putNumber("IMU_Byte_Count", ahrs.getByteCount());
-    SmartDashboard.putNumber("IMU_Update_Count", ahrs.getUpdateCount());
-    SmartDashboard.putNumber("IMU Rate", ahrs.getRate());
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
