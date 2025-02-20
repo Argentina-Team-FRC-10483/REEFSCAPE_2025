@@ -23,7 +23,7 @@ public final class Constants {
   }
 
   public static final class AlgaeIntakeConstants {
-    public static final int RodilloMotor_ID = 5;
+    public static final int RodilloMotor_ID = 7;
     public static final int RodilloMotor_LIMITE = 60;
     public static final double RodilloMotor_CompVolt = 10;
     public static final double RodilloMotor_ValorExp = 0.44;
@@ -36,8 +36,8 @@ public final class Constants {
   }  
 
   public static final class ElevadorConstants {
-    public static final int MotorElevadorIzquierdoLider_ID = 6;
-    public static final int MotorElevadorDerechoSeguidor_ID = 7;
+    public static final int MotorElevadorIzquierdoLider_ID = 5;
+    public static final int MotorElevadorDerechoSeguidor_ID = 6;
     public static final int CURRENT_LIMIT = 40;
     public static final double VOLTAGE_COMPENSATION = 12.0;
   }
