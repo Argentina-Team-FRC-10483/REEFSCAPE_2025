@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevadorConstants;
 
@@ -34,11 +35,13 @@ public class ElevadorSubsystem extends SubsystemBase {
     configSeguidor.follow(MotorElevadorIzquierdoLider);
     MotorElevadorDerechoSeguidor.configure(configSeguidor, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        // Obtener el encoder integrado
+        // Obtener el encoder
         encoderElevador = MotorElevadorIzquierdoLider.getEncoder();
 
         // Resetear el encoder al iniciar
         encoderElevador.setPosition(0);
+
+        SmartDashboard.putData("Reiniciar Encoder Elevador", new InstantCommand(() -> encoderElevador.setPosition(0)));
   }
 
   @Override

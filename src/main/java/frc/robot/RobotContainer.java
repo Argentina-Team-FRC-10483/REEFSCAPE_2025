@@ -79,7 +79,7 @@ public class RobotContainer {
    elevadorSubsystem.setDefaultCommand(
         new ElevadorCommand(
         elevadorSubsystem,
-    () ->  operadorController.getLeftY()));
+    () ->  operadorController.getLeftY() * 0.5));
 
    driverController.x()
    .whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
