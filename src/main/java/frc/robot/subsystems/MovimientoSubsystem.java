@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPLTVController;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -9,9 +12,14 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelPositions;
+import edu.wpi.first.math.kinematics.Kinematics;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -71,7 +79,8 @@ public class MovimientoSubsystem extends SubsystemBase {
     this.leftEncoder = MotorMovimientoIzquierdoLider.getEncoder();
     this.rightEncoder = MotorMovimientoDerechoLider.getEncoder();
     odometry = new DifferentialDriveOdometry(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition());
-    
+    DifferentialDriveKinematics diffdrivekinematics = new DifferentialDriveKinematics(0.546);
+
     field2d = new Field2d();
     SmartDashboard.putData(field2d);
     SmartDashboard.putData("Reset encoders", new InstantCommand(()->{
@@ -81,6 +90,35 @@ public class MovimientoSubsystem extends SubsystemBase {
     }));
     posePublisher = NetworkTableInstance.getDefault().getStructTopic("Pose", Pose2d.struct).publish();
     
+    RobotConfig configAuto;
+    try{
+      configAuto = RobotConfig.fromGUISettings();
+    } catch (Exception e) {
+      // Handle exception as needed
+      e.printStackTrace();
+    }
+
+    // Configure AutoBuilder last
+    AutoBuilder.configure(
+            this::getPose, // Robot pose supplier
+            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+            new PPLTVController(0.02), // PPLTVController is the built in path following controller for differential drive trains
+            config, // The robot configuration
+            () -> {
+              // Boolean supplier that controls when the path will be mirrored for the red alliance
+              // This will flip the path being followed to the red side of the field.
+              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+              var alliance = DriverStation.getAlliance();
+              if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+              }
+              return false;
+            },
+            this // Reference to this subsystem to set requirements
+    );
   }
 
   @Override
@@ -106,6 +144,20 @@ public class MovimientoSubsystem extends SubsystemBase {
   public double getRightEncoderPosition() {
     return -(rightEncoder.getPosition() * kDriveTickAMetros);
   }
+
+  public Pose2d getPose(){
+    return odometry.getPoseMeters();
+  }
+
+  public Pose2d resetPose(Pose2d pose2d){
+    System.out.println(pose2d);
+    odometry.resetPosition(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition(), pose2d);
+  }
+
+  public ChassisSpeeds getRobotRelativeSpeeds(){
+    return Kinematics.toChassisSpeeds(getLeftEncoderPosition(), getRightEncoderPosition(), Gyro.getInstance().getYawAngle2d());
+  }
+  
 
   // Arcade drive method (single joystick for forward/backward and rotation)
   public void driveArcade(double xSpeed, double zRotation) {
