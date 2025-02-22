@@ -69,16 +69,19 @@ public class ElevadorSubsystem extends SubsystemBase {
 
   public void moverElevador(double velocidad) {
     double posicionActual = getPosicionElevador();
-    double zonaDesaceleracion = 5.0;
+    double zonaDesaceleracion = 7.0;
 
     if (velocidad < 0 && posicionActual <= LIMITE_INFERIOR + zonaDesaceleracion) {
         double factor = (posicionActual - LIMITE_INFERIOR) / zonaDesaceleracion;
         factor = Math.max(factor, 0);
         MotorElevadorIzquierdoLider.set(velocidad * factor);
+
     } else if (velocidad > 0 && posicionActual >= LIMITE_SUPERIOR - zonaDesaceleracion) {
         double factor = (LIMITE_SUPERIOR - posicionActual) / zonaDesaceleracion;
         factor = Math.max(factor, 0);
         MotorElevadorIzquierdoLider.set(velocidad * factor);
+        
+
     } else {
         MotorElevadorIzquierdoLider.set(velocidad);
     }
