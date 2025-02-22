@@ -11,106 +11,102 @@ import frc.robot.subsystems.MovimientoSubsystem;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-import javax.security.auth.login.FailedLoginException;
-
 public class MovimientoCommand extends Command {
-  private final DoubleSupplier xSpeed;
-  private final DoubleSupplier zRotation;
-  private final BooleanSupplier bumper;
-  private final MovimientoSubsystem driveSubsystem;
-  private final SlewRateLimiter Filter = new SlewRateLimiter(0.5);
-  private double lastTime;
-  private double acel;
+    private final DoubleSupplier xSpeed;
+    private final DoubleSupplier zRotation;
+    private final BooleanSupplier bumper;
+    private final MovimientoSubsystem driveSubsystem;
+    private final SlewRateLimiter filter = new SlewRateLimiter(0.5);
+    private double lastTime;
+    private double accel;
 
-  public MovimientoCommand(
-      DoubleSupplier xSpeed, BooleanSupplier bumper, DoubleSupplier zRotation, MovimientoSubsystem driveSubsystem) {
-    this.xSpeed = xSpeed;
-    this.bumper = bumper;
-    this.zRotation = zRotation;
-    this.driveSubsystem = driveSubsystem;
-    this.lastTime = Timer.getFPGATimestamp();
+    public MovimientoCommand(
+      DoubleSupplier xSpeed,
+      BooleanSupplier bumper,
+      DoubleSupplier zRotation,
+      MovimientoSubsystem driveSubsystem
+    ) {
+        this.xSpeed = xSpeed;
+        this.bumper = bumper;
+        this.zRotation = zRotation;
+        this.driveSubsystem = driveSubsystem;
+        this.lastTime = Timer.getFPGATimestamp();
 
-    addRequirements(this.driveSubsystem);
-  }
-  // Runs each time the command is scheduled.
-  @Override
-  public void initialize() {
-    SmartDashboard.putNumber("Giro", 0);
-    SmartDashboard.putNumber("Velocidad", 0);
-    SmartDashboard.putNumber("Aceleracion", 0);
-    SmartDashboard.putNumber("Giro Total", 0 );
-    SmartDashboard.putNumber("Velocidad Total", 0);
-  }
-
-  // Runs every cycle while the command is scheduled (~50 times per second)
-  @Override
-  public void execute() {
-    double velocidad = xSpeed.getAsDouble();
-    double giro = zRotation.getAsDouble();
-
-    double deltaTime = Timer.getFPGATimestamp() - lastTime;
-
-    if(velocidad != DriveConstants.AXIS_VELOCIDAD_LIMIT && velocidad != -DriveConstants.AXIS_VELOCIDAD_LIMIT &&
-    giro != DriveConstants.AXIS_GIRO_LIMIT && giro != -DriveConstants.AXIS_GIRO_LIMIT){
-      this.acel = DriveConstants.DEAD_POINT;
-    }
-    else if(bumper.getAsBoolean() && this.acel != DriveConstants.BUMPER_ACEL_LIMIT) {
-      this.acel += DriveConstants.ACEL_AUMENTO * deltaTime;
-      if(this.acel > DriveConstants.BUMPER_ACEL_LIMIT) this.acel = DriveConstants.BUMPER_ACEL_LIMIT;
-    }
-    else if (!bumper.getAsBoolean() && this.acel > DriveConstants.DEAD_POINT) {
-      this.acel -= DriveConstants.ACEL_AUMENTO * deltaTime;
-      if(this.acel < DriveConstants.DEAD_POINT) this.acel = DriveConstants.DEAD_POINT;
+        addRequirements(this.driveSubsystem);
     }
 
-    velocidad = aplicarDeadZone(velocidad, DeadZone.MovimientoDeadZone);
-    giro = aplicarDeadZone(giro, DeadZone.MovimientoDeadZone);
-
-    SmartDashboard.putNumber("Tiempo", deltaTime);
-    SmartDashboard.putNumber("Giro", giro);
-    SmartDashboard.putNumber("Velocidad", velocidad);
-    SmartDashboard.putNumber("Aceleracion", acel);
-    SmartDashboard.putNumber("Giro Total", giro+acel);
-    SmartDashboard.putNumber("Velocidad Total", velocidad+acel);
-
-    if (velocidad > DriveConstants.DEAD_POINT){
-      velocidad = Filter.calculate(velocidad + acel);
-    } else if ((velocidad == DriveConstants.DEAD_POINT) ||
-     (velocidad <= DriveConstants.AXIS_VELOCIDAD_LIMIT) || (velocidad >= -DriveConstants.AXIS_VELOCIDAD_LIMIT)){
-      velocidad = Filter.calculate(velocidad - acel);
+    // Runs each time the command is scheduled.
+    @Override
+    public void initialize() {
+        SmartDashboard.putNumber("Giro", 0);
+        SmartDashboard.putNumber("Velocidad", 0);
+        SmartDashboard.putNumber("Aceleracion", 0);
+        SmartDashboard.putNumber("Giro Total", 0);
+        SmartDashboard.putNumber("Velocidad Total", 0);
     }
-  if (giro > DriveConstants.DEAD_ZONE && giro < -DriveConstants.DEAD_ZONE){
-    if (giro > DriveConstants.DEAD_POINT){
-      giro += Filter.calculate(giro + acel);
-    }else if (giro == DriveConstants.DEAD_POINT || 
-    giro <= DriveConstants.AXIS_GIRO_LIMIT || giro >= -DriveConstants.AXIS_GIRO_LIMIT){
-      giro = Filter.calculate(giro - acel);
-    }
-  }
-    this.lastTime = Timer.getFPGATimestamp();
-    
-    driveSubsystem.driveArcade(velocidad, giro);
-  }
-  public double aplicarDeadZone(double input, double deadZone) {
-    double output = input;
-        if (input <= deadZone && input > 0) {
-      output = 0;
-    } else if(input >= -deadZone && input < 0) {
-      output = 0;
-    }
-    return output;
-  }
-  // Runs each time the command ends via isFinished or being interrupted.
-  @Override
-  public void end(boolean isInterrupted) {
-  }
 
-  // Runs every cycle while the command is scheduled to check if the command is
-  // finished
-  @Override
-  public boolean isFinished() {
-    // Return false to indicate that this command never ends. It can be interrupted
-    // by another command needing the same subsystem.
-    return false;
-  }
+    // Runs every cycle while the command is scheduled (~50 times per second)
+    @Override
+    public void execute() {
+        double speed = xSpeed.getAsDouble();
+        double rotation = zRotation.getAsDouble();
+
+        double deltaTime = Timer.getFPGATimestamp() - lastTime;
+
+        boolean velocityNotAtLimit = Math.abs(speed) < DriveConstants.AXIS_VELOCIDAD_LIMIT;
+        boolean giroNotAtLimit = Math.abs(rotation) < DriveConstants.AXIS_GIRO_LIMIT;
+        boolean accelerator = bumper.getAsBoolean();
+        boolean accelNotAtLimit = this.accel < DriveConstants.BUMPER_ACEL_LIMIT;
+
+        if (velocityNotAtLimit && giroNotAtLimit) {
+            this.accel = DriveConstants.DEAD_POINT;
+        } else if (accelerator && accelNotAtLimit) {
+            this.accel += DriveConstants.ACEL_AUMENTO * deltaTime;
+            this.accel = Math.min(this.accel, DriveConstants.BUMPER_ACEL_LIMIT);
+        } else if (!accelerator && this.accel > DriveConstants.DEAD_POINT) {
+            this.accel -= DriveConstants.ACEL_AUMENTO * deltaTime;
+            this.accel = Math.max(this.accel, DriveConstants.DEAD_POINT);
+        }
+
+        speed = applyDeadZone(speed, DeadZone.MovimientoDeadZone);
+        rotation = applyDeadZone(rotation, DeadZone.MovimientoDeadZone);
+
+        updateDashboard(deltaTime, rotation, speed);
+
+        if (speed > DriveConstants.DEAD_POINT) {
+            speed = filter.calculate(speed + accel);
+        } else if (speed <= DriveConstants.AXIS_VELOCIDAD_LIMIT) {
+            speed = filter.calculate(speed - accel);
+        }
+        this.lastTime = Timer.getFPGATimestamp();
+
+        driveSubsystem.driveArcade(speed, rotation);
+    }
+
+    private void updateDashboard(double deltaTime, double giro, double velocidad) {
+        SmartDashboard.putNumber("Tiempo", deltaTime);
+        SmartDashboard.putNumber("Giro", giro);
+        SmartDashboard.putNumber("Velocidad", velocidad);
+        SmartDashboard.putNumber("Aceleracion", accel);
+        SmartDashboard.putNumber("Giro Total", giro + accel);
+        SmartDashboard.putNumber("Velocidad Total", velocidad + accel);
+    }
+
+    public double applyDeadZone(double input, double deadZone) {
+        return Math.abs(input) < deadZone ? 0 : input;
+    }
+
+    // Runs each time the command ends via isFinished or being interrupted.
+    @Override
+    public void end(boolean isInterrupted) {
+    }
+
+    // Runs every cycle while the command is scheduled to check if the command is
+    // finished
+    @Override
+    public boolean isFinished() {
+        // Return false to indicate that this command never ends. It can be interrupted
+        // by another command needing the same subsystem.
+        return false;
+    }
 }
