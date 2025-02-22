@@ -79,14 +79,14 @@ public class RobotContainer {
    elevadorSubsystem.setDefaultCommand(
         new ElevadorCommand(
         elevadorSubsystem,
-    () ->  operadorController.getLeftY()));
+    () ->  operadorController.getLeftY() * 0.5));
 
    driverController.x()
    .whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
 
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
     () -> -driverController.getLeftY()*0.5,
-    () ->  driverController.getLeftTriggerAxis()*0.5,
+    () ->  driverController.getHID().getLeftBumperButton(),
     () -> -driverController.getRightX()*0.5,
     movimientoSubsystem));
 
