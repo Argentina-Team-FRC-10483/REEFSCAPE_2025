@@ -24,29 +24,22 @@ import frc.robot.subsystems.MovementSubsystem;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-
   private final MovementSubsystem movementSubsystem = new MovementSubsystem();
-
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
-
   private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
-
-  // Control del conductor
   private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
 
   private final CommandXboxController driverController = new CommandXboxController(
-    OperatorConstants.DRIVER_CONTROLLER_PORT);
-
-  // Control del operador
-  private final CommandXboxController operadorController = new CommandXboxController(
-    OperatorConstants.OPERADOR_CONTROLLER_PORT);
+    OperatorConstants.DRIVER_CONTROLLER_PORT
+  );
+  private final CommandXboxController operatorController = new CommandXboxController(
+    OperatorConstants.OPERADOR_CONTROLLER_PORT
+  );
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // Configure the trigger bindings
     configureBindings();
   }
 
@@ -60,40 +53,25 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    driverController.rightBumper().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
+    driverController.rightTrigger().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.5));
+    driverController.b().whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
+    driverController.x().whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
 
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-
-
-    driverController.rightBumper()
-      .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
-
-    driverController.rightTrigger()
-      .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.5));
-
-    driverController.b()
-      .whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
-
-
-    elevatorSubsystem.setDefaultCommand(
-      new ElevatorCommand(
-        elevatorSubsystem,
-        () -> operadorController.getLeftY() * 0.5));
-
-    driverController.x()
-      .whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
-
+    elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.5));
     movementSubsystem.setDefaultCommand(new MovementCommand(
       () -> -driverController.getLeftY() * 0.5,
       () -> driverController.getHID().getLeftBumperButton(),
       () -> -driverController.getRightX() * 0.5,
-      movementSubsystem));
-
+      movementSubsystem
+    ));
   }
 
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
   public Command getAutonomousCommand() {
     return null;
   }
