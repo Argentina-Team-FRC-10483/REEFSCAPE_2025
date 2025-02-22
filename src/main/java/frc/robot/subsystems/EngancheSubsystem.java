@@ -10,23 +10,23 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 public class EngancheSubsystem extends SubsystemBase {
-    private SparkMax motorEnganche;
+  private SparkMax motorEnganche;
 
-    public void Enganche() {
-        motorEnganche = new SparkMax(EngancheContants.MotorEnganche_ID,MotorType.kBrushless);
-        SparkMaxConfig motorEngancheConfig = new SparkMaxConfig();
-        motorEngancheConfig.voltageCompensation(EngancheContants.MotorEnganche_CompVolt);
-        motorEngancheConfig.smartCurrentLimit(EngancheContants.MotorEnganche_LIMITE);
-        motorEnganche.configure(motorEngancheConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    }
-    public void enganchar(double vel) {
-        motorEnganche.set(vel);
-    }
+  public void Enganche() {
+    motorEnganche = new SparkMax(EngancheContants.MotorEnganche_ID, MotorType.kBrushless);
+    SparkMaxConfig motorEngancheConfig = new SparkMaxConfig();
+    motorEngancheConfig.voltageCompensation(EngancheContants.MotorEnganche_CompVolt);
+    motorEngancheConfig.smartCurrentLimit(EngancheContants.MotorEnganche_LIMITE);
+    motorEnganche.configure(motorEngancheConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  }
 
-    @Override
-    public void periodic() { 
-     
-    }
+  public void enganchar(double vel) {
+    motorEnganche.set(vel);
+  }
 
+  @Override
+  public void periodic() {
+
+  }
 }
 
