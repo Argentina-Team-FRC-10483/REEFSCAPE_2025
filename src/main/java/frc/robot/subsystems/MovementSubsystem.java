@@ -14,7 +14,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.math.kinematics.Kinematics;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -23,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.util.Gyro;
 
@@ -34,58 +34,60 @@ public class MovementSubsystem extends SubsystemBase {
 
   StructPublisher<Pose2d> posePublisher;
 
-  public final RelativeEncoder leftEncoder;
-  public final RelativeEncoder rightEncoder;
-  private final DifferentialDriveOdometry odometry;
-  private final Field2d field2d;
+  public RelativeEncoder leftEncoder;
+  public RelativeEncoder rightEncoder;
+  private DifferentialDriveOdometry odometry;
+  private Field2d field2d;
+  
+  private DifferentialDrive drive;
+  
+    final double kDriveTickAMetros = (15.24 * Math.PI * 1.0 / 100.0) / 2.1;
+  
+    final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.546);
 
-  private final DifferentialDrive drive;
-
-  final double kDriveTickAMetros = (15.24 * Math.PI * 1.0 / 100.0) / 2.1;
-
-  public MovementSubsystem() {
-    // Create brushed motors for drive
-    leftLeader = new SparkMax(DriveConstants.LEFT_MOVEMENT_LEADER_MOTOR_ID, MotorType.kBrushed);
-    leftFollow = new SparkMax(DriveConstants.LEFT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
-    rightLeader = new SparkMax(DriveConstants.RIGHT_MOVEMENT_LEADER_MOTOR_ID, MotorType.kBrushed);
-    rightFollow = new SparkMax(DriveConstants.RIGHT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
-
-    // Set up differential drive class
-    drive = new DifferentialDrive(leftLeader, rightLeader);
-    leftLeader.setCANTimeout(DriveConstants.CAN_TIMEOUT);
-    rightLeader.setCANTimeout(DriveConstants.CAN_TIMEOUT);
-    leftFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
-    rightFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
-
-    configureMotors();
-    configureOdometry();;
-   
-  }
-
-  private void configureMotors() {
-    SparkMaxConfig config = new SparkMaxConfig();
-    config.voltageCompensation(12);
-    config.smartCurrentLimit(DriveConstants.DRIVE_MOTOR_CURRENT_LIMIT);
-
-    config.follow(leftLeader);
-    leftFollow.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    config.follow(rightLeader);
-    rightFollow.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    // Remove following, then apply config to right leader
-    config.disableFollowerMode();
-    rightLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    // Set conifg to inverted and then apply to left leader.
-    // Set Left side inverted so that positive values drive both sides forward
-    config.inverted(true);
-    leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  }
-
-  private void configureOdometry() {
-    this.leftEncoder = rightLeader.getEncoder();
-    this.rightEncoder = leftLeader.getEncoder();
-    odometry = new DifferentialDriveOdometry(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition());
-    DifferentialDriveKinematics diffdrivekinematics = new DifferentialDriveKinematics(0.546);
+    public MovementSubsystem() {
+      // Create brushed motors for drive
+      leftLeader = new SparkMax(DriveConstants.LEFT_MOVEMENT_LEADER_MOTOR_ID, MotorType.kBrushed);
+      leftFollow = new SparkMax(DriveConstants.LEFT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
+      rightLeader = new SparkMax(DriveConstants.RIGHT_MOVEMENT_LEADER_MOTOR_ID, MotorType.kBrushed);
+      rightFollow = new SparkMax(DriveConstants.RIGHT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
+  
+      // Set up differential drive class
+      drive = new DifferentialDrive(leftLeader, rightLeader);
+      leftLeader.setCANTimeout(DriveConstants.CAN_TIMEOUT);
+      rightLeader.setCANTimeout(DriveConstants.CAN_TIMEOUT);
+      leftFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
+      rightFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
+  
+      configureMotors();
+      configureOdometry();;
+      configureAutoBuilder();
+    }
+  
+    private void configureMotors() {
+      SparkMaxConfig config = new SparkMaxConfig();
+      config.voltageCompensation(12);
+      config.smartCurrentLimit(DriveConstants.DRIVE_MOTOR_CURRENT_LIMIT);
+  
+      config.follow(leftLeader);
+      leftFollow.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+      config.follow(rightLeader);
+      rightFollow.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  
+      // Remove following, then apply config to right leader
+      config.disableFollowerMode();
+      rightLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+      // Set conifg to inverted and then apply to left leader.
+      // Set Left side inverted so that positive values drive both sides forward
+      config.inverted(true);
+      leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    }
+  
+    private void configureOdometry() {
+      this.rightEncoder = rightLeader.getEncoder();
+      this.leftEncoder = leftLeader.getEncoder();
+      odometry = new DifferentialDriveOdometry(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition());
+    
 
     field2d = new Field2d();
     SmartDashboard.putData(field2d);
@@ -98,7 +100,7 @@ public class MovementSubsystem extends SubsystemBase {
   }
   
   private void configureAutoBuilder() {
-    RobotConfig configAuto;
+    RobotConfig configAuto = null;
     try{
       configAuto = RobotConfig.fromGUISettings();
     } catch (Exception e) {
@@ -155,6 +157,7 @@ public class MovementSubsystem extends SubsystemBase {
   public Pose2d resetPose(Pose2d pose2d){
     System.out.println(pose2d);
     odometry.resetPosition(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition(), pose2d);
+    return odometry.getPoseMeters();
   }
 
   public ChassisSpeeds getRobotRelativeSpeeds(){
@@ -164,7 +167,10 @@ public class MovementSubsystem extends SubsystemBase {
     return new ChassisSpeeds(estimatedSpeed, 0, estimatedRotation);
   }
 
-  
+  public void driveRobotRelative(ChassisSpeeds speeds) {
+    var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
+    driveArcade(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
+  }
 
   // sets the speed of the drive motors
   public void driveArcade(double xSpeed, double zRotation) {
