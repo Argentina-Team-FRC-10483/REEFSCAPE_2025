@@ -151,25 +151,29 @@ public class MovementSubsystem extends SubsystemBase {
   }
 
   public Pose2d getPose(){
+    System.out.println("getPose");
     return odometry.getPoseMeters();
+    //return new Pose2d(odometry.getPoseMeters().getX()/10.0, odometry.getPoseMeters().getY()/10.0, odometry.getPoseMeters().getRotation());
   }
 
   public Pose2d resetPose(Pose2d pose2d){
     System.out.println(pose2d);
     odometry.resetPosition(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition(), pose2d);
+    System.out.println("resetPose");
     return odometry.getPoseMeters();
   }
 
   public ChassisSpeeds getRobotRelativeSpeeds(){
     double estimatedSpeed = (leftLeader.get() + rightLeader.get()) / 2.0;
     double estimatedRotation = Math.toRadians(Gyro.getInstance().getYawAngleVelocity());
-
-    return new ChassisSpeeds(estimatedSpeed, 0, estimatedRotation);
+    System.out.println("getRobotRelativeSpeeds");
+    return new ChassisSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity(), Gyro.getInstance().getRobotAngleVelocity());
   }
 
   public void driveRobotRelative(ChassisSpeeds speeds) {
     var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
-    driveArcade(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
+    driveArcade(wheelSpeeds.leftMetersPerSecond * 0.01, wheelSpeeds.rightMetersPerSecond * 0.01);
+    System.out.println("driveRobotRelative");
   }
 
   // sets the speed of the drive motors

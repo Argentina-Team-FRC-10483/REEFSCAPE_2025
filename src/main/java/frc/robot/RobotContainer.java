@@ -31,7 +31,8 @@ import frc.robot.subsystems.MovementSubsystem;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-    private final SendableChooser<Command> autoChooser;
+  private final SendableChooser<Command> autoChooser;
+
   private final MovementSubsystem movementSubsystem = new MovementSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
@@ -74,6 +75,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    Command SelectedCommand = autoChooser.getSelected();
+    SmartDashboard.putData("SelectedCommand", SelectedCommand);
     return autoChooser.getSelected();
   }
 }
