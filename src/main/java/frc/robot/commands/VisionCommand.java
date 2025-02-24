@@ -1,6 +1,4 @@
-package frc.robot;
-
-import java.util.Optional;
+package frc.robot.commands;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -16,24 +14,28 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.EyesSubsystem;
 
-public class phothonVision extends Command{
+public class VisionCommand extends Command{
 
-    private final PhotonCamera camera = new PhotonCamera("photonvision");
-    private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
-
-    Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0));
-    PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam);
-
-    public phothonVision(){
-
-    }
-
-    @Override
-    public void initialize(){
-        SmartDashboard.putBoolean("Deteccion de April", false);
-    }
+    private EyesSubsystem ES = new EyesSubsystem();
     
+        private final PhotonCamera camera = new PhotonCamera("photonvision");
+    
+        public VisionCommand(EyesSubsystem eyesSubsystem){
+        this.ES = eyesSubsystem;
+        AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+
+        Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0));
+        PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, robotToCam);
+        
+        addRequirements(this.ES);
+    }
+    @Override
+    public void initialize() {
+
+    }
+
     @Override
     public void execute() {
         var result = camera.getLatestResult();
@@ -62,7 +64,6 @@ public class phothonVision extends Command{
             SmartDashboard.putNumber("ID", id);
         }
     }
-
     @Override
     public boolean isFinished() {
         return false;

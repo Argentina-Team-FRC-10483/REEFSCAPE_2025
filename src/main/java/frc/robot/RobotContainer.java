@@ -10,12 +10,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.MovimientoCommand;
+import frc.robot.commands.VisionCommand;
 import frc.robot.commands.ClawCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ElevadorSubsystem;
 import frc.robot.subsystems.EngancheSubsystem;
+import frc.robot.subsystems.EyesSubsystem;
 import frc.robot.subsystems.MovimientoSubsystem;
 
 /**
@@ -27,18 +29,21 @@ import frc.robot.subsystems.MovimientoSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
+  private final EyesSubsystem eyesSubsystem = new EyesSubsystem();
+
   private final MovimientoSubsystem movimientoSubsystem = new MovimientoSubsystem();
+  
 
-  // private final ElevadorSubsystem elevadorSubsystem = new ElevadorSubsystem();
+  //  private final ElevadorSubsystem elevadorSubsystem = new ElevadorSubsystem();
 
-  // private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
+  //  private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
 
-  // private final ClawSubsystem ClawSubsystem = new ClawSubsystem();
+  //  private final ClawSubsystem ClawSubsystem = new ClawSubsystem();
 
-  // private final ArmSubsystem armSubsystem = new ArmSubsystem();
+  //  private final ArmSubsystem armSubsystem = new ArmSubsystem();
 
-  // // Control del conductor
-  // private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
+  // // // Control del conductor
+  //  private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
   
   private final CommandXboxController driverController = new CommandXboxController(
       OperatorConstants.DRIVER_CONTROLLER_PORT);
@@ -70,12 +75,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
 
-  //  driverController.a()
-  //  .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 1));
+    // driverController.a()
+    // .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 1));
 
-  //  driverController.b()
-  //  .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1));
-
+    // driverController.b()
+    // .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -1));   
 
   movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
     () -> -driverController.getLeftY()*0.5,

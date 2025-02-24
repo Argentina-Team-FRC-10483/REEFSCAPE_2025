@@ -4,7 +4,10 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DeadZone;
+import frc.robot.subsystems.EyesSubsystem;
 import frc.robot.subsystems.MovimientoSubsystem;
+
+import java.lang.reflect.Array;
 import java.util.function.DoubleSupplier;
 
 import org.photonvision.PhotonCamera;
@@ -16,9 +19,6 @@ public class MovimientoCommand extends Command {
   private final DoubleSupplier aceleracion;
   private final MovimientoSubsystem driveSubsystem;
 
-  private final PhotonCamera camera = new PhotonCamera("photonvision");
-
-
   public MovimientoCommand(
       DoubleSupplier xSpeed, DoubleSupplier aceleracion, DoubleSupplier zRotation, MovimientoSubsystem driveSubsystem) {
     this.xSpeed = xSpeed;
@@ -27,6 +27,7 @@ public class MovimientoCommand extends Command {
     this.driveSubsystem = driveSubsystem;
 
     addRequirements(this.driveSubsystem);
+    
   }
 
   // Runs each time the command is scheduled.
@@ -35,7 +36,6 @@ public class MovimientoCommand extends Command {
     SmartDashboard.putNumber("Giro", 0);
     SmartDashboard.putNumber("Velocidad", 0);
     SmartDashboard.putNumber("Aceleracion", 0);
-    SmartDashboard.putBoolean("Deteccion de April", false);
   }
 
   // Runs every cycle while the command is scheduled (~50 times per second)
@@ -44,32 +44,6 @@ public class MovimientoCommand extends Command {
     double velocidad = xSpeed.getAsDouble();
     double acel = aceleracion.getAsDouble();
     double giro = zRotation.getAsDouble();
-    var result = camera.getLatestResult();
-
-    if (result.getMultiTagResult().isPresent()) {
-      Transform3d fieldToCamera = result.getMultiTagResult().get().estimatedPose.best;
-      SmartDashboard.putNumber("Camera X:", fieldToCamera.getX());
-      SmartDashboard.putNumber("Camera Y:", fieldToCamera.getY());
-      SmartDashboard.putNumber("Camera Z:", fieldToCamera.getZ());
-    } 
-
-    boolean hasTargets = result.hasTargets();
-
-    SmartDashboard.putBoolean("Deteccion de April", hasTargets);
-
-    PhotonTrackedTarget target = result.getBestTarget();
-    if(target != null) {
-      double yaw = target.getYaw();
-      double pitch = target.getPitch();
-      double area = target.getArea();
-      int id =  target.fiducialId;
-      
-      SmartDashboard.putNumber("Yaw", yaw);
-      SmartDashboard.putNumber("Pitch", pitch);
-      SmartDashboard.putNumber("Area", area);
-      SmartDashboard.putNumber("ID", id);
-    }
-
 
     velocidad = aplicarDeadZone(velocidad, DeadZone.MovimientoDeadZone);
     giro = aplicarDeadZone(giro, DeadZone.MovimientoDeadZone);
