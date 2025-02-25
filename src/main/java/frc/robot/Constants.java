@@ -23,7 +23,7 @@ public final class Constants {
     public static final int OPERADOR_CONTROLLER_PORT = 1;
   }
   public static final class ArmConstants {
-    public static final int ArmMotorShoulder_ID = 7;
+    public static final int ArmMotorShoulder_ID = 10;
   }
   public static final class WristConstants {
     public static final int WristMotor_ID = 11;
