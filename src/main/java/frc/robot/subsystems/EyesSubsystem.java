@@ -79,4 +79,33 @@ public class EyesSubsystem extends SubsystemBase{
         // photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
         return photonPoseEstimator.update(prevEstimatedRobotPose);
     }
-}
+    private final DiferentialDrivePoseEstimator m_poseEstimator =
+        new DiferentialDrivePoseEstimator (
+            m_kinematics,
+            m_gyro.getrotation2d(),
+            m_leftEncoder.getDistance(),
+            m_rightEncoder.getDistance(),
+            new pose2D(),
+            VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+            VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30));
+            )
+        m_poseEstimator.update(
+            m_gyro.getRotation2d(), m_leftEncoder.getDistance(), m_rigthEncoder.getDistance());
+    Pose3d visionMeasument3d =
+        objectToRobotPose(m_objectInField, m_robotToCamera, m_cameraToObjectEntry);
+
+    Pose2d visionMeasument2d = visionMeasument3d.pose2d();
+
+    m_poseEstimator.addVisionMeasurement(visionMeasurement2d, Timer.getFPGATimestamp());
+
+    apriltag_detection_info_t info;
+    info.det = det;
+    info.tagsize = tagsize;
+    info.fx = fx;
+    info.fy = fy;
+    info.cx = cx;
+    info.cy = cy;
+
+    apriltag_pose_t pose;
+    double err = estimate_tag_pose(&info, &pose)
+    }
