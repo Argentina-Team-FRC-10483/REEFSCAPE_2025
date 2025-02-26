@@ -66,12 +66,13 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    driverController.rightBumper().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
-    driverController.rightTrigger().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.5));
-    driverController.b().whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
-    driverController.x().whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
+    // driverController.rightBumper().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
+    // driverController.rightTrigger().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.5));
+    // driverController.b().whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
+    // driverController.x().whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
 
-    elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.5));
+    // elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.5));
+    
     movementSubsystem.setDefaultCommand(new MovementCommand(
       () -> -driverController.getLeftY() * 0.5,
       () -> driverController.getHID().getLeftBumperButton(),
