@@ -10,13 +10,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
-import frc.robot.commands.EngancheCommand;
 import frc.robot.commands.MovementCommand;
 import frc.robot.commands.RodInteriorCommand;
 import frc.robot.commands.RodLateralesCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.EngancheSubsystem;
 import frc.robot.subsystems.MovementSubsystem;
 import frc.robot.subsystems.RodInteriorSubsystem;
 import frc.robot.subsystems.RodLateralesSubsystem;
@@ -31,7 +29,6 @@ public class RobotContainer {
   private final MovementSubsystem movementSubsystem = new MovementSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
-  private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
   private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
   private final RodLateralesSubsystem rodLateralesSubsystem = new RodLateralesSubsystem();
 
@@ -61,10 +58,9 @@ public class RobotContainer {
   private void configureBindings() {
     driverController.rightBumper().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
     driverController.rightTrigger().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.5));
-    driverController.b().whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
-    driverController.x().whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
-    driverController.y().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
-    driverController.a().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
+    operatorController.y().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
+    operatorController.a().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
+    operatorController.b().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
     elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.5));
     movementSubsystem.setDefaultCommand(new MovementCommand(
       () -> -driverController.getLeftY() * 0.5,
