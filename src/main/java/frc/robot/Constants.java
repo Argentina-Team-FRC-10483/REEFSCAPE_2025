@@ -45,4 +45,9 @@ public final class Constants {
   public static final class MunecaConstants {
     public static final int MUNECA_MOTOR_ID = 9;
   }
+
+  public static final class HandConstants {
+    public static final int ROD_INTERIOR_ID = 10;
+    public static final int ROD_LATERALES_ID = 11;
+  }
 }
