@@ -24,7 +24,7 @@ public class ElevatorCommand extends Command {
 
   @Override
   public void execute() {
-    elevatorSubsystem.moveElevator(Utils.applyDeadZone(elevatorPower.getAsDouble(), DeadZone.ElevadorDeadZone));
+    elevatorSubsystem.moveElevator(Utils.applyDeadZone(-elevatorPower.getAsDouble(), DeadZone.ElevadorDeadZone));
   }
 
   @Override

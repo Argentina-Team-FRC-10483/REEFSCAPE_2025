@@ -14,12 +14,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
-import frc.robot.commands.EngancheCommand;
 import frc.robot.commands.MovementCommand;
+import frc.robot.commands.MunecaCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.EngancheSubsystem;
 import frc.robot.subsystems.MovementSubsystem;
+import frc.robot.subsystems.MunecaSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -36,7 +36,7 @@ public class RobotContainer {
   private final MovementSubsystem movementSubsystem = new MovementSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
-  private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
+  private final MunecaSubsystem munecaSubsystem = new MunecaSubsystem();
 
   private final CommandXboxController driverController = new CommandXboxController(
     OperatorConstants.DRIVER_CONTROLLER_PORT
@@ -57,10 +57,10 @@ public class RobotContainer {
   private void configureBindings() {
     driverController.rightBumper().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
     driverController.rightTrigger().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.5));
-    driverController.b().whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
-    driverController.x().whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
 
     elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.5));
+    munecaSubsystem.setDefaultCommand(new MunecaCommand(munecaSubsystem, () -> operatorController.getRightY() * 0.5));
+
     movementSubsystem.setDefaultCommand(new MovementCommand(
       () -> -driverController.getLeftY() * 0.5,
       () -> driverController.getHID().getLeftBumperButton(),
