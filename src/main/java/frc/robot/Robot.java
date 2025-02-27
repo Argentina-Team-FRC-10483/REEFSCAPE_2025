@@ -5,14 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
-import com.studica.frc.AHRS;
-
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -20,9 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
-  AHRS ahrs;
-  XboxController stick;
-  
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
@@ -34,27 +25,6 @@ public class Robot extends TimedRobot {
   public Robot() {
     // This will perform all our button bindings, and put our autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
-    stick = new XboxController(0);
-    try {
-      /***********************************************************************
-       * navX-MXP: - Communication via RoboRIO MXP (SPI, I2C) and USB. - See
-       * http://navx-mxp.kauailabs.com/guidance/selecting-an-interface.
-       * 
-       * navX-Micro: - Communication via I2C (RoboRIO MXP or Onboard) and USB. - See
-       * http://navx-micro.kauailabs.com/guidance/selecting-an-interface.
-       * 
-       * VMX-pi: - Communication via USB. - See
-       * https://vmx-pi.kauailabs.com/installation/roborio-installation/
-       * 
-       * Multiple navX-model devices on a single robot are supported.
-       ************************************************************************/
-      ahrs = new AHRS(AHRS.NavXComType.kMXP_SPI);
-      // ahrs = new AHRS(SerialPort.Port.kUSB1);
-      ahrs.enableLogging(true);
-    } catch (RuntimeException ex) {
-      DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
-    }
   }
 
   /**
@@ -90,6 +60,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -101,13 +72,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    CommandScheduler.getInstance().run();
   }
 
   @Override
   public void teleopInit() {
-    /* Display 6-axis Processed Angle Data */
-    SmartDashboard.putBoolean("IMU_Connected", ahrs.isConnected());
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

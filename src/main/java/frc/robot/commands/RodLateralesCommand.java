@@ -8,7 +8,7 @@ public class RodLateralesCommand extends Command {
 
   private final RodLateralesSubsystem rodLateralesSubsystem;
 
-  public RodLateralesCommand(RodLateralesSubsystem algaeIntakeSubsystem, double power) {
+  public RodLateralesCommand(RodLateralesSubsystem rodLateralesSubsystem, double power) {
     this.power = power;
     this.rodLateralesSubsystem = rodLateralesSubsystem;
 

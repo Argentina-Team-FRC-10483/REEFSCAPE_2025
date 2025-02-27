@@ -1,18 +1,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.AlgaeIntakeSubsystem;
+import frc.robot.subsystems.RodInteriorSubsystem;
 
-public class AlgaeIntakeCommand extends Command {
+public class RodInteriorCommand extends Command {
   private final double power;
 
-  private final AlgaeIntakeSubsystem algaeIntakeSubsystem;
+  private final RodInteriorSubsystem rodInteriorSubsystem;
 
-  public AlgaeIntakeCommand(AlgaeIntakeSubsystem algaeIntakeSubsystem, double power) {
+  public RodInteriorCommand(RodInteriorSubsystem rodInteriorSubsystem, double power) {
     this.power = power;
-    this.algaeIntakeSubsystem = algaeIntakeSubsystem;
+    this.rodInteriorSubsystem = rodInteriorSubsystem;
 
-    addRequirements(this.algaeIntakeSubsystem);
+    addRequirements(this.rodInteriorSubsystem);
   }
 
   @Override
@@ -21,12 +21,12 @@ public class AlgaeIntakeCommand extends Command {
 
   @Override
   public void execute() {
-    algaeIntakeSubsystem.andarRodillo(power);
+    rodInteriorSubsystem.andarRodillo(power);
   }
 
   @Override
   public void end(boolean isInterrupted) {
-    algaeIntakeSubsystem.andarRodillo(0);
+    rodInteriorSubsystem.andarRodillo(0);
   }
 
   @Override
