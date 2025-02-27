@@ -7,8 +7,8 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.AlgaeIntakeConstants;
 import frc.robot.Constants.HandConstants;
+import frc.robot.Constants.AlgaeIntakeConstants;
 
 public class RodInteriorSubsystem extends SubsystemBase {
   private final SparkMax motor;

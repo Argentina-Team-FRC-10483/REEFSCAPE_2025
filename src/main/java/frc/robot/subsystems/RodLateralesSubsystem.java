@@ -15,7 +15,7 @@ public class RodLateralesSubsystem extends SubsystemBase {
 
 
   public RodLateralesSubsystem() {
-    motor = new SparkMax(HandConstants.ROD_INTERIOR_ID, MotorType.kBrushless);
+    motor = new SparkMax(HandConstants.ROD_LATERALES_ID, MotorType.kBrushless);
     SparkMaxConfig motorConfig = new SparkMaxConfig();
     motorConfig.voltageCompensation(AlgaeIntakeConstants.RodilloMotor_CompVolt);
     motorConfig.smartCurrentLimit(AlgaeIntakeConstants.RodilloMotor_LIMITE);
