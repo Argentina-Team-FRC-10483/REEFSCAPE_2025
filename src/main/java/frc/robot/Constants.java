@@ -44,6 +44,14 @@ public final class Constants {
     public static final double VOLTAGE_COMPENSATION = 12.0;
   }
 
+  public static final class HandContans {
+    public static final int MotorRodInterior_ID = 10;
+    public static final int MotorRodLaterales_ID = 11;
+    public static final int MotorRodInterior_LIMIT = 40;
+    public static final int MotorRodLaterales_LIMIT = 40;
+      
+  }
+
   public static final class DeadZone {
     public static final double ElevadorDeadZone = 0.15;
     public static final double MovimientoDeadZone = 0.05;

@@ -12,10 +12,14 @@ import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.EngancheCommand;
 import frc.robot.commands.MovementCommand;
+import frc.robot.commands.RodInteriorCommand;
+import frc.robot.commands.RodLateralesCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.EngancheSubsystem;
 import frc.robot.subsystems.MovementSubsystem;
+import frc.robot.subsystems.RodInteriorSubsystem;
+import frc.robot.subsystems.RodLateralesSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -28,6 +32,8 @@ public class RobotContainer {
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
   private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
+  private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
+  private final RodLateralesSubsystem rodLateralesSubsystem = new RodLateralesSubsystem();
 
   private final CommandXboxController driverController = new CommandXboxController(
     OperatorConstants.DRIVER_CONTROLLER_PORT
@@ -57,13 +63,15 @@ public class RobotContainer {
     driverController.rightTrigger().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.5));
     driverController.b().whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
     driverController.x().whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
-
+    driverController.y().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
+    driverController.a().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
     elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.5));
     movementSubsystem.setDefaultCommand(new MovementCommand(
       () -> -driverController.getLeftY() * 0.5,
       () -> driverController.getHID().getLeftBumperButton(),
       () -> -driverController.getRightX() * 0.5,
       movementSubsystem
+      
     ));
   }
 
