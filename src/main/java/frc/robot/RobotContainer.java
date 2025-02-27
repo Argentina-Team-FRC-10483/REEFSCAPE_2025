@@ -49,6 +49,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    NamedCommands.registerCommand("AlgaeIntake", new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
     configureBindings();
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
