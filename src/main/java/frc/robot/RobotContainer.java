@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,7 +32,6 @@ import frc.robot.subsystems.MovementSubsystem;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  private final SendableChooser<Command> autoChooser;
 
   private final MovementSubsystem movementSubsystem = new MovementSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
@@ -51,8 +51,6 @@ public class RobotContainer {
   public RobotContainer() {
     NamedCommands.registerCommand("AlgaeIntake", new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
     configureBindings();
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void configureBindings() {
@@ -76,8 +74,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    Command SelectedCommand = autoChooser.getSelected();
-    SmartDashboard.putData("SelectedCommand", SelectedCommand);
-    return autoChooser.getSelected();
+     return null;
   }
 }

@@ -42,6 +42,7 @@ public class MovementSubsystem extends SubsystemBase {
   private DifferentialDrive drive;
   
     final double kDriveTickAMetros = (15.24 * Math.PI * 1.0 / 100.0) / 2.1;
+    final double kDriveRPMToMS = kDriveTickAMetros / 60;
   
     final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.546);
 
@@ -164,10 +165,12 @@ public class MovementSubsystem extends SubsystemBase {
   }
 
   public ChassisSpeeds getRobotRelativeSpeeds(){
-    double estimatedSpeed = (leftLeader.get() + rightLeader.get()) / 2.0;
-    double estimatedRotation = Math.toRadians(Gyro.getInstance().getYawAngleVelocity());
+    double leftVelocity = leftEncoder.getVelocity() * kDriveRPMToMS;
+    double rightVelocity = rightEncoder.getVelocity() * kDriveRPMToMS;
+    double vx = (leftVelocity + rightVelocity) / 2;
+    double vy = 0.0;
     System.out.println("getRobotRelativeSpeeds");
-    return new ChassisSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity(), Gyro.getInstance().getRobotAngleVelocity());
+    return new ChassisSpeeds(vx, vy, Gyro.getInstance().getRobotAngleVelocity());
   }
 
   public void driveRobotRelative(ChassisSpeeds speeds) {
