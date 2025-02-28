@@ -4,8 +4,8 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DeadZone;
-import frc.robot.subsystems.MunecaSubsystem;
 import frc.robot.utils.Utils;
+import frc.robot.subsystems.MunecaSubsystem;
 
 public class MunecaCommand extends Command {
   private final DoubleSupplier munecaPower;

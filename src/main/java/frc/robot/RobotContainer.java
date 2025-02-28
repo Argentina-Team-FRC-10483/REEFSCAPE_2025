@@ -14,12 +14,14 @@ import frc.robot.commands.MovementCommand;
 import frc.robot.commands.MunecaCommand;
 import frc.robot.commands.RodInteriorCommand;
 import frc.robot.commands.RodLateralesCommand;
+import frc.robot.commands.EngancheCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.MovementSubsystem;
 import frc.robot.subsystems.MunecaSubsystem;
 import frc.robot.subsystems.RodLateralesSubsystem;
 import frc.robot.subsystems.RodInteriorSubsystem;
+import frc.robot.subsystems.EngancheSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,6 +36,7 @@ public class RobotContainer {
   private final MunecaSubsystem munecaSubsystem = new MunecaSubsystem();
   private final RodLateralesSubsystem rodLateralesSubsystem = new RodLateralesSubsystem();
   private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
+  private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
 
   private final CommandXboxController driverController = new CommandXboxController(
     OperatorConstants.DRIVER_CONTROLLER_PORT
@@ -61,6 +64,9 @@ public class RobotContainer {
   private void configureBindings() {
     driverController.rightBumper().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
     driverController.rightTrigger().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.5));
+
+    driverController.b().whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
+    driverController.x().whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
 
     elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.5));
     munecaSubsystem.setDefaultCommand(new MunecaCommand(munecaSubsystem, () -> operatorController.getRightY() * 0.5));

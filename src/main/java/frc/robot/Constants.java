@@ -30,6 +30,10 @@ public final class Constants {
     public static final double RodilloMotor_ValorExp = 0.44;
   }
 
+  public static final class EngancheConstants {
+    public static final int MOTOR_ENGANCHE_ID = 8;
+  }
+
   public static final class ElevadorConstants {
     public static final int LEFT_ELEVATOR_LEADER_MOTOR_ID = 5;
     public static final int RIGHT_ELEVATOR_FOLLOW_MOTOR_ID = 6;
