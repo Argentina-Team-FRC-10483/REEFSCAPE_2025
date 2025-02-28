@@ -26,8 +26,8 @@ public class RodLateralesSubsystem extends SubsystemBase {
 
   }
 
-  public void andarRodillo(double power) {
-    rodillosLateralesMotor.set(power);
+  public void andarRodilloLaterales(double powerRodLaterales) {
+    rodillosLateralesMotor.set(powerRodLaterales);
   }
 
 }

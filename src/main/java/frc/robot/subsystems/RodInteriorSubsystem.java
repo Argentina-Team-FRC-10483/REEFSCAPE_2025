@@ -26,8 +26,8 @@ public class RodInteriorSubsystem extends SubsystemBase {
 
   }
 
-  public void andarRodillo(double power) {
-    rodilloIntMotor.set(power);
+  public void andarRodilloInterior(double powerRodInterior) {
+    rodilloIntMotor.set(powerRodInterior);
   }
 
 }

@@ -21,12 +21,12 @@ public class RodInteriorCommand extends Command {
 
   @Override
   public void execute() {
-    rodInteriorSubsystem.andarRodillo(powerRodInterior);
+    rodInteriorSubsystem.andarRodilloInterior(powerRodInterior);
   }
 
   @Override
   public void end(boolean isInterrupted) {
-    rodInteriorSubsystem.andarRodillo(powerRodInterior);
+    rodInteriorSubsystem.andarRodilloInterior(powerRodInterior);
   }
 
   @Override

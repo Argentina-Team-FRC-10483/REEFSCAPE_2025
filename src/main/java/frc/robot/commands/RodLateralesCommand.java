@@ -21,12 +21,12 @@ public class RodLateralesCommand extends Command {
 
   @Override
   public void execute() {
-    rodLateralesSubsystem.andarRodillo(powerRodLaterales);
+    rodLateralesSubsystem.andarRodilloLaterales(powerRodLaterales);
   }
 
   @Override
   public void end(boolean isInterrupted) {
-    rodLateralesSubsystem.andarRodillo(powerRodLaterales);
+    rodLateralesSubsystem.andarRodilloLaterales(powerRodLaterales);
   }
 
   @Override
