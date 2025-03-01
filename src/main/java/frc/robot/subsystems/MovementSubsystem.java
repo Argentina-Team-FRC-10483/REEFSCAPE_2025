@@ -10,6 +10,8 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.LTVDifferentialDriveController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
@@ -39,6 +41,8 @@ public class MovementSubsystem extends SubsystemBase {
   private DifferentialDriveOdometry odometry;
   private Field2d field2d;
   
+  private LTVDifferentialDriveController ltv;
+
   private DifferentialDrive drive;
   
     final double kDriveTickAMetros = (15.24 * Math.PI * 1.0 / 100.0) / 2.1;
@@ -60,7 +64,8 @@ public class MovementSubsystem extends SubsystemBase {
       rightFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
   
       configureMotors();
-      configureOdometry();;
+      configureOdometry();
+      System.out.println("Before autobuilder");
       configureAutoBuilder();
     }
   
@@ -82,6 +87,8 @@ public class MovementSubsystem extends SubsystemBase {
       config.inverted(true);
       leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
+
+    
   
     private void configureOdometry() {
       this.rightEncoder = rightLeader.getEncoder();
@@ -151,7 +158,6 @@ public class MovementSubsystem extends SubsystemBase {
   }
 
   public Pose2d getPose(){
-    System.out.println("getPose");
     return odometry.getPoseMeters();
     //return new Pose2d(odometry.getPoseMeters().getX()/10.0, odometry.getPoseMeters().getY()/10.0, odometry.getPoseMeters().getRotation());
   }
@@ -159,16 +165,15 @@ public class MovementSubsystem extends SubsystemBase {
   public Pose2d resetPose(Pose2d pose2d){
     System.out.println(pose2d);
     odometry.resetPosition(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition(), pose2d);
-    System.out.println("resetPose");
     return odometry.getPoseMeters();
   }
 
   public ChassisSpeeds getRobotRelativeSpeeds(){
     double leftVelocity = calculoRPM(leftEncoder.getVelocity());
-    double rightVelocity = calculoRPM(-rightEncoder.getVelocity());
+    double rightVelocity = calculoRPM(-
+    rightEncoder.getVelocity());
     double vx = (leftVelocity + rightVelocity) / 2;
     double vy = 0.0;
-    System.out.println("getRobotRelativeSpeeds");
     SmartDashboard.putNumber("vx", vx);
     SmartDashboard.putNumber("leftVelocity", leftVelocity);
     SmartDashboard.putNumber("rightVelocity", rightVelocity);
@@ -178,8 +183,7 @@ public class MovementSubsystem extends SubsystemBase {
 
   public void driveRobotRelative(ChassisSpeeds speeds) {
     var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
-    drive.tankDrive(wheelSpeeds.leftMetersPerSecond * 0.01, wheelSpeeds.rightMetersPerSecond * 0.01);
-    System.out.println("driveRobotRelative");
+    drive.tankDrive(wheelSpeeds.leftMetersPerSecond * 0.065, wheelSpeeds.rightMetersPerSecond * 0.065);
   }
 
   public static double calculoRPM(double rpm){
