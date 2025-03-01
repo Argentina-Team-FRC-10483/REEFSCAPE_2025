@@ -64,7 +64,6 @@ public class MovementSubsystem extends SubsystemBase {
 
     configureMotors();
     configureOdometry();
-    ;
     configureAutoBuilder();
   }
 
@@ -90,8 +89,7 @@ public class MovementSubsystem extends SubsystemBase {
   private void configureOdometry() {
     this.rightEncoder = rightLeader.getEncoder();
     this.leftEncoder = leftLeader.getEncoder();
-    // odometry = new DifferentialDriveOdometry(Gyro.getInstance().getYawAngle2d(),
-    // getLeftEncoderPosition(), getRightEncoderPosition());
+    // odometry = new DifferentialDriveOdometry(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition());
     odometry = new DifferentialDrivePoseEstimator(
         kinematics,
         Gyro.getInstance().getYawAngle2d(),

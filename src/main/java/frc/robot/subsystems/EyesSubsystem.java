@@ -38,14 +38,23 @@ public class EyesSubsystem extends SubsystemBase{
     private final PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam);
     
     public void periodic(){
+        boolean hasTarget1;
+        boolean hasTarget2;
         for (var camera : cameras){
-            var resultCam1 = camera.getAllUnreadResults();
-            for (var result : resultCam1){
+            var resultCams = camera.getAllUnreadResults();
+            for (var result : resultCams){
+                if (camera == cameras[0]){
+                    hasTarget1 = result.hasTargets();
+                    SmartDashboard.putBoolean("Deteccion de Camara_1 April", hasTarget1);
+               }else{
+                    hasTarget2 = result.hasTargets();
+                    SmartDashboard.putBoolean("Deteccion de Camara_2 April", hasTarget2);
+               }
                 if (result.getMultiTagResult().isPresent()) {
                     Transform3d fieldToCamera = result.getMultiTagResult().get().estimatedPose.best;
-                    SmartDashboard.putNumber("Camera_1 X:", fieldToCamera.getX());
-                    SmartDashboard.putNumber("Camera_1 Y:", fieldToCamera.getY());
-                    SmartDashboard.putNumber("Camera_1 Z:", fieldToCamera.getZ());
+                    SmartDashboard.putNumber("Cameras  X:", fieldToCamera.getX());
+                    SmartDashboard.putNumber("Cameras  Y:", fieldToCamera.getY());
+                    SmartDashboard.putNumber("Cameras  Z:", fieldToCamera.getZ());
                     SmartDashboard.putNumber("Time:", result.getTimestampSeconds());
                     Optional<Pose2d> estimatedPose = getEstimatedGlobalPose(result).map(x->x.estimatedPose).map(Pose3d::toPose2d);
                     if (estimatedPose.isPresent()){
@@ -54,11 +63,6 @@ public class EyesSubsystem extends SubsystemBase{
                         posePublisher.accept(new Pose2d(new Translation2d(0.5, 0.5), new Rotation2d(0.5)));
                     }
                 } 
-    
-                boolean hasTargets = result.hasTargets();
-    
-            SmartDashboard.putBoolean("Deteccion de Camara_1 April", hasTargets);
-    
             PhotonTrackedTarget target = result.getBestTarget();
                 if(target != null) {
                     double yaw = target.getYaw();
