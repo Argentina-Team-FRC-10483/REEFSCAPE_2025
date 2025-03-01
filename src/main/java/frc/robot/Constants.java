@@ -30,11 +30,8 @@ public final class Constants {
     public static final double RodilloMotor_ValorExp = 0.44;
   }
 
-  public static final class EngancheContants {
-    public static final int MotorEnganche_ID = 8;
-    public static final int MotorEnganche_LIMITE = 40;
-    public static final double MotorEnganche_CompVolt = 10;
-    public static final double MotorEnganche_ValorExp = 0.44;
+  public static final class EngancheConstants {
+    public static final int MOTOR_ENGANCHE_ID = 8;
   }
 
   public static final class ElevadorConstants {
@@ -47,5 +44,14 @@ public final class Constants {
   public static final class DeadZone {
     public static final double ElevadorDeadZone = 0.15;
     public static final double MovimientoDeadZone = 0.05;
+  }
+
+  public static final class MunecaConstants {
+    public static final int MUNECA_MOTOR_ID = 9;
+  }
+
+  public static final class HandConstants {
+    public static final int ROD_INTERIOR_ID = 10;
+    public static final int ROD_LATERALES_ID = 11;
   }
 }

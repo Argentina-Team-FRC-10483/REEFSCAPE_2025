@@ -4,33 +4,33 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.EngancheSubsystem;
 
 public class EngancheCommand extends Command {
-  private final double vel;
+  private final double power;
+
   private final EngancheSubsystem engancheSubsystem;
 
-  public EngancheCommand(EngancheSubsystem engancheSubsystem, double vel) {
-    this.vel = vel;
+  public EngancheCommand(EngancheSubsystem engancheSubsystem, double power) {
+    this.power = power;
     this.engancheSubsystem = engancheSubsystem;
 
-    addRequirements(engancheSubsystem);
+    addRequirements(this.engancheSubsystem);
   }
 
   @Override
   public void initialize() {
-
   }
 
   @Override
   public void execute() {
-    engancheSubsystem.enganchar(vel);
+    engancheSubsystem.andarRodillo(power);
+  }
+
+  @Override
+  public void end(boolean isInterrupted) {
+    engancheSubsystem.andarRodillo(0);
   }
 
   @Override
   public boolean isFinished() {
     return false;
-  }
-
-  @Override
-  public void end(boolean interrupted) {
-
   }
 }

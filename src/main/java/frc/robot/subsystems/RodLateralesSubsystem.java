@@ -7,15 +7,15 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.EngancheConstants;
 import frc.robot.Constants.AlgaeIntakeConstants;
+import frc.robot.Constants.HandConstants;
 
-public class EngancheSubsystem extends SubsystemBase {
+public class RodLateralesSubsystem extends SubsystemBase {
   private final SparkMax motor;
 
 
-  public EngancheSubsystem() {
-    motor = new SparkMax(EngancheConstants.MOTOR_ENGANCHE_ID, MotorType.kBrushless);
+  public RodLateralesSubsystem() {
+    motor = new SparkMax(HandConstants.ROD_LATERALES_ID, MotorType.kBrushless);
     SparkMaxConfig motorConfig = new SparkMaxConfig();
     motorConfig.voltageCompensation(AlgaeIntakeConstants.RodilloMotor_CompVolt);
     motorConfig.smartCurrentLimit(AlgaeIntakeConstants.RodilloMotor_LIMITE);
