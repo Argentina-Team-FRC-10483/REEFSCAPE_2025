@@ -45,12 +45,16 @@ public class RobotContainer {
     OperatorConstants.OPERADOR_CONTROLLER_PORT
   );
 
+  private final SendableChooser<Command> autoChooser;
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     NamedCommands.registerCommand("AlgaeIntake", new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
     configureBindings();
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void configureBindings() {
@@ -74,6 +78,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-     return null;
+    return autoChooser.getSelected();
   }
 }

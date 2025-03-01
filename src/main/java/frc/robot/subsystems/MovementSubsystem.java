@@ -42,8 +42,7 @@ public class MovementSubsystem extends SubsystemBase {
   private DifferentialDrive drive;
   
     final double kDriveTickAMetros = (15.24 * Math.PI * 1.0 / 100.0) / 2.1;
-    final double kDriveRPMToMS = kDriveTickAMetros / 60;
-  
+
     final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.546);
 
     public MovementSubsystem() {
@@ -165,18 +164,26 @@ public class MovementSubsystem extends SubsystemBase {
   }
 
   public ChassisSpeeds getRobotRelativeSpeeds(){
-    double leftVelocity = leftEncoder.getVelocity() * kDriveRPMToMS;
-    double rightVelocity = rightEncoder.getVelocity() * kDriveRPMToMS;
+    double leftVelocity = calculoRPM(leftEncoder.getVelocity());
+    double rightVelocity = calculoRPM(rightEncoder.getVelocity());
     double vx = (leftVelocity + rightVelocity) / 2;
     double vy = 0.0;
     System.out.println("getRobotRelativeSpeeds");
+    SmartDashboard.putNumber("vx", vx);
+    SmartDashboard.putNumber("leftVelocity", leftVelocity);
+    SmartDashboard.putNumber("rightVelocity", rightVelocity);
+    SmartDashboard.putNumber("robotanglevelocity", Gyro.getInstance().getRobotAngleVelocity());
     return new ChassisSpeeds(vx, vy, Gyro.getInstance().getRobotAngleVelocity());
   }
 
   public void driveRobotRelative(ChassisSpeeds speeds) {
     var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
-    driveArcade(wheelSpeeds.leftMetersPerSecond * 0.01, wheelSpeeds.rightMetersPerSecond * 0.01);
+    drive.tankDrive(wheelSpeeds.leftMetersPerSecond * 0.01, wheelSpeeds.rightMetersPerSecond * 0.01);
     System.out.println("driveRobotRelative");
+  }
+
+  public static double calculoRPM(double rpm){
+      return (2 * Math.PI * 0.0762 * rpm) / 60;
   }
 
   // sets the speed of the drive motors
