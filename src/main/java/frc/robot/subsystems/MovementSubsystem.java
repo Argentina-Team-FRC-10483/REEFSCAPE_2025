@@ -165,7 +165,7 @@ public class MovementSubsystem extends SubsystemBase {
 
   public ChassisSpeeds getRobotRelativeSpeeds(){
     double leftVelocity = calculoRPM(leftEncoder.getVelocity());
-    double rightVelocity = calculoRPM(rightEncoder.getVelocity());
+    double rightVelocity = calculoRPM(-rightEncoder.getVelocity());
     double vx = (leftVelocity + rightVelocity) / 2;
     double vy = 0.0;
     System.out.println("getRobotRelativeSpeeds");
