@@ -28,7 +28,7 @@ public class EyesSubsystem extends SubsystemBase{
 
     private final String Pose = "Pose";
 
-    private final PhotonCamera[] cameras = new PhotonCamera[]{new PhotonCamera("Camera_1"), new PhotonCamera("Camera_2")};
+    private final PhotonCamera[] cameras = new PhotonCamera[]{new PhotonCamera("WebLaptoop"), new PhotonCamera("Camera_2")};
 
     StructPublisher <Pose2d> posePublisher = NetworkTableInstance.getDefault().getStructTopic(Pose, Pose2d.struct).publish();
 
@@ -83,4 +83,4 @@ public class EyesSubsystem extends SubsystemBase{
         // photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
         return photonPoseEstimator.update(prevEstimatedRobotPose);
     }
-    }
+}
