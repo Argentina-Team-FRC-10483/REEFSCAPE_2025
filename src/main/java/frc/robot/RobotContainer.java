@@ -8,10 +8,13 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
@@ -70,6 +73,11 @@ public class RobotContainer {
       () -> -driverController.getRightX() * 0.5,
       movementSubsystem
     ));
+
+  driverController.povUp().whileTrue(movementSubsystem.sysIdQuasistatic(Direction.kForward));
+  driverController.povRight().whileTrue(movementSubsystem.sysIdQuasistatic(Direction.kReverse));
+  driverController.povDown().whileTrue(movementSubsystem.sysIdDynamic(Direction.kForward));
+  driverController.povLeft().whileTrue(movementSubsystem.sysIdDynamic(Direction.kReverse));
   }
 
   /**

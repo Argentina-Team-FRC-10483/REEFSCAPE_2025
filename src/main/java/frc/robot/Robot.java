@@ -89,8 +89,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    /* Display 6-axis Processed Angle Data */
-    SmartDashboard.putBoolean("IMU_Connected", ahrs.isConnected());
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
