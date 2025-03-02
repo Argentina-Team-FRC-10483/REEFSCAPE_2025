@@ -183,7 +183,7 @@ public class MovementSubsystem extends SubsystemBase {
 
   public void driveRobotRelative(ChassisSpeeds speeds) {
     var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
-    drive.tankDrive(wheelSpeeds.leftMetersPerSecond * 0.065, wheelSpeeds.rightMetersPerSecond * 0.065);
+    drive.tankDrive(wheelSpeeds.leftMetersPerSecond * 0.11, wheelSpeeds.rightMetersPerSecond * 0.11);
   }
 
   public static double calculoRPM(double rpm){
