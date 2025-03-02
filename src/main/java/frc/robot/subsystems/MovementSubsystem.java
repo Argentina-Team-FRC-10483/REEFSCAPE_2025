@@ -84,7 +84,7 @@ public class MovementSubsystem extends SubsystemBase {
                             rightLeader.getAppliedOutput() * RobotController.getBatteryVoltage(), Volts))
                     .linearPosition(m_distance.mut_replace(getRightEncoderPosition(), Meters))
                     .linearVelocity(
-                        m_velocity.mut_replace(calculoRPM(rightEncoder.getVelocity()), MetersPerSecond));
+                        m_velocity.mut_replace(calculoRPM(-rightEncoder.getVelocity()), MetersPerSecond));
               }, this));
 
   public MovementSubsystem() {
