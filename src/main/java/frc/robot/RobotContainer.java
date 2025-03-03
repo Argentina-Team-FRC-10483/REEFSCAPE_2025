@@ -78,9 +78,9 @@ public class RobotContainer {
     elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.5));
     munecaSubsystem.setDefaultCommand(new MunecaCommand(munecaSubsystem, () -> operatorController.getRightY() * 0.5));
 
-    operatorController.a().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
-    operatorController.b().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
-    operatorController.y().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
+    operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
+    operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
+    operatorController.a().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
 
     movementSubsystem.setDefaultCommand(new MovementCommand(
       () -> -driverController.getLeftY() * 0.5,
