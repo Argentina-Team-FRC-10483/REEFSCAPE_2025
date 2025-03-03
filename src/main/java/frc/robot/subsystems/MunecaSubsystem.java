@@ -20,7 +20,7 @@ public class MunecaSubsystem extends SubsystemBase {
 
   private static final double SLOWDOWN_RANGE = 7.0;
   private static final double UPPER_LIMIT = 30.0;
-  private static final double LOWER_LIMIT = 0.0;
+  private static final double LOWER_LIMIT = -30.0;
   public static final String DASH_MUNECA_POS = "Muñeca Posicion";
   public static final String DASH_RESET_MUNECA_ENCODER = "Reiniciar Encoder Muñeca";
 
