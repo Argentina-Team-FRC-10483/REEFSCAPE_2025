@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.ElevadorConstants;
 import frc.robot.Constants.MunecaConstants;
+import frc.robot.Constants.NEOMotorsConstants;
 
 public class MunecaSubsystem extends SubsystemBase {
   private final SparkMax motor;
@@ -47,8 +47,8 @@ public class MunecaSubsystem extends SubsystemBase {
       .reverseSoftLimit(0);
 
     leaderConfig
-      .voltageCompensation(ElevadorConstants.VOLTAGE_COMPENSATION)
-      .smartCurrentLimit(ElevadorConstants.CURRENT_LIMIT);
+      .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION_NEO)
+      .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT_NEO);
 
     return leaderConfig;
   }

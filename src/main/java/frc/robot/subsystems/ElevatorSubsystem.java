@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ElevadorConstants;
+import frc.robot.Constants.NEOMotorsConstants;
 
 public class ElevatorSubsystem extends SubsystemBase {
   private final SparkMax leftMotorLeader;
@@ -55,8 +56,8 @@ public class ElevatorSubsystem extends SubsystemBase {
       .reverseSoftLimit(0);
 
     leaderConfig
-      .voltageCompensation(ElevadorConstants.VOLTAGE_COMPENSATION)
-      .smartCurrentLimit(ElevadorConstants.CURRENT_LIMIT);
+      .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION_NEO)
+      .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT_NEO);
 
     return leaderConfig;
   }

@@ -37,8 +37,11 @@ public final class Constants {
   public static final class ElevadorConstants {
     public static final int LEFT_ELEVATOR_LEADER_MOTOR_ID = 5;
     public static final int RIGHT_ELEVATOR_FOLLOW_MOTOR_ID = 6;
-    public static final int CURRENT_LIMIT = 40;
-    public static final double VOLTAGE_COMPENSATION = 12.0;
+  }
+
+  public static final class NEOMotorsConstants {
+    public static final int CURRENT_LIMIT_NEO = 40;
+    public static final double VOLTAGE_COMPENSATION_NEO = 12.0; 
   }
 
   public static final class DeadZone {
