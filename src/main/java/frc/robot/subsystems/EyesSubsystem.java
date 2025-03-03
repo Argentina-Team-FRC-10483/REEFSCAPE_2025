@@ -46,7 +46,8 @@ public class EyesSubsystem extends SubsystemBase{
                 if (camera == cameras[0]){
                     hasTarget1 = result.hasTargets();
                     SmartDashboard.putBoolean("Deteccion de Camara_1 April", hasTarget1);
-               }else{
+               }
+               else{
                     hasTarget2 = result.hasTargets();
                     SmartDashboard.putBoolean("Deteccion de Camara_2 April", hasTarget2);
                }
@@ -78,9 +79,10 @@ public class EyesSubsystem extends SubsystemBase{
             }
         }
     }
-    
+   
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose(PhotonPipelineResult prevEstimatedRobotPose) {
         // photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
         return photonPoseEstimator.update(prevEstimatedRobotPose);
     }
 }
+
