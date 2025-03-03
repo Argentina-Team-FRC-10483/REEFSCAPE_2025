@@ -9,6 +9,12 @@
           "data": {
             "pathName": "Path1Pos1Azul"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SubirElevador"
+          }
         }
       ]
     }

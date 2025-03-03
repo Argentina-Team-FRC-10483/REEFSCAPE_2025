@@ -54,7 +54,12 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    NamedCommands.registerCommand("AlgaeIntake", new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
+    NamedCommands.registerCommand("SubirElevador", 
+    new ElevatorCommand(elevatorSubsystem, () -> 0.5)
+        .withTimeout(2) // Mantiene el motor encendido por 2 segundos
+        .andThen(new ElevatorCommand(elevatorSubsystem, () -> 0).withTimeout(1)) // Luego lo detiene
+);
+
     configureBindings();
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -85,7 +90,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
-  }
+public Command getAutonomousCommand() {
+  return autoChooser.getSelected();
+}
 }
