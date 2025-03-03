@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.ElevatorToL4Command;
 import frc.robot.commands.EngancheCommand;
 import frc.robot.commands.MovementCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
@@ -54,11 +55,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    NamedCommands.registerCommand("SubirElevador", 
-    new ElevatorCommand(elevatorSubsystem, () -> 0.5)
-        .withTimeout(2) // Mantiene el motor encendido por 2 segundos
-        .andThen(new ElevatorCommand(elevatorSubsystem, () -> 0).withTimeout(1)) // Luego lo detiene
-);
+    NamedCommands.registerCommand("SubirElevador", new ElevatorToL4Command(elevatorSubsystem));
 
     configureBindings();
     autoChooser = AutoBuilder.buildAutoChooser();

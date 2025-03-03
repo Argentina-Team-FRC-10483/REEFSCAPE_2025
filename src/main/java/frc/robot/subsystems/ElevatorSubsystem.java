@@ -70,6 +70,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     return elevatorEncoder.getPosition();
   }
 
+  public void resetEncoder() {
+    elevatorEncoder.setPosition(0);
+  }
+
   public void moveElevator(double speed) {
     double currentPosition = getElevatorPosition();
 
