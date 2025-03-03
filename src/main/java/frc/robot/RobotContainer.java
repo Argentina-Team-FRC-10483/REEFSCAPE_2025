@@ -55,7 +55,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     NamedCommands.registerCommand("SubirElevador", 
-    new ElevatorCommand(elevatorSubsystem, () -> 0.5)
+    new ElevatorCommand(elevatorSubsystem, () -> 0.1)
         .withTimeout(2) // Mantiene el motor encendido por 2 segundos
         .andThen(new ElevatorCommand(elevatorSubsystem, () -> 0).withTimeout(1)) // Luego lo detiene
 );
