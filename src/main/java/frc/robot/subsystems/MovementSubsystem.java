@@ -35,6 +35,7 @@ import frc.robot.util.Gyro;
 
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Volts;
 
 public class MovementSubsystem extends SubsystemBase {
@@ -75,7 +76,7 @@ public class MovementSubsystem extends SubsystemBase {
                             leftLeader.getAppliedOutput() * RobotController.getBatteryVoltage(), Volts))
                     .linearPosition(m_distance.mut_replace(getLeftEncoderPosition(), Meters))
                     .linearVelocity(
-                        m_velocity.mut_replace(calculoRPM(leftEncoder.getPosition()), MetersPerSecond));
+                        m_velocity.mut_replace(calculoRPM(leftEncoder.getVelocity()), MetersPerSecond));
                 // Record a frame for the right motors.  Since these share an encoder, we consider
                 // the entire group to be one motor.
                 log.motor("drive-right")
