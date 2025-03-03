@@ -25,8 +25,6 @@ public final class Constants {
 
   public static final class AlgaeIntakeConstants {
     public static final int RodilloMotor_ID = 7;
-    public static final int RodilloMotor_LIMITE = 60;
-    public static final double RodilloMotor_CompVolt = 10;
     public static final double RodilloMotor_ValorExp = 0.44;
   }
 
