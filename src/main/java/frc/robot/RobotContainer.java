@@ -55,7 +55,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     NamedCommands.registerCommand("SubirElevador", 
-    new ElevatorCommand(elevatorSubsystem, () -> 0.1)
+    new ElevatorCommand(elevatorSubsystem, () -> 0.5)
         .withTimeout(2) // Mantiene el motor encendido por 2 segundos
         .andThen(new ElevatorCommand(elevatorSubsystem, () -> 0).withTimeout(1)) // Luego lo detiene
 );
@@ -71,7 +71,7 @@ public class RobotContainer {
     driverController.b().whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
     driverController.x().whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
 
-    elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.5));
+    elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * -0.5));
     movementSubsystem.setDefaultCommand(new MovementCommand(
       () -> -driverController.getLeftY() * 0.5,
       () -> driverController.getHID().getLeftBumperButton(),
