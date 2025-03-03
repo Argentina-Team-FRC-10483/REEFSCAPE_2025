@@ -6,14 +6,10 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
@@ -33,9 +29,12 @@ import frc.robot.subsystems.RodInteriorSubsystem;
 import frc.robot.subsystems.EngancheSubsystem;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
@@ -49,11 +48,9 @@ public class RobotContainer {
   private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
 
   private final CommandXboxController driverController = new CommandXboxController(
-    OperatorConstants.DRIVER_CONTROLLER_PORT
-  );
+      OperatorConstants.DRIVER_CONTROLLER_PORT);
   private final CommandXboxController operatorController = new CommandXboxController(
-    OperatorConstants.OPERADOR_CONTROLLER_PORT
-  );
+      OperatorConstants.OPERADOR_CONTROLLER_PORT);
 
   private final SendableChooser<Command> autoChooser;
 
@@ -61,18 +58,24 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    autoChooser = AutoBuilder.buildAutoChooser();
     NamedCommands.registerCommand("SubirElevador", new ElevatorToL4Command(elevatorSubsystem));
 
     configureBindings();
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link
+   * CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {
@@ -82,7 +85,8 @@ public class RobotContainer {
     driverController.b().whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
     driverController.x().whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
 
-    elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.5));
+    elevatorSubsystem
+        .setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.5));
     munecaSubsystem.setDefaultCommand(new MunecaCommand(munecaSubsystem, () -> operatorController.getRightY() * 0.5));
 
     operatorController.a().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
@@ -90,16 +94,15 @@ public class RobotContainer {
     operatorController.y().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
 
     movementSubsystem.setDefaultCommand(new MovementCommand(
-      () -> -driverController.getLeftY() * 0.5,
-      () -> driverController.getHID().getLeftBumperButton(),
-      () -> -driverController.getRightX() * 0.5,
-      movementSubsystem
-    ));
+        () -> -driverController.getLeftY() * 0.5,
+        () -> driverController.getHID().getLeftBumperButton(),
+        () -> -driverController.getRightX() * 0.5,
+        movementSubsystem));
 
-  driverController.povUp().whileTrue(movementSubsystem.sysIdQuasistatic(Direction.kForward));
-  driverController.povRight().whileTrue(movementSubsystem.sysIdQuasistatic(Direction.kReverse));
-  driverController.povDown().whileTrue(movementSubsystem.sysIdDynamic(Direction.kForward));
-  driverController.povLeft().whileTrue(movementSubsystem.sysIdDynamic(Direction.kReverse));
+    driverController.povUp().whileTrue(movementSubsystem.sysIdQuasistatic(Direction.kForward));
+    driverController.povRight().whileTrue(movementSubsystem.sysIdQuasistatic(Direction.kReverse));
+    driverController.povDown().whileTrue(movementSubsystem.sysIdDynamic(Direction.kForward));
+    driverController.povLeft().whileTrue(movementSubsystem.sysIdDynamic(Direction.kReverse));
   }
 
   /**
@@ -107,7 +110,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-public Command getAutonomousCommand() {
-  return autoChooser.getSelected();
-}
+  public Command getAutonomousCommand() {
+    return autoChooser.getSelected();
+  }
 }

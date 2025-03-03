@@ -25,8 +25,6 @@ public class Robot extends TimedRobot {
   public Robot() {
     // This will perform all our button bindings, and put our autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
-    stick = new XboxController(0);
   }
 
   /**
