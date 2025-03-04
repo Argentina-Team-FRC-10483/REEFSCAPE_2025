@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
+
 import com.studica.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -122,6 +125,30 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+
+        PhotonCamera camera = new PhotonCamera("Camera_1");
+        boolean targetVisible = false;
+        double targetYaw = 0.0;
+        double targetRange = 0.0;
+        var results = camera.getAllUnreadResults();
+        if(!results.isEmpty()) {
+            var result = results.get(results.size() - 1);
+            if (result.hasTargets()) {
+                for (var target : result.getTargets()){
+                    if (target.getFiducialId() == 7){
+                        targetYaw = target.getYaw();
+                        targetVisible = true;
+                    }
+                }
+            }
+        }
+        //if (controller.getAButton() && targetVisible) {
+           // turn = -1.0 * targetYaw * VISION_TURN_kP * Constans.Differential.kMaxAngularSpeed;
+            
+                
+        // }
+        //drivetrain.drive(forward, strafe, turn);
+        SmartDashboard.putBoolean("Vision Target Visible", targetVisible);
   }
 
   @Override
