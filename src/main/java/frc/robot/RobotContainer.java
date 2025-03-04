@@ -82,16 +82,22 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
     driverController.rightTrigger().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.5));
 
-    driverController.b().whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
-    driverController.x().whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
+    engancheSubsystem.setDefaultCommand(new EngancheCommand(engancheSubsystem, 
+    () -> {
+      double power = 0;
+      if (driverController.x().getAsBoolean()) power += 0.5;
+      if (driverController.b().getAsBoolean()) power -= 0.5;
+      return power;
+    }
+  ));
+  
 
-    elevatorSubsystem
-        .setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.5));
+    elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.4));
     munecaSubsystem.setDefaultCommand(new MunecaCommand(munecaSubsystem, () -> operatorController.getRightY() * 0.5));
 
-    operatorController.a().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
-    operatorController.b().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
-    operatorController.y().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
+    operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
+    operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
+    operatorController.a().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
 
     movementSubsystem.setDefaultCommand(new MovementCommand(
         () -> -driverController.getLeftY() * 0.5,

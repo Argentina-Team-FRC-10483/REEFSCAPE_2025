@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ElevadorConstants;
+import frc.robot.Constants.NEOMotorsConstants;
 
 public class ElevatorSubsystem extends SubsystemBase {
   private final SparkMax leftMotorLeader;
@@ -20,7 +21,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final RelativeEncoder elevatorEncoder;
 
   private static final double SLOWDOWN_RANGE = 7.0;
-  private static final double UPPER_LIMIT = 30.0;
+  private static final double UPPER_LIMIT = 80.0;
   private static final double LOWER_LIMIT = 0.0;
   public static final String DASH_ELEVATOR_POS = "Elevador Posicion";
   public static final String DASH_RESET_ELEVATOR_ENCODER = "Reiniciar Encoder Elevador";
@@ -42,8 +43,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   private SparkBaseConfig getFollowConfig() {
-    return new SparkMaxConfig().follow(leftMotorLeader);
-  }
+    return new SparkMaxConfig().follow(leftMotorLeader, true);
+}
+
 
   private static SparkMaxConfig getLeaderConfig() {
     SparkMaxConfig leaderConfig = new SparkMaxConfig();
@@ -55,8 +57,10 @@ public class ElevatorSubsystem extends SubsystemBase {
       .reverseSoftLimit(0);
 
     leaderConfig
-      .voltageCompensation(ElevadorConstants.VOLTAGE_COMPENSATION)
-      .smartCurrentLimit(ElevadorConstants.CURRENT_LIMIT);
+      .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION_NEO)
+      .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT_NEO)
+
+      .inverted(false);
 
     return leaderConfig;
   }

@@ -24,7 +24,7 @@ public class MunecaCommand extends Command {
 
   @Override
   public void execute() {
-    munecaSubsystem.moveMuneca(Utils.applyDeadZone(munecaPower.getAsDouble(), DeadZone.ElevadorDeadZone));
+    munecaSubsystem.moveMuneca(Utils.applyDeadZone(-munecaPower.getAsDouble(), DeadZone.ElevadorDeadZone));
   }
 
   @Override
