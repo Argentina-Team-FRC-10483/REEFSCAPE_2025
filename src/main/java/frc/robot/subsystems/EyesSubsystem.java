@@ -23,12 +23,14 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
+import org.photonvision.estimation.OpenCVHelp;
 public class EyesSubsystem extends SubsystemBase{
 
     private final String Pose = "Pose";
 
-    private final PhotonCamera[] cameras = new PhotonCamera[]{new PhotonCamera("WebLaptoop"), new PhotonCamera("Camera_2")};
+    private final PhotonCamera[] cameras = new PhotonCamera[]{new PhotonCamera("Camera_1"), new PhotonCamera("Camera_2")};
 
     StructPublisher <Pose2d> posePublisher = NetworkTableInstance.getDefault().getStructTopic(Pose, Pose2d.struct).publish();
 
@@ -36,20 +38,17 @@ public class EyesSubsystem extends SubsystemBase{
         
     private final Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0));
     private final PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam);
+    private String number = "";
     
     public void periodic(){
-        boolean hasTarget1;
-        boolean hasTarget2;
-        for (var camera : cameras){
+        double start = Timer.getFPGATimestamp();
+        for (int i = 0; i < cameras.length; i++){
+            PhotonCamera camera = cameras[i];
             var resultCams = camera.getAllUnreadResults();
             for (var result : resultCams){
-                if (camera == cameras[0]){
-                    hasTarget1 = result.hasTargets();
-                    SmartDashboard.putBoolean("Deteccion de Camara_1 April", hasTarget1);
-               }else{
-                    hasTarget2 = result.hasTargets();
-                    SmartDashboard.putBoolean("Deteccion de Camara_2 April", hasTarget2);
-               }
+                number = Integer.toString(i+1);
+                SmartDashboard.putBoolean("Deteccion April Cam " + number, result.hasTargets());
+
                 if (result.getMultiTagResult().isPresent()) {
                     Transform3d fieldToCamera = result.getMultiTagResult().get().estimatedPose.best;
                     SmartDashboard.putNumber("Cameras  X:", fieldToCamera.getX());
@@ -77,6 +76,7 @@ public class EyesSubsystem extends SubsystemBase{
                 }
             }
         }
+        SmartDashboard.putNumber("Time elapsed", start - Timer.getFPGATimestamp());
     }
     
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose(PhotonPipelineResult prevEstimatedRobotPose) {
