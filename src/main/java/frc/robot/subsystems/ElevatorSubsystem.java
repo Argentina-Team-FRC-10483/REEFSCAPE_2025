@@ -20,8 +20,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final SparkMax rightMotorFollow;
   private final RelativeEncoder elevatorEncoder;
 
-  private static final double SLOWDOWN_RANGE = 7.0;
-  private static final double UPPER_LIMIT = 30.0;
+  private static final double SLOWDOWN_RANGE = 20.0;
+  private static final double UPPER_LIMIT = 83.0;
   private static final double LOWER_LIMIT = 0.0;
   public static final String DASH_ELEVATOR_POS = "Elevador Posicion";
   public static final String DASH_RESET_ELEVATOR_ENCODER = "Reiniciar Encoder Elevador";
@@ -43,21 +43,26 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   private SparkBaseConfig getFollowConfig() {
-    return new SparkMaxConfig().follow(leftMotorLeader);
-  }
+    return new SparkMaxConfig().follow(leftMotorLeader, true)
+    .idleMode(SparkBaseConfig.IdleMode.kBrake); // Modo Brake para evitar caída
+}
+
 
   private static SparkMaxConfig getLeaderConfig() {
     SparkMaxConfig leaderConfig = new SparkMaxConfig();
 
     leaderConfig.softLimit
       .forwardSoftLimitEnabled(true)
-      .forwardSoftLimit(30)
+      .forwardSoftLimit(80)
       .reverseSoftLimitEnabled(true)
       .reverseSoftLimit(0);
 
     leaderConfig
       .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION_NEO)
-      .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT_NEO);
+      .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT_NEO)
+
+      .idleMode(SparkBaseConfig.IdleMode.kBrake) //  Modo Brake para evitar caída
+      .inverted(false);
 
     return leaderConfig;
   }
