@@ -11,7 +11,9 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.LimitesEncoders;
 import frc.robot.Constants.MunecaConstants;
 import frc.robot.Constants.NEOMotorsConstants;
 
@@ -75,11 +77,17 @@ public class MunecaSubsystem extends SubsystemBase {
   }
 
   public double getUpperSlowdownFactor(double currentPosition) {
-    return Math.max((UPPER_LIMIT - currentPosition) / SLOWDOWN_RANGE, 0);
+    double resultado = Math.max((UPPER_LIMIT - currentPosition) / SLOWDOWN_RANGE, 0);
+    if (resultado == 0 ) return 0;
+    if (resultado <= Constants.LimitesEncoders.LimiteFuerzaAceleracion) return Constants.LimitesEncoders.LimiteFuerzaAceleracion;
+    return resultado;
   }
 
   public double getLowerSlowdownFactor(double currentPosition) {
-    return Math.max((currentPosition - LOWER_LIMIT) / SLOWDOWN_RANGE, 0);
+    double resultado = Math.max((currentPosition - LOWER_LIMIT) / SLOWDOWN_RANGE, 0);
+    if (resultado == 0 ) return 0;
+    if (resultado <= LimitesEncoders.LimiteFuerzaAceleracion) return LimitesEncoders.LimiteFuerzaAceleracion;
+    return resultado;
   }
 
 }

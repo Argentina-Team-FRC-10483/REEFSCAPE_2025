@@ -89,7 +89,9 @@ public class RobotContainer {
       movementSubsystem
     ));
   }
-
+  public ElevatorSubsystem getElevatorSubsystem() {
+    return elevatorSubsystem;
+}
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
