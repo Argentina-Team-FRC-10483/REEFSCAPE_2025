@@ -12,6 +12,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -36,7 +37,8 @@ public class EyesSubsystem extends SubsystemBase{
         
     private final Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0));
     private final PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam);
-    
+    public PhotonPipelineResult Results;
+
     public void periodic(){
         boolean hasTarget1;
         boolean hasTarget2;
@@ -46,15 +48,21 @@ public class EyesSubsystem extends SubsystemBase{
                 if (camera == cameras[0]){
                     hasTarget1 = result.hasTargets();
                     SmartDashboard.putBoolean("Deteccion de Camara_1 April", hasTarget1);
+                    Results = resultCams.get(0);
                }else{
                     hasTarget2 = result.hasTargets();
                     SmartDashboard.putBoolean("Deteccion de Camara_2 April", hasTarget2);
+                    Results = resultCams.get(1);
                }
-                if (result.getMultiTagResult().isPresent()) {
-                    Transform3d fieldToCamera = result.getMultiTagResult().get().estimatedPose.best;
-                    SmartDashboard.putNumber("Cameras  X:", fieldToCamera.getX());
-                    SmartDashboard.putNumber("Cameras  Y:", fieldToCamera.getY());
-                    SmartDashboard.putNumber("Cameras  Z:", fieldToCamera.getZ());
+                if (resultCams.get(0).getMultiTagResult().isPresent() || resultCams.get(0).getMultiTagResult().isPresent()) {
+                    Transform3d fieldToCamera1 = resultCams.get(0).getMultiTagResult().get().estimatedPose.best;
+                    Transform3d fieldToCamera2 = resultCams.get(0).getMultiTagResult().get().estimatedPose.best;
+                    SmartDashboard.putNumber("Camera_1  X:", fieldToCamera1.getX());
+                    SmartDashboard.putNumber("Camera_1  Y:", fieldToCamera1.getY());
+                    SmartDashboard.putNumber("Cameras_1  Z:", fieldToCamera1.getZ());
+                    SmartDashboard.putNumber("Camera_2  X:", fieldToCamera2.getX());
+                    SmartDashboard.putNumber("Camera_2  Y:", fieldToCamera2.getY());
+                    SmartDashboard.putNumber("Camera_2  Z:", fieldToCamera2.getZ());
                     SmartDashboard.putNumber("Time:", result.getTimestampSeconds());
                     Optional<Pose2d> estimatedPose = getEstimatedGlobalPose(result).map(x->x.estimatedPose).map(Pose3d::toPose2d);
                     if (estimatedPose.isPresent()){
