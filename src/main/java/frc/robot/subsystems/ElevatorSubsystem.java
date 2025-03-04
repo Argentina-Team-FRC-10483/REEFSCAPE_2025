@@ -43,9 +43,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   private SparkBaseConfig getFollowConfig() {
-    return new SparkMaxConfig()
-      .follow(leftMotorLeader)
-      .inverted(true);  // Invierte el motor seguidor
+    return new SparkMaxConfig().follow(leftMotorLeader, true);
 }
 
 
