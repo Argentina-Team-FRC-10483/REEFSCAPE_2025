@@ -5,9 +5,8 @@ import frc.robot.subsystems.ElevatorSubsystem;
 
 public class ElevatorToL4Command extends Command {
   private final ElevatorSubsystem elevatorSubsystem;
-  private static final double TARGET_ROTATIONS = 30.0;
-  private static final double POWER = 0.5;
-
+  private final double targetPosition = 70.0;
+  
   public ElevatorToL4Command(ElevatorSubsystem elevatorSubsystem) {
     this.elevatorSubsystem = elevatorSubsystem;
     addRequirements(this.elevatorSubsystem);
@@ -15,25 +14,47 @@ public class ElevatorToL4Command extends Command {
 
   @Override
   public void initialize() {
-    elevatorSubsystem.resetEncoder();
   }
 
   @Override
   public void execute() {
-    if (elevatorSubsystem.getElevatorPosition() < TARGET_ROTATIONS) {
-      elevatorSubsystem.moveElevator(POWER);
-    } else {
-      elevatorSubsystem.moveElevator(0);
-    }
+      double currentPosition = elevatorSubsystem.getElevatorPosition();
+      double speed = 0.3;
+  
+      if (currentPosition < targetPosition) {
+          double distanceRemaining = targetPosition - currentPosition;
+        
+          if (distanceRemaining <= ElevatorSubsystem.SLOWDOWN_RANGE) {
+              double slowdownFactor = distanceRemaining / ElevatorSubsystem.SLOWDOWN_RANGE;
+              speed *= Math.max(slowdownFactor, 0.05);
+          }
+      } else if (currentPosition > targetPosition) {
+          double distanceRemaining = currentPosition - targetPosition;
+  
+          if (distanceRemaining <= ElevatorSubsystem.SLOWDOWN_RANGE) {
+              double slowdownFactor = distanceRemaining / ElevatorSubsystem.SLOWDOWN_RANGE;
+              speed *= Math.max(slowdownFactor, 0.05);
+          }
+  
+          speed = -speed;
+      }
+  
+      if (Math.abs(speed) < 0.05) {
+          speed = Math.signum(speed) * 0.05;
+      }
+  
+      elevatorSubsystem.moveElevator(speed);
   }
+  
 
   @Override
-  public void end(boolean isInterrupted) {
-    elevatorSubsystem.moveElevator(0);
+  public void end(boolean interrupted) {
+    elevatorSubsystem.moveElevator(0);  // Aseguramos que el elevador se detenga al finalizar
   }
 
   @Override
   public boolean isFinished() {
-    return elevatorSubsystem.getElevatorPosition() >= TARGET_ROTATIONS;
+      return elevatorSubsystem.getElevatorPosition() >= (targetPosition - 0.5) && elevatorSubsystem.getElevatorPosition() <= (targetPosition + 0.5);
   }
+  
 }
