@@ -3,11 +3,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem;
 
-public class ElevatorToL4Command extends Command {
+public class ElevatorToL2Command extends Command {
   private final ElevatorSubsystem elevatorSubsystem;
-  private final double targetPosition = 70.0;
+  private final double targetPosition = 30.0;
   
-  public ElevatorToL4Command(ElevatorSubsystem elevatorSubsystem) {
+  public ElevatorToL2Command(ElevatorSubsystem elevatorSubsystem) {
     this.elevatorSubsystem = elevatorSubsystem;
     addRequirements(this.elevatorSubsystem);
   }
