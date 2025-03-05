@@ -54,7 +54,6 @@ public class ElevatorToL4Command extends Command {
 
   @Override
   public boolean isFinished() {
-    // Terminamos cuando el elevador alcanza el objetivo
-    return elevatorSubsystem.getElevatorPosition() >= targetPosition;
+    return elevatorSubsystem.getElevatorPosition() == targetPosition;
   }
 }

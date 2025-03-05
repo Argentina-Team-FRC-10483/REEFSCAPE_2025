@@ -23,7 +23,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final RelativeEncoder elevatorEncoder;
 
   public static final double SLOWDOWN_RANGE = 20.0;
-  private static final double UPPER_LIMIT = 85.0;
+  private static final double UPPER_LIMIT = 88.0;
   private static final double LOWER_LIMIT = 0.0;
   public static final String DASH_ELEVATOR_POS = "Elevador Posicion";
   public static final String DASH_RESET_ELEVATOR_ENCODER = "Reiniciar Encoder Elevador";
@@ -54,7 +54,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     leaderConfig.softLimit
       .forwardSoftLimitEnabled(true)
-      .forwardSoftLimit(85)
+      .forwardSoftLimit(88)
       .reverseSoftLimitEnabled(true)
       .reverseSoftLimit(0);
 
