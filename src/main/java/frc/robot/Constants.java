@@ -47,6 +47,10 @@ public final class Constants {
     public static final double MovimientoDeadZone = 0.05;
   }
 
+  public static final class LimitesEncoders {
+    public static final double LimiteFuerzaAceleracion = 0.166666;
+  }
+
   public static final class MunecaConstants {
     public static final int MUNECA_MOTOR_ID = 9;
   }
