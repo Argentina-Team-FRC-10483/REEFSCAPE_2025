@@ -5,7 +5,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 
 public class ElevatorToL4Command extends Command {
   private final ElevatorSubsystem elevatorSubsystem;
-  private final double targetPosition = 70.0;
+  private final double targetPosition = 30.0;
   
   public ElevatorToL4Command(ElevatorSubsystem elevatorSubsystem) {
     this.elevatorSubsystem = elevatorSubsystem;
