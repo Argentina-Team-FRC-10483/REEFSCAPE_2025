@@ -1,36 +1,39 @@
 package frc.robot.commands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.DeadZone;
+import frc.robot.utils.Utils;
 import frc.robot.subsystems.EngancheSubsystem;
 
 public class EngancheCommand extends Command {
-    private final double vel; 
-    private final EngancheSubsystem engancheSubsystem;
-    
-    public EngancheCommand (EngancheSubsystem engancheSubsystem, double vel){
-        this.vel = vel;
-        this.engancheSubsystem = engancheSubsystem;
+  private final DoubleSupplier enganchePower;
+  private final EngancheSubsystem engancheSubsystem;
 
-        addRequirements(engancheSubsystem);    
-    }
+  public EngancheCommand(EngancheSubsystem engancheSubsystem, DoubleSupplier enganchePower) {
+    this.enganchePower = enganchePower;
+    this.engancheSubsystem = engancheSubsystem;
 
-    @Override 
-    public void initialize(){
- 
-    }
+    addRequirements(this.engancheSubsystem);
+  }
 
-    @Override
-    public void execute(){
-        engancheSubsystem.enganchar(vel);
-    }
+  @Override
+  public void initialize() {
+  }
 
-    @Override 
-    public boolean isFinished(){
-        return false;
-    }
+  @Override
+  public void execute() {
+    engancheSubsystem.moveEnganche(Utils.applyDeadZone(enganchePower.getAsDouble(), DeadZone.ElevadorDeadZone));
+  }
 
-    @Override 
-    public void end(boolean interrupted){
+  @Override
+  public void end(boolean isInterrupted) {
+    engancheSubsystem.moveEnganche(0);
+  }
 
-    }
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
 }

@@ -5,36 +5,37 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.EngancheConstants;
+import frc.robot.Constants.MunecaConstants;
 import frc.robot.Constants.NEOMotorsConstants;
 
-public class EngancheSubsystem extends SubsystemBase {
+public class MunecaSubsystem extends SubsystemBase {
   private final SparkMax motor;
-  private final RelativeEncoder engancheEncoder;
+  private final RelativeEncoder munecaEncoder;
 
   private static final double SLOWDOWN_RANGE = 7.0;
-  private static final double UPPER_LIMIT = 30.0;
-  private static final double LOWER_LIMIT = 0.0;
-  public static final String DASH_ENGANCHE_POS = "Enganche Posicion";
-  public static final String DASH_RESET_ENGANCHE_ENCODER = "Reiniciar Encoder Enganche";
+  private static final double UPPER_LIMIT = 0.0;
+  private static final double LOWER_LIMIT = -15.0;
+  public static final String DASH_MUNECA_POS = "Muñeca Posicion";
+  public static final String DASH_RESET_MUNECA_ENCODER = "Reiniciar Encoder Muñeca";
 
-  public EngancheSubsystem() {
-    motor = new SparkMax(EngancheConstants.MOTOR_ENGANCHE_ID, MotorType.kBrushless);
+  public MunecaSubsystem() {
+    motor = new SparkMax(MunecaConstants.MUNECA_MOTOR_ID, MotorType.kBrushless);
 
     motor.setCANTimeout(DriveConstants.CAN_TIMEOUT);
 
     motor.configure(getLeaderConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    engancheEncoder = motor.getEncoder();
-    engancheEncoder.setPosition(0);
+    munecaEncoder = motor.getEncoder();
+    munecaEncoder.setPosition(0);
 
-    SmartDashboard.putData(DASH_RESET_ENGANCHE_ENCODER, new InstantCommand(() -> engancheEncoder.setPosition(0)));
+    SmartDashboard.putData(DASH_RESET_MUNECA_ENCODER, new InstantCommand(() -> munecaEncoder.setPosition(0)));
   }
 
   private static SparkMaxConfig getLeaderConfig() {
@@ -42,28 +43,29 @@ public class EngancheSubsystem extends SubsystemBase {
 
     leaderConfig.softLimit
       .forwardSoftLimitEnabled(true)
-      .forwardSoftLimit(30)
+      .forwardSoftLimit(0)
       .reverseSoftLimitEnabled(true)
-      .reverseSoftLimit(0);
+      .reverseSoftLimit(-15);
 
     leaderConfig
       .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION_NEO)
-      .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT_NEO);
+      .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT_NEO)
+      .idleMode(SparkBaseConfig.IdleMode.kBrake);
 
     return leaderConfig;
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber(DASH_ENGANCHE_POS, getEnganchePosition());
+    SmartDashboard.putNumber(DASH_MUNECA_POS, getMunecaPosition());
   }
 
-  public double getEnganchePosition() {
-    return engancheEncoder.getPosition();
+  public double getMunecaPosition() {
+    return munecaEncoder.getPosition();
   }
 
-  public void moveEnganche(double speed) {
-    double currentPosition = getEnganchePosition();
+  public void moveMuneca(double speed) {
+    double currentPosition = getMunecaPosition();
 
     boolean inLowerSlowdownZone = currentPosition <= LOWER_LIMIT + SLOWDOWN_RANGE;
     boolean inUpperSlowdownZone = currentPosition >= UPPER_LIMIT - SLOWDOWN_RANGE;
