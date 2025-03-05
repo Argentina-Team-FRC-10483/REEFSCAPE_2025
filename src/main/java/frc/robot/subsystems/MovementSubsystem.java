@@ -55,6 +55,9 @@ public class MovementSubsystem extends SubsystemBase {
 
   final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.546);
 
+  double leftVelocity = calculoRPM(leftEncoder.getVelocity());
+  double rightVelocity = calculoRPM(-rightEncoder.getVelocity());
+
   private final MutVoltage m_appliedVoltage = Volts.mutable(0);
   // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
   private final MutDistance m_distance = Meters.mutable(0);
@@ -74,7 +77,7 @@ public class MovementSubsystem extends SubsystemBase {
                             leftLeader.getAppliedOutput() * RobotController.getBatteryVoltage(), Volts))
                     .linearPosition(m_distance.mut_replace(getLeftEncoderPosition(), Meters))
                     .linearVelocity(
-                        m_velocity.mut_replace(calculoRPM(leftEncoder.getVelocity()), MetersPerSecond));
+                        m_velocity.mut_replace(leftVelocity, MetersPerSecond));
                 // Record a frame for the right motors.  Since these share an encoder, we consider
                 // the entire group to be one motor.
                 log.motor("drive-right")
@@ -83,7 +86,7 @@ public class MovementSubsystem extends SubsystemBase {
                             rightLeader.getAppliedOutput() * RobotController.getBatteryVoltage(), Volts))
                     .linearPosition(m_distance.mut_replace(getRightEncoderPosition(), Meters))
                     .linearVelocity(
-                        m_velocity.mut_replace(calculoRPM(-rightEncoder.getVelocity()), MetersPerSecond));
+                        m_velocity.mut_replace(rightVelocity, MetersPerSecond));
               }, this));
 
   public MovementSubsystem() {
@@ -174,6 +177,9 @@ public class MovementSubsystem extends SubsystemBase {
     field2d.setRobotPose(odometry.getPoseMeters());
     SmartDashboard.putNumber("Left sensor position", getLeftEncoderPosition());
     SmartDashboard.putNumber("Right sensor position", getRightEncoderPosition());
+
+    SmartDashboard.putNumber("Left Motor Velocity", leftVelocity);
+     SmartDashboard.putNumber("Right Motor Velocity", rightVelocity);
     posePublisher.accept(odometry.getPoseMeters());
   }
 
@@ -198,9 +204,6 @@ public class MovementSubsystem extends SubsystemBase {
   }
 
   public ChassisSpeeds getRobotRelativeSpeeds(){
-    double leftVelocity = calculoRPM(leftEncoder.getVelocity());
-    double rightVelocity = calculoRPM(-
-    rightEncoder.getVelocity());
     double vx = (leftVelocity + rightVelocity) / 2;
     double vy = 0.0;
     SmartDashboard.putNumber("vx", vx);
