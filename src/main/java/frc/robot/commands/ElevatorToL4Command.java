@@ -14,7 +14,6 @@ public class ElevatorToL4Command extends Command {
 
   @Override
   public void initialize() {
-    elevatorSubsystem.resetElevador();
   }
 
   @Override
@@ -24,7 +23,7 @@ public class ElevatorToL4Command extends Command {
   
       if (currentPosition < targetPosition) {
           double distanceRemaining = targetPosition - currentPosition;
-  
+        
           if (distanceRemaining <= ElevatorSubsystem.SLOWDOWN_RANGE) {
               double slowdownFactor = distanceRemaining / ElevatorSubsystem.SLOWDOWN_RANGE;
               speed *= Math.max(slowdownFactor, 0.05);

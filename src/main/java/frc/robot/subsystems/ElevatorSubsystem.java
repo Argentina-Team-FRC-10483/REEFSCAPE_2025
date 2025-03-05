@@ -101,9 +101,4 @@ public class ElevatorSubsystem extends SubsystemBase {
     return resultado;
   }
 
-  public void resetElevador() {
-    if (getElevatorPosition() > 0) {
-        moveElevator(-0.2); 
-    }
-  }
 }
