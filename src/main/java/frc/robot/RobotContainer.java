@@ -9,13 +9,19 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
-import frc.robot.commands.ElevadorCommand;
+import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.MovementCommand;
+import frc.robot.commands.MunecaCommand;
+import frc.robot.commands.RodInteriorCommand;
+import frc.robot.commands.RodLateralesCommand;
 import frc.robot.commands.EngancheCommand;
-import frc.robot.commands.MovimientoCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
-import frc.robot.subsystems.ElevadorSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.MovementSubsystem;
+import frc.robot.subsystems.MunecaSubsystem;
+import frc.robot.subsystems.RodLateralesSubsystem;
+import frc.robot.subsystems.RodInteriorSubsystem;
 import frc.robot.subsystems.EngancheSubsystem;
-import frc.robot.subsystems.MovimientoSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -24,17 +30,14 @@ import frc.robot.subsystems.MovimientoSubsystem;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-
-  private final MovimientoSubsystem movimientoSubsystem = new MovimientoSubsystem();
-
-  private final ElevadorSubsystem elevadorSubsystem = new ElevadorSubsystem();
-
+  private final MovementSubsystem movementSubsystem = new MovementSubsystem();
+  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
-
-  // Control del conductor
+  private final MunecaSubsystem munecaSubsystem = new MunecaSubsystem();
+  private final RodLateralesSubsystem rodLateralesSubsystem = new RodLateralesSubsystem();
+  private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
   private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
-  
+
   private final CommandXboxController driverController = new CommandXboxController(
     OperatorConstants.DRIVER_CONTROLLER_PORT
   );
@@ -92,34 +95,6 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-    
-
-   driverController.rightBumper()
-   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
-
-   driverController.rightTrigger()
-   .whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.5));
-
-   driverController.b()
-   .whileTrue(new EngancheCommand(engancheSubsystem, 0.5));
-
-
-   elevadorSubsystem.setDefaultCommand(
-        new ElevadorCommand(
-        elevadorSubsystem,
-    () ->  operadorController.getLeftY()));
-
-   driverController.x()
-   .whileTrue(new EngancheCommand(engancheSubsystem, -0.5));
-
-  movimientoSubsystem.setDefaultCommand(new MovimientoCommand(
-    () -> -driverController.getLeftY()*0.5,
-    () ->  driverController.getLeftTriggerAxis()*0.5,
-    () -> -driverController.getRightX()*0.5,
-    movimientoSubsystem));
-
-  }
-
   public Command getAutonomousCommand() {
     return null;
   }

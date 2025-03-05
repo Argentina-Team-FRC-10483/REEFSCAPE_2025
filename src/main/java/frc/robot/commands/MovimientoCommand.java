@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DeadZone;
 import frc.robot.subsystems.EyesSubsystem;
-import frc.robot.subsystems.MovimientoSubsystem;
+import frc.robot.subsystems.MovementSubsystem;
 
 import java.lang.reflect.Array;
 import java.util.function.DoubleSupplier;
@@ -17,10 +17,10 @@ public class MovimientoCommand extends Command {
   private final DoubleSupplier xSpeed;
   private final DoubleSupplier zRotation;
   private final DoubleSupplier aceleracion;
-  private final MovimientoSubsystem driveSubsystem;
+  private final MovementSubsystem driveSubsystem;
 
   public MovimientoCommand(
-      DoubleSupplier xSpeed, DoubleSupplier aceleracion, DoubleSupplier zRotation, MovimientoSubsystem driveSubsystem) {
+      DoubleSupplier xSpeed, DoubleSupplier aceleracion, DoubleSupplier zRotation, MovementSubsystem driveSubsystem) {
     this.xSpeed = xSpeed;
     this.aceleracion = aceleracion;
     this.zRotation = zRotation;
