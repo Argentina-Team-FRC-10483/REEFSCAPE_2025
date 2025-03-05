@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.ElevatorToL4Command;
 import frc.robot.commands.MovementCommand;
 import frc.robot.commands.MunecaCommand;
 import frc.robot.commands.RodInteriorCommand;
@@ -77,6 +78,8 @@ public class RobotContainer {
 
     elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.3));
     munecaSubsystem.setDefaultCommand(new MunecaCommand(munecaSubsystem, () -> operatorController.getRightY() * 0.5));
+    
+    operatorController.povUp().whileTrue(new ElevatorToL4Command(elevatorSubsystem));
 
     operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
     operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));

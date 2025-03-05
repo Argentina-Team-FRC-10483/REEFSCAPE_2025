@@ -22,7 +22,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private final SparkMax rightMotorFollow;
   private final RelativeEncoder elevatorEncoder;
 
-  private static final double SLOWDOWN_RANGE = 20.0;
+  public static final double SLOWDOWN_RANGE = 20.0;
   private static final double UPPER_LIMIT = 85.0;
   private static final double LOWER_LIMIT = 0.0;
   public static final String DASH_ELEVATOR_POS = "Elevador Posicion";
@@ -47,8 +47,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private SparkBaseConfig getFollowConfig() {
     return new SparkMaxConfig().follow(leftMotorLeader, true)
     .idleMode(SparkBaseConfig.IdleMode.kBrake); // Modo Brake para evitar caída
-}
-
+  }
 
   private static SparkMaxConfig getLeaderConfig() {
     SparkMaxConfig leaderConfig = new SparkMaxConfig();
@@ -102,10 +101,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     return resultado;
   }
 
-  public void ResetElevador() {
+  public void resetElevador() {
     if (getElevatorPosition() > 0) {
-        moveElevator(-0.2); // Baja el elevador lentamente
+        moveElevator(-0.2); 
     }
-}
-
+  }
 }
