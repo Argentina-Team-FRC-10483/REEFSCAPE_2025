@@ -11,6 +11,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.ElevatorToL4Command;
+import frc.robot.commands.ElevatorToPositionCommand;
 import frc.robot.commands.ElevatorToL3Command;
 import frc.robot.commands.ElevatorToL2Command;
 import frc.robot.commands.ElevatorToL1Command;
@@ -82,10 +83,10 @@ public class RobotContainer {
     elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.3));
     munecaSubsystem.setDefaultCommand(new MunecaCommand(munecaSubsystem, () -> operatorController.getRightY() * 0.5));
     
-    operatorController.povUp().onTrue(new ElevatorToL3Command(elevatorSubsystem));
-    operatorController.povLeft().onTrue(new ElevatorToL2Command(elevatorSubsystem));
-    operatorController.povRight().onTrue(new ElevatorToL4Command(elevatorSubsystem));
-    operatorController.povDown().onTrue(new ElevatorToL1Command(elevatorSubsystem));
+    operatorController.povDown().onTrue(new ElevatorToPositionCommand(elevatorSubsystem, 10.0)); // Nivel 1
+    operatorController.povLeft().onTrue(new ElevatorToPositionCommand(elevatorSubsystem, 20.0)); // Nivel 2
+    operatorController.povUp().onTrue(new ElevatorToPositionCommand(elevatorSubsystem, 30.0)); // Nivel 3
+    operatorController.povRight().onTrue(new ElevatorToPositionCommand(elevatorSubsystem, 40.0)); // Nivel 4
 
     operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
     operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
@@ -107,4 +108,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return null;
   }
+  public ElevatorSubsystem getElevatorSubsystem() {
+    return elevatorSubsystem;
+}
 }
