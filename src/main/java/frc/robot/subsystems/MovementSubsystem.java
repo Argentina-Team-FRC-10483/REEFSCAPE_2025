@@ -55,8 +55,8 @@ public class MovementSubsystem extends SubsystemBase {
 
   final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.546);
 
-  double leftVelocity = calculoRPM(leftEncoder.getVelocity());
-  double rightVelocity = calculoRPM(-rightEncoder.getVelocity());
+  double leftVelocity;
+  double rightVelocity;
 
   private final MutVoltage m_appliedVoltage = Volts.mutable(0);
   // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
@@ -177,6 +177,9 @@ public class MovementSubsystem extends SubsystemBase {
     field2d.setRobotPose(odometry.getPoseMeters());
     SmartDashboard.putNumber("Left sensor position", getLeftEncoderPosition());
     SmartDashboard.putNumber("Right sensor position", getRightEncoderPosition());
+
+    leftVelocity = calculoRPM(leftEncoder.getVelocity());
+    rightVelocity = calculoRPM(rightEncoder.getVelocity());
 
     SmartDashboard.putNumber("Left Motor Velocity", leftVelocity);
      SmartDashboard.putNumber("Right Motor Velocity", rightVelocity);
