@@ -13,8 +13,8 @@ public class TakeCoralCommand extends Command {
   private final Timer timer = new Timer();
 
   private static final double ELEVATOR_TARGET_POSITION = 20.0;
-  private static final double MUNECA_TARGET_POSITION = -10.0;
-  private static final double ROD_POWER = 0.5;
+  private static final double MUNECA_TARGET_POSITION = -2.0;
+  private static final double ROD_POWER = 0.1;
   private static final double ROD_DURATION = 2.0;
 
   public TakeCoralCommand(ElevatorSubsystem elevatorSubsystem, MunecaSubsystem munecaSubsystem, RodLateralesSubsystem rodLateralesSubsystem) {
