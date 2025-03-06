@@ -21,7 +21,7 @@ public class MunecaSubsystem extends SubsystemBase {
   private final SparkMax motor;
   private final RelativeEncoder munecaEncoder;
 
-  private static final double SLOWDOWN_RANGE = 7.0;
+  public static final double SLOWDOWN_RANGE = 7.0;
   private static final double UPPER_LIMIT = 0.0;
   private static final double LOWER_LIMIT = -15.0;
   public static final String DASH_MUNECA_POS = "Muñeca Posicion";

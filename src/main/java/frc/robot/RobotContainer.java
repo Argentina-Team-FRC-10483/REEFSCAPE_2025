@@ -10,15 +10,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
-import frc.robot.commands.ElevatorToL4Command;
 import frc.robot.commands.ElevatorToPositionCommand;
-import frc.robot.commands.ElevatorToL3Command;
-import frc.robot.commands.ElevatorToL2Command;
-import frc.robot.commands.ElevatorToL1Command;
 import frc.robot.commands.MovementCommand;
 import frc.robot.commands.MunecaCommand;
 import frc.robot.commands.RodInteriorCommand;
 import frc.robot.commands.RodLateralesCommand;
+import frc.robot.commands.TakeCoralCommand;
 import frc.robot.commands.EngancheCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -91,6 +88,8 @@ public class RobotContainer {
     operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
     operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
     operatorController.a().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
+
+    operatorController.y().onTrue(new TakeCoralCommand(elevatorSubsystem, munecaSubsystem, rodLateralesSubsystem));//bajar muñeca y agarrar coral
 
     movementSubsystem.setDefaultCommand(new MovementCommand(
       () -> -driverController.getLeftY() * 0.5,
