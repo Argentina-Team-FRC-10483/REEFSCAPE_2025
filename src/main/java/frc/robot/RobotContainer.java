@@ -9,15 +9,20 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.ElevatorToPositionCommand;
 import frc.robot.commands.MovementCommand;
 import frc.robot.commands.MunecaCommand;
+import frc.robot.commands.MunecaToPositionCommand;
 import frc.robot.commands.RodInteriorCommand;
+import frc.robot.commands.RodLatTakeCoralCommand;
 import frc.robot.commands.RodLateralesCommand;
 import frc.robot.commands.ElevatorToL4Command;
 import frc.robot.commands.EngancheCommand;
@@ -97,8 +102,21 @@ public class RobotContainer {
   ));
   
 
-    elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.4));
-    munecaSubsystem.setDefaultCommand(new MunecaCommand(munecaSubsystem, () -> operatorController.getRightY() * 0.5));
+    elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.3));
+    munecaSubsystem.setDefaultCommand(new MunecaCommand(munecaSubsystem, () -> operatorController.getRightY() * 0.2));
+    
+    operatorController.povDown().onTrue(new ElevatorToPositionCommand(elevatorSubsystem, 10.0)); // Nivel 1
+    operatorController.povLeft().onTrue(new ElevatorToPositionCommand(elevatorSubsystem, 20.0)); // Nivel 2
+    operatorController.povUp().onTrue(new ElevatorToPositionCommand(elevatorSubsystem, 30.0)); // Nivel 3
+    operatorController.povRight().onTrue(new ElevatorToPositionCommand(elevatorSubsystem, 40.0)); // Nivel 4
+
+operatorController.y().onTrue(
+  new ElevatorToPositionCommand(elevatorSubsystem, 30)
+    .andThen(new MunecaToPositionCommand(munecaSubsystem, -2))
+    .andThen(new SequentialCommandGroup(
+      new RodLatTakeCoralCommand(rodLateralesSubsystem, 0.1, 2)
+    ))
+);
 
     operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
     operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
@@ -124,4 +142,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
+  public ElevatorSubsystem getElevatorSubsystem() {
+    return elevatorSubsystem;
+}
+
 }
