@@ -64,15 +64,20 @@ public class EyesSubsystem extends SubsystemBase{
                         posePublisher.accept(new Pose2d(new Translation2d(0.5, 0.5), new Rotation2d(0.5)));
                     }
                 }else if(result.hasTargets()){
+                    var infoFieldTags = aprilTagFieldLayout.getTagPose(resultCams.get(i).getBestTarget().getFiducialId()).get();
+                    if (resultCams.get(0).hasTargets() && resultCams.get(0).hasTargets()){
+                        double distance = Math.round(Math.pow(infoFieldTags.getX(), 2)+Math.pow(infoFieldTags.getY(), 2));
+                        SmartDashboard.putNumber("Camera distancia", distance);
+                     }
                     if(resultCams.get(0).hasTargets()){
-                        SmartDashboard.putNumber("Camera X" +number, aprilTagFieldLayout.getTagPose(resultCams.get(i).getBestTarget().getFiducialId()).get().getX());
-                        SmartDashboard.putNumber("Camera Y" +number, aprilTagFieldLayout.getTagPose(resultCams.get(i).getBestTarget().getFiducialId()).get().getY());
-                        SmartDashboard.putNumber("Camera Z" +number, aprilTagFieldLayout.getTagPose(resultCams.get(i).getBestTarget().getFiducialId()).get().getZ());
-                        SmartDashboard.putNumber("Camera R" +number, Math.toDegrees(aprilTagFieldLayout.getTagPose(resultCams.get(i).getBestTarget().getFiducialId()).get().getRotation().getZ()));
+                        SmartDashboard.putNumber("Camera X" +number, infoFieldTags.getX());
+                        SmartDashboard.putNumber("Camera Y" +number, infoFieldTags.getY());
+                        SmartDashboard.putNumber("Camera Z" +number, infoFieldTags.getZ());
+                        SmartDashboard.putNumber("Camera R" +number, Math.toDegrees(infoFieldTags.getRotation().getZ()));
                     }else if (resultCams.get(1).hasTargets() && target != null){
-                        SmartDashboard.putNumber("Camera X" +number, aprilTagFieldLayout.getTagPose(resultCams.get(i).getBestTarget().getFiducialId()).get().getX());
-                        SmartDashboard.putNumber("Camera Y" +number, aprilTagFieldLayout.getTagPose(resultCams.get(i).getBestTarget().getFiducialId()).get().getY());
-                        SmartDashboard.putNumber("Camera Z" +number, aprilTagFieldLayout.getTagPose(resultCams.get(i).getBestTarget().getFiducialId()).get().getZ());
+                        SmartDashboard.putNumber("Camera X" +number, infoFieldTags.getX());
+                        SmartDashboard.putNumber("Camera Y" +number, infoFieldTags.getY());
+                        SmartDashboard.putNumber("Camera Z" +number, infoFieldTags.getZ());
                     }
                 }
                 if(target != null) {    
