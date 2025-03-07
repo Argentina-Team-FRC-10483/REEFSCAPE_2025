@@ -48,9 +48,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    while (m_robotContainer.getElevatorSubsystem().getElevatorPosition() > 0) {
-      m_robotContainer.getElevatorSubsystem().moveElevator(-0.1); // Ajusta la velocidad según sea necesario
-  }
 }
   
   @Override

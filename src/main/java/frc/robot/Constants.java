@@ -11,7 +11,7 @@ public final class Constants {
     public static final double AXIS_VELOCIDAD_LIMIT = 0.5;
     public static final double AXIS_GIRO_LIMIT = 0.5;
     public static final double BUMPER_ACEL_LIMIT = 0.5;
-    public static final double ACEL_AUMENTO = 0.15;
+    public static final double ACEL_AUMENTO = 0.3;
     public static final double DEAD_POINT = 0.0;
     public static final double DEAD_ZONE = 0.12;
 

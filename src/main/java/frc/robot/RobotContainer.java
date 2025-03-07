@@ -5,6 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -13,9 +15,9 @@ import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.ElevatorToPositionCommand;
 import frc.robot.commands.MovementCommand;
 import frc.robot.commands.MunecaCommand;
+import frc.robot.commands.MunecaToPositionCommand;
 import frc.robot.commands.RodInteriorCommand;
 import frc.robot.commands.RodLateralesCommand;
-import frc.robot.commands.TakeCoralCommand;
 import frc.robot.commands.EngancheCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -78,18 +80,26 @@ public class RobotContainer {
   
 
     elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.3));
-    munecaSubsystem.setDefaultCommand(new MunecaCommand(munecaSubsystem, () -> operatorController.getRightY() * 0.5));
+    munecaSubsystem.setDefaultCommand(new MunecaCommand(munecaSubsystem, () -> operatorController.getRightY() * 0.2));
     
     operatorController.povDown().onTrue(new ElevatorToPositionCommand(elevatorSubsystem, 10.0)); // Nivel 1
     operatorController.povLeft().onTrue(new ElevatorToPositionCommand(elevatorSubsystem, 20.0)); // Nivel 2
     operatorController.povUp().onTrue(new ElevatorToPositionCommand(elevatorSubsystem, 30.0)); // Nivel 3
     operatorController.povRight().onTrue(new ElevatorToPositionCommand(elevatorSubsystem, 40.0)); // Nivel 4
 
+operatorController.y().onTrue(
+  new ElevatorToPositionCommand(elevatorSubsystem, 30)
+    .andThen(new MunecaToPositionCommand(munecaSubsystem, -2))
+    .andThen(new SequentialCommandGroup(
+      new RodLateralesCommand(rodLateralesSubsystem, 0.1),
+      new WaitCommand(2),
+      new RodLateralesCommand(rodLateralesSubsystem, 0)
+    ))
+);
+
     operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
     operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
     operatorController.a().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
-
-    operatorController.y().onTrue(new TakeCoralCommand(elevatorSubsystem, munecaSubsystem, rodLateralesSubsystem));//bajar muñeca y agarrar coral
 
     movementSubsystem.setDefaultCommand(new MovementCommand(
       () -> -driverController.getLeftY() * 0.5,
@@ -110,4 +120,5 @@ public class RobotContainer {
   public ElevatorSubsystem getElevatorSubsystem() {
     return elevatorSubsystem;
 }
+
 }
