@@ -5,8 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -17,6 +17,7 @@ import frc.robot.commands.MovementCommand;
 import frc.robot.commands.MunecaCommand;
 import frc.robot.commands.MunecaToPositionCommand;
 import frc.robot.commands.RodInteriorCommand;
+import frc.robot.commands.RodLatTakeCoralCommand;
 import frc.robot.commands.RodLateralesCommand;
 import frc.robot.commands.EngancheCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
@@ -91,9 +92,7 @@ operatorController.y().onTrue(
   new ElevatorToPositionCommand(elevatorSubsystem, 30)
     .andThen(new MunecaToPositionCommand(munecaSubsystem, -2))
     .andThen(new SequentialCommandGroup(
-      new RodLateralesCommand(rodLateralesSubsystem, 0.1),
-      new WaitCommand(2),
-      new RodLateralesCommand(rodLateralesSubsystem, 0)
+      new RodLatTakeCoralCommand(rodLateralesSubsystem, 0.1, 2)
     ))
 );
 

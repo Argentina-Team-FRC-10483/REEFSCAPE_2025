@@ -49,7 +49,7 @@ public class ElevatorToPositionCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    elevatorSubsystem.moveElevator(0);  // Aseguramos que el elevador se detenga al finalizar
+    elevatorSubsystem.moveElevator(0);
   }
 
   @Override
