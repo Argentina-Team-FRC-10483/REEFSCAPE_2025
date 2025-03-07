@@ -127,10 +127,6 @@ operatorController.y().onTrue(
         () -> -driverController.getRightX() * 0.5,
         movementSubsystem));
 
-    driverController.povUp().whileTrue(movementSubsystem.sysIdQuasistatic(Direction.kForward));
-    driverController.povRight().whileTrue(movementSubsystem.sysIdQuasistatic(Direction.kReverse));
-    driverController.povDown().whileTrue(movementSubsystem.sysIdDynamic(Direction.kForward));
-    driverController.povLeft().whileTrue(movementSubsystem.sysIdDynamic(Direction.kReverse));
   }
 
   /**
