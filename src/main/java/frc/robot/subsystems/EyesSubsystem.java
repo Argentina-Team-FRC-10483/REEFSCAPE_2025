@@ -10,6 +10,7 @@ import org.photonvision.targeting.PhotonPipelineMetadata;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -24,13 +25,14 @@ import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
-import org.photonvision.estimation.OpenCVHelp;
+
+
+
 public class EyesSubsystem extends SubsystemBase{
 
     private final String Pose = "Pose";
 
-    private final PhotonCamera[] cameras = new PhotonCamera[]{new PhotonCamera("Camera_1"), new PhotonCamera("Camera_2")};
+    private final PhotonCamera[] cameras = new PhotonCamera[]{new PhotonCamera("Camera_3"), new PhotonCamera("Camera_4")};
 
     StructPublisher <Pose2d> posePublisher = NetworkTableInstance.getDefault().getStructTopic(Pose, Pose2d.struct).publish();
 
@@ -39,48 +41,56 @@ public class EyesSubsystem extends SubsystemBase{
     private final Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0));
     private final PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam);
     private String number = "";
-    
-    public void periodic(){
+
+    public void periodic(){ 
         double start = Timer.getFPGATimestamp();
         for (int i = 0; i < cameras.length; i++){
             PhotonCamera camera = cameras[i];
             var resultCams = camera.getAllUnreadResults();
             for (var result : resultCams){
                 number = Integer.toString(i+1);
+                PhotonTrackedTarget target = result.getBestTarget();
                 SmartDashboard.putBoolean("Deteccion April Cam " + number, result.hasTargets());
-
+                Optional<Pose2d> estimatedPose = getEstimatedGlobalPose(result).map(x->x.estimatedPose).map(Pose3d::toPose2d);
                 if (result.getMultiTagResult().isPresent()) {
                     Transform3d fieldToCamera = result.getMultiTagResult().get().estimatedPose.best;
-                    SmartDashboard.putNumber("Cameras  X:", fieldToCamera.getX());
-                    SmartDashboard.putNumber("Cameras  Y:", fieldToCamera.getY());
-                    SmartDashboard.putNumber("Cameras  Z:", fieldToCamera.getZ());
+                    SmartDashboard.putNumber("Robot  X:" +number, fieldToCamera.getX());
+                    SmartDashboard.putNumber("Robot  Y:" +number, fieldToCamera.getY());
+                    SmartDashboard.putNumber("Robot  Z:" +number, fieldToCamera.getZ());
                     SmartDashboard.putNumber("Time:", result.getTimestampSeconds());
-                    Optional<Pose2d> estimatedPose = getEstimatedGlobalPose(result).map(x->x.estimatedPose).map(Pose3d::toPose2d);
                     if (estimatedPose.isPresent()){
                         posePublisher.accept(estimatedPose.get());
                     }else{
                         posePublisher.accept(new Pose2d(new Translation2d(0.5, 0.5), new Rotation2d(0.5)));
                     }
-                } 
-            PhotonTrackedTarget target = result.getBestTarget();
+                }else if(result.hasTargets()){
+                    if(resultCams.get(0).hasTargets()){
+                        SmartDashboard.putNumber("Camera X" +number, aprilTagFieldLayout.getTagPose(resultCams.get(i).getBestTarget().getFiducialId()).get().getX());
+                        SmartDashboard.putNumber("Camera Y" +number, aprilTagFieldLayout.getTagPose(resultCams.get(i).getBestTarget().getFiducialId()).get().getY());
+                        SmartDashboard.putNumber("Camera Z" +number, aprilTagFieldLayout.getTagPose(resultCams.get(i).getBestTarget().getFiducialId()).get().getZ());
+                        SmartDashboard.putNumber("Camera R" +number, Math.toDegrees(aprilTagFieldLayout.getTagPose(resultCams.get(i).getBestTarget().getFiducialId()).get().getRotation().getZ()));
+                    }else if (resultCams.get(1).hasTargets() && target != null){
+                        SmartDashboard.putNumber("Camera X" +number, aprilTagFieldLayout.getTagPose(resultCams.get(i).getBestTarget().getFiducialId()).get().getX());
+                        SmartDashboard.putNumber("Camera Y" +number, aprilTagFieldLayout.getTagPose(resultCams.get(i).getBestTarget().getFiducialId()).get().getY());
+                        SmartDashboard.putNumber("Camera Z" +number, aprilTagFieldLayout.getTagPose(resultCams.get(i).getBestTarget().getFiducialId()).get().getZ());
+                    }
+                }
                 if(target != null) {    
                     double yaw = target.getYaw();
                     double pitch = target.getPitch();
                     double area = target.getArea();
+                    double skew = target.getSkew();
                     int id =  target.fiducialId;
-                    
-                    SmartDashboard.putNumber("Camara_1 Yaw", yaw);
-                    SmartDashboard.putNumber("Camara_1 Pitch", pitch);
-                    SmartDashboard.putNumber("Camara_1 Area", area);
-                    SmartDashboard.putNumber("Camara_1 ID", id);
+
+                    SmartDashboard.putNumber("Yaw" +number, yaw);
+                    SmartDashboard.putNumber("Camara_1 ID", id);                        
                 }
-            }
+            } 
         }
         SmartDashboard.putNumber("Time elapsed", start - Timer.getFPGATimestamp());
     }
-    
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose(PhotonPipelineResult prevEstimatedRobotPose) {
         // photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
         return photonPoseEstimator.update(prevEstimatedRobotPose);
     }
-}
+ }

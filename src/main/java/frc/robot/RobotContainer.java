@@ -22,6 +22,7 @@ import frc.robot.subsystems.MunecaSubsystem;
 import frc.robot.subsystems.RodLateralesSubsystem;
 import frc.robot.subsystems.RodInteriorSubsystem;
 import frc.robot.subsystems.EngancheSubsystem;
+import frc.robot.subsystems.EyesSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -37,6 +38,7 @@ public class RobotContainer {
   private final RodLateralesSubsystem rodLateralesSubsystem = new RodLateralesSubsystem();
   private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
   private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
+  private final EyesSubsystem eyesSubsystem = new EyesSubsystem();
 
   private final CommandXboxController driverController = new CommandXboxController(
     OperatorConstants.DRIVER_CONTROLLER_PORT
