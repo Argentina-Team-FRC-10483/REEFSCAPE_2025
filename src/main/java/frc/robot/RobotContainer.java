@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
@@ -23,7 +22,6 @@ import frc.robot.commands.MunecaToPositionCommand;
 import frc.robot.commands.RodInteriorCommand;
 import frc.robot.commands.RodLatTakeCoralCommand;
 import frc.robot.commands.RodLateralesCommand;
-import frc.robot.commands.ElevatorToL4Command;
 import frc.robot.commands.EngancheCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -63,8 +61,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    NamedCommands.registerCommand("SubirElevador", new ElevatorToL4Command(elevatorSubsystem));
-    System.out.println(NamedCommands.getCommand("SubirElevador"));
+    NamedCommands.registerCommand("SubirElevador", new ElevatorToPositionCommand(elevatorSubsystem, 30));
     autoChooser = AutoBuilder.buildAutoChooser();
 
    
