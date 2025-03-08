@@ -11,16 +11,16 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ElevadorConstants;
 import frc.robot.Constants.NEOMotorsConstants;
-import frc.robot.Constants.LimitesEncoders;
+import frc.robot.utils.MotorSlowdownLimits;
 
 public class ElevatorSubsystem extends SubsystemBase {
   private final SparkMax leftMotorLeader;
   private final SparkMax rightMotorFollow;
   private final RelativeEncoder elevatorEncoder;
+  private final MotorSlowdownLimits slowdownLimits;
 
   public static final double SLOWDOWN_RANGE = 20.0;
   private static final double UPPER_LIMIT = 86.0;
@@ -42,11 +42,18 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorEncoder.setPosition(0);
 
     SmartDashboard.putData(DASH_RESET_ELEVATOR_ENCODER, new InstantCommand(() -> elevatorEncoder.setPosition(0)));
+    slowdownLimits = new MotorSlowdownLimits(
+      LOWER_LIMIT,
+      UPPER_LIMIT,
+      SLOWDOWN_RANGE,
+      this::getElevatorPosition,
+      leftMotorLeader::set
+    );
   }
 
   private SparkBaseConfig getFollowConfig() {
     return new SparkMaxConfig().follow(leftMotorLeader, true)
-    .idleMode(SparkBaseConfig.IdleMode.kBrake); // Modo Brake para evitar caída
+      .idleMode(SparkBaseConfig.IdleMode.kBrake); // Modo Brake para evitar caída
   }
 
   private static SparkMaxConfig getLeaderConfig() {
@@ -61,7 +68,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     leaderConfig
       .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION_NEO)
       .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT_NEO)
-
       .idleMode(SparkBaseConfig.IdleMode.kBrake) //  Modo Brake para evitar caída
       .inverted(false);
 
@@ -78,27 +84,6 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void moveElevator(double speed) {
-    double currentPosition = getElevatorPosition();
-
-    boolean inLowerSlowdownZone = currentPosition <= LOWER_LIMIT + SLOWDOWN_RANGE;
-    boolean inUpperSlowdownZone = currentPosition >= UPPER_LIMIT - SLOWDOWN_RANGE;
-    if (speed < 0 && inLowerSlowdownZone) speed = speed * getLowerSlowdownFactor(currentPosition);
-    if (speed > 0 && inUpperSlowdownZone) speed = speed * getUpperSlowdownFactor(currentPosition);
-    leftMotorLeader.set(speed);
+    slowdownLimits.move(speed);
   }
-
-  public double getUpperSlowdownFactor(double currentPosition) {
-    double resultado = Math.max((UPPER_LIMIT - currentPosition) / SLOWDOWN_RANGE, 0);
-    if (resultado == 0 ) return 0;
-    if (resultado <= Constants.LimitesEncoders.LimiteFuerzaAceleracion) return Constants.LimitesEncoders.LimiteFuerzaAceleracion;
-    return resultado;
-  }
-
-  public double getLowerSlowdownFactor(double currentPosition) {
-    double resultado = Math.max((currentPosition - LOWER_LIMIT) / SLOWDOWN_RANGE, 0);
-    if (resultado == 0 ) return 0;
-    if (resultado <= LimitesEncoders.LimiteFuerzaAceleracion) return LimitesEncoders.LimiteFuerzaAceleracion;
-    return resultado;
-  }
-
 }

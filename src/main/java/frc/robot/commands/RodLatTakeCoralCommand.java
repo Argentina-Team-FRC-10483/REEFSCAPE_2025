@@ -24,10 +24,6 @@ public class RodLatTakeCoralCommand extends Command {
   }
 
   @Override
-  public void execute() {
-  }
-
-  @Override
   public void end(boolean isInterrupted) {
     rodLateralesSubsystem.andarRodillo(0);
   }

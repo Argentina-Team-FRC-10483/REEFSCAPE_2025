@@ -14,10 +14,6 @@ public class ElevatorToPositionCommand extends Command {
   }
 
   @Override
-  public void initialize() {
-  }
-
-  @Override
   public void execute() {
     double currentPosition = elevatorSubsystem.getElevatorPosition();
     double speed = 0.3;

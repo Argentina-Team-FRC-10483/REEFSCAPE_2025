@@ -16,10 +16,6 @@ public class AlgaeIntakeCommand extends Command {
   }
 
   @Override
-  public void initialize() {
-  }
-
-  @Override
   public void execute() {
     algaeIntakeSubsystem.andarRodillo(power);
   }
@@ -27,10 +23,5 @@ public class AlgaeIntakeCommand extends Command {
   @Override
   public void end(boolean isInterrupted) {
     algaeIntakeSubsystem.andarRodillo(0);
-  }
-
-  @Override
-  public boolean isFinished() {
-    return false;
   }
 }
