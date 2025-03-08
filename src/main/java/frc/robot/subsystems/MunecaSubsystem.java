@@ -29,14 +29,10 @@ public class MunecaSubsystem extends SubsystemBase {
 
   public MunecaSubsystem() {
     motor = new SparkMax(MunecaConstants.MUNECA_MOTOR_ID, MotorType.kBrushless);
-
     motor.setCANTimeout(DriveConstants.CAN_TIMEOUT);
-
     motor.configure(getLeaderConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
     munecaEncoder = motor.getEncoder();
     munecaEncoder.setPosition(0);
-
     SmartDashboard.putData(DASH_RESET_MUNECA_ENCODER, new InstantCommand(() -> munecaEncoder.setPosition(0)));
   }
 
@@ -79,15 +75,13 @@ public class MunecaSubsystem extends SubsystemBase {
   public double getUpperSlowdownFactor(double currentPosition) {
     double resultado = Math.max((UPPER_LIMIT - currentPosition) / SLOWDOWN_RANGE, 0);
     if (resultado == 0 ) return 0;
-    if (resultado <= Constants.LimitesEncoders.LimiteFuerzaAceleracion) return Constants.LimitesEncoders.LimiteFuerzaAceleracion;
-    return resultado;
+    return Math.max(resultado, LimitesEncoders.LimiteFuerzaAceleracion);
   }
 
   public double getLowerSlowdownFactor(double currentPosition) {
     double resultado = Math.max((currentPosition - LOWER_LIMIT) / SLOWDOWN_RANGE, 0);
     if (resultado == 0 ) return 0;
-    if (resultado <= LimitesEncoders.LimiteFuerzaAceleracion) return LimitesEncoders.LimiteFuerzaAceleracion;
-    return resultado;
+    return Math.max(resultado, LimitesEncoders.LimiteFuerzaAceleracion);
   }
 
 }
