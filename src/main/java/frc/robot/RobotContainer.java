@@ -22,6 +22,7 @@ import frc.robot.commands.MunecaToPositionCommand;
 import frc.robot.commands.RodInteriorCommand;
 import frc.robot.commands.RodLatTakeCoralCommand;
 import frc.robot.commands.RodLateralesCommand;
+import frc.robot.commands.TimedRollerScoreCommand;
 import frc.robot.commands.EngancheCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -61,7 +62,15 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    NamedCommands.registerCommand("SubirElevador", new ElevatorToPositionCommand(elevatorSubsystem, 30));
+    NamedCommands.registerCommand("Elevator to L4", new ElevatorToPositionCommand(elevatorSubsystem, 40));
+    NamedCommands.registerCommand("Elevator to L3", new ElevatorToPositionCommand(elevatorSubsystem, 30));
+    NamedCommands.registerCommand("Elevator to L2", new ElevatorToPositionCommand(elevatorSubsystem, 20));
+    NamedCommands.registerCommand("Elevator to L1", new ElevatorToPositionCommand(elevatorSubsystem, 10));
+    NamedCommands.registerCommand("RollerIntakeClaw", new RodLatTakeCoralCommand(rodLateralesSubsystem, 0.1, 2));
+    NamedCommands.registerCommand("RollerScoreCoral", new TimedRollerScoreCommand(rodInteriorSubsystem, 0.1, 2));
+    NamedCommands.registerCommand("Wrist Position L4", new MunecaToPositionCommand(munecaSubsystem, -2));
+    NamedCommands.registerCommand("Wrist Position L3, 2 and 1", new MunecaToPositionCommand(munecaSubsystem, -4));
+    NamedCommands.registerCommand("Wrist Position Grab Coral", new MunecaToPositionCommand(munecaSubsystem, -15));
     autoChooser = AutoBuilder.buildAutoChooser();
 
    
@@ -111,6 +120,14 @@ operatorController.y().onTrue(
     .andThen(new MunecaToPositionCommand(munecaSubsystem, -2))
     .andThen(new SequentialCommandGroup(
       new RodLatTakeCoralCommand(rodLateralesSubsystem, 0.1, 2)
+    ))
+);
+
+operatorController.x().onTrue(
+  new ElevatorToPositionCommand(elevatorSubsystem, 40)
+    .andThen(new MunecaToPositionCommand(munecaSubsystem, -2))
+    .andThen(new SequentialCommandGroup(
+      new TimedRollerScoreCommand(rodInteriorSubsystem, 0.1, 2)
     ))
 );
 
