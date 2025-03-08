@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 3.906678082191781,
-        "y": 5.354773116438356
+        "x": 3.7161885245901636,
+        "y": 5.523463114754098
       },
       "prevControl": {
-        "x": 3.906678082191781,
-        "y": 7.653899316751191
+        "x": 2.7571721311475414,
+        "y": 7.345594262295082
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,14 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Elevator to L4",
+      "waypointRelativePos": 0.8038936372269703,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

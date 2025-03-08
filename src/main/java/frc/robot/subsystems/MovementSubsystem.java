@@ -1,7 +1,11 @@
+
 package frc.robot.subsystems;
 
 import java.util.List;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.util.Units;
 import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -20,26 +24,34 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.units.measure.MutDistance;
+import edu.wpi.first.units.measure.MutLinearVelocity;
+import edu.wpi.first.units.measure.MutVoltage;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.utils.CameraInterFace;
 import frc.robot.utils.Gyro;
 import frc.robot.utils.PositionCamera;
 
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Volts;
+
 public class MovementSubsystem extends SubsystemBase {
-  private final SparkMax leftLeader;
-  private final SparkMax leftFollow;
-  private final SparkMax rightLeader;
-  private final SparkMax rightFollow;
+  private final SparkMax leftLeader = new SparkMax(DriveConstants.LEFT_MOVEMENT_LEADER_MOTOR_ID, MotorType.kBrushed);
+  private final SparkMax leftFollow = new SparkMax(DriveConstants.LEFT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
+  private final SparkMax rightLeader = new SparkMax(DriveConstants.RIGHT_MOVEMENT_LEADER_MOTOR_ID, MotorType.kBrushed);
+  private final SparkMax rightFollow = new SparkMax(DriveConstants.RIGHT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
 
   StructPublisher<Pose2d> posePublisher;
 
@@ -47,22 +59,50 @@ public class MovementSubsystem extends SubsystemBase {
 
   public RelativeEncoder leftEncoder;
   public RelativeEncoder rightEncoder;
-  private DifferentialDriveOdometry odometry;
+  private DifferentialDrivePoseEstimator odometry;
   private Field2d field2d;
-  
+
   private DifferentialDrive drive;
   
-    final double kDriveTickAMetros = (15.24 * Math.PI * 1.0 / 100.0) / 2.1;
+  final double kDriveTickAMetros = (15.24 * Math.PI * 1.0 / 100.0) / 2.1;
 
-    final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.546);
+  final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.546);
+
+    double leftVelocity;
+    double rightVelocity;
+
+    private final MutVoltage m_appliedVoltage = Volts.mutable(0);
+    // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
+    private final MutDistance m_distance = Meters.mutable(0);
+    // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
+    private final MutLinearVelocity m_velocity = MetersPerSecond.mutable(0);
+
+    // Creates a SysIdRoutine
+    SysIdRoutine routine = new SysIdRoutine(new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(voltage -> {
+        leftLeader.setVoltage(voltage);
+        rightLeader.setVoltage(voltage);
+    }, log -> {
+        // Record a frame for the left motors.  Since these share an encoder, we consider
+        // the entire group to be one motor.
+        log.motor("drive-left")
+          .voltage(
+            m_appliedVoltage.mut_replace(
+              leftLeader.getAppliedOutput() * RobotController.getBatteryVoltage(), Volts))
+          .linearPosition(m_distance.mut_replace(getLeftEncoderPosition(), Meters))
+          .linearVelocity(
+            m_velocity.mut_replace(leftVelocity, MetersPerSecond));
+        // Record a frame for the right motors.  Since these share an encoder, we consider
+        // the entire group to be one motor.
+        log.motor("drive-right")
+          .voltage(
+            m_appliedVoltage.mut_replace(
+              rightLeader.getAppliedOutput() * RobotController.getBatteryVoltage(), Volts))
+          .linearPosition(m_distance.mut_replace(getRightEncoderPosition(), Meters))
+          .linearVelocity(
+            m_velocity.mut_replace(rightVelocity, MetersPerSecond));
+    }, this));
 
   public MovementSubsystem() {
-    // Create brushed motors for drive
-    leftLeader = new SparkMax(DriveConstants.LEFT_MOVEMENT_LEADER_MOTOR_ID, MotorType.kBrushed);
-    leftFollow = new SparkMax(DriveConstants.LEFT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
-    rightLeader = new SparkMax(DriveConstants.RIGHT_MOVEMENT_LEADER_MOTOR_ID, MotorType.kBrushed);
-    rightFollow = new SparkMax(DriveConstants.RIGHT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
-
     // Set up differential drive class
     drive = new DifferentialDrive(leftLeader, rightLeader);
     leftLeader.setCANTimeout(DriveConstants.CAN_TIMEOUT);
@@ -172,9 +212,15 @@ public class MovementSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putData(drive);
     odometry.update(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition());
-    field2d.setRobotPose(odometry.getPoseMeters());
+    field2d.setRobotPose(odometry.getEstimatedPosition());
     SmartDashboard.putNumber("Left sensor position", getLeftEncoderPosition());
     SmartDashboard.putNumber("Right sensor position", getRightEncoderPosition());
+
+    leftVelocity = calculoRPM(leftEncoder.getVelocity());
+    rightVelocity = calculoRPM(rightEncoder.getVelocity());
+
+    SmartDashboard.putNumber("Left Motor Velocity", leftVelocity);
+     SmartDashboard.putNumber("Right Motor Velocity", rightVelocity);
     posePublisher.accept(odometry.getEstimatedPosition());
     cameraInterFace.periodic();
   }
@@ -190,7 +236,7 @@ public class MovementSubsystem extends SubsystemBase {
 
   public Pose2d getPose(){
     System.out.println("getPose");
-    return odometry.getPoseMeters();
+    return odometry.getEstimatedPosition();
     //return new Pose2d(odometry.getPoseMeters().getX()/10.0, odometry.getPoseMeters().getY()/10.0, odometry.getPoseMeters().getRotation());
   }
 
@@ -198,15 +244,12 @@ public class MovementSubsystem extends SubsystemBase {
     System.out.println(pose2d);
     odometry.resetPosition(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition(), pose2d);
     System.out.println("resetPose");
-    return odometry.getPoseMeters();
+    return odometry.getEstimatedPosition();
   }
 
   public ChassisSpeeds getRobotRelativeSpeeds(){
-    double leftVelocity = calculoRPM(leftEncoder.getVelocity());
-    double rightVelocity = calculoRPM(-rightEncoder.getVelocity());
     double vx = (leftVelocity + rightVelocity) / 2;
     double vy = 0.0;
-    System.out.println("getRobotRelativeSpeeds");
     SmartDashboard.putNumber("vx", vx);
     SmartDashboard.putNumber("leftVelocity", leftVelocity);
     SmartDashboard.putNumber("rightVelocity", rightVelocity);
@@ -216,8 +259,7 @@ public class MovementSubsystem extends SubsystemBase {
 
   public void driveRobotRelative(ChassisSpeeds speeds) {
     var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
-    drive.tankDrive(wheelSpeeds.leftMetersPerSecond * 0.01, wheelSpeeds.rightMetersPerSecond * 0.01);
-    System.out.println("driveRobotRelative");
+    drive.tankDrive(wheelSpeeds.leftMetersPerSecond * 0.11, wheelSpeeds.rightMetersPerSecond * 0.11);
   }
 
   public static double calculoRPM(double rpm){
@@ -226,10 +268,19 @@ public class MovementSubsystem extends SubsystemBase {
 
   // sets the speed of the drive motors
   public void driveArcade(double xSpeed, double zRotation) {
-    drive.arcadeDrive(xSpeed, zRotation);
+    drive.arcadeDrive(xSpeed, zRotation, false);
   }
 
   public void curvatureArcade(double xSpeed, double zRotation) {
-    drive.curvatureDrive(xSpeed, zRotation, false);
+    drive.curvatureDrive(xSpeed, zRotation, false); //hay que probar
   }
+
+  // Commands for testing
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return routine.quasistatic(direction);
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return routine.dynamic(direction);
+    }
 }
