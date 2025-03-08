@@ -24,10 +24,6 @@ public class TimedRollerScoreCommand extends Command {
   }
 
   @Override
-  public void execute() {
-  }
-
-  @Override
   public void end(boolean isInterrupted) {
     rodInteriorSubsystem.andarRodillo(0);
   }

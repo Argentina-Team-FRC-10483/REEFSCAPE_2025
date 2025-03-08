@@ -8,10 +8,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-import org.photonvision.PhotonCamera;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
  * the TimedRobot documentation. If you change the name of this class or the package after creating
@@ -52,7 +48,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-}
+  }
 
   @Override
   public void disabledPeriodic() {
@@ -96,30 +92,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-
-        PhotonCamera camera = new PhotonCamera("Camera_1");
-        boolean targetVisible = false;
-        double targetYaw = 0.0;
-        double targetRange = 0.0;
-        var results = camera.getAllUnreadResults();
-        if(!results.isEmpty()) {
-            var result = results.get(results.size() - 1);
-            if (result.hasTargets()) {
-                for (var target : result.getTargets()){
-                    if (target.getFiducialId() == 7){
-                        targetYaw = target.getYaw();
-                        targetVisible = true;
-                    }
-                }
-            }
-        }
-        //if (controller.getAButton() && targetVisible) {
-           // turn = -1.0 * targetYaw * VISION_TURN_kP * Constans.Differential.kMaxAngularSpeed;
-
-
-        // }
-        //drivetrain.drive(forward, strafe, turn);
-        SmartDashboard.putBoolean("Vision Target Visible", targetVisible);
   }
 
   @Override

@@ -19,10 +19,6 @@ public class MunecaCommand extends Command {
   }
 
   @Override
-  public void initialize() {
-  }
-
-  @Override
   public void execute() {
     munecaSubsystem.moveMuneca(Utils.applyDeadZone(-munecaPower.getAsDouble(), DeadZone.ElevadorDeadZone));
   }
@@ -30,10 +26,5 @@ public class MunecaCommand extends Command {
   @Override
   public void end(boolean isInterrupted) {
     munecaSubsystem.moveMuneca(0);
-  }
-
-  @Override
-  public boolean isFinished() {
-    return false;
   }
 }

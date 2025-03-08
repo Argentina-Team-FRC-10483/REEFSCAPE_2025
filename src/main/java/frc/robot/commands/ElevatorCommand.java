@@ -19,10 +19,6 @@ public class ElevatorCommand extends Command {
   }
 
   @Override
-  public void initialize() {
-  }
-
-  @Override
   public void execute() {
     elevatorSubsystem.moveElevator(Utils.applyDeadZone(-elevatorPower.getAsDouble(), DeadZone.ElevadorDeadZone));
   }
@@ -30,10 +26,5 @@ public class ElevatorCommand extends Command {
   @Override
   public void end(boolean isInterrupted) {
     elevatorSubsystem.moveElevator(0);
-  }
-
-  @Override
-  public boolean isFinished() {
-    return false;
   }
 }

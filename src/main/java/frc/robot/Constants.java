@@ -22,12 +22,11 @@ public final class Constants {
     public static final int DRIVER_CONTROLLER_PORT = 0;
     public static final int OPERADOR_CONTROLLER_PORT = 1;
   }
+
   public static final class ArmConstants {
     public static final int ArmMotorShoulder_ID = 10;
   }
-  public static final class WristConstants {
-    public static final int WristMotor_ID = 11;
-  }
+
   public static final class PinzaConstants {
     //Motores
     public static final int PinzaMotorRodilloCentral_ID = 9;
@@ -58,7 +57,7 @@ public final class Constants {
     public static final double MovimientoDeadZone = 0.05;
   }
 
-public static final class LimitesEncoders {
+  public static final class LimitesEncoders {
     public static final double LimiteFuerzaAceleracion = 0.166666;
   }
 

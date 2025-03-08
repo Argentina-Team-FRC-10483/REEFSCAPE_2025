@@ -16,10 +16,6 @@ public class RodLateralesCommand extends Command {
   }
 
   @Override
-  public void initialize() {
-  }
-
-  @Override
   public void execute() {
     rodLateralesSubsystem.andarRodillo(power);
   }
@@ -27,10 +23,5 @@ public class RodLateralesCommand extends Command {
   @Override
   public void end(boolean isInterrupted) {
     rodLateralesSubsystem.andarRodillo(0);
-  }
-
-  @Override
-  public boolean isFinished() {
-    return false;
   }
 }
