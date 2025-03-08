@@ -20,6 +20,8 @@ import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.units.measure.MutLinearVelocity;
 import edu.wpi.first.units.measure.MutVoltage;
+import edu.wpi.first.units.measure.Velocity;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -34,6 +36,7 @@ import frc.robot.util.Gyro;
 
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
 
 public class MovementSubsystem extends SubsystemBase {
@@ -55,8 +58,8 @@ public class MovementSubsystem extends SubsystemBase {
 
   final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.546);
 
-  double leftVelocity = calculoRPM(leftEncoder.getVelocity());
-  double rightVelocity = calculoRPM(-rightEncoder.getVelocity());
+  double leftVelocity;
+  double rightVelocity;
 
   private final MutVoltage m_appliedVoltage = Volts.mutable(0);
   // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
@@ -65,7 +68,7 @@ public class MovementSubsystem extends SubsystemBase {
   private final MutLinearVelocity m_velocity = MetersPerSecond.mutable(0);
 
   // Creates a SysIdRoutine
-  SysIdRoutine routine = new SysIdRoutine(new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(voltage -> {
+  SysIdRoutine routine = new SysIdRoutine(new SysIdRoutine.Config(Volts.of(0.5).per(Second), Volts.of(4), null), new SysIdRoutine.Mechanism(voltage -> {
     leftLeader.setVoltage(voltage);
     rightLeader.setVoltage(voltage);
   }, log -> {
@@ -96,7 +99,7 @@ public class MovementSubsystem extends SubsystemBase {
       rightLeader.setCANTimeout(DriveConstants.CAN_TIMEOUT);
       leftFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
       rightFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
-      
+    
       configureMotors();
       configureOdometry();
       System.out.println("Before autobuilder");
@@ -177,6 +180,8 @@ public class MovementSubsystem extends SubsystemBase {
     field2d.setRobotPose(odometry.getPoseMeters());
     SmartDashboard.putNumber("Left sensor position", getLeftEncoderPosition());
     SmartDashboard.putNumber("Right sensor position", getRightEncoderPosition());
+    leftVelocity  = calculoRPM(leftEncoder.getVelocity());
+    rightVelocity = calculoRPM(-rightEncoder.getVelocity());
 
     SmartDashboard.putNumber("Left Motor Velocity", leftVelocity);
      SmartDashboard.putNumber("Right Motor Velocity", rightVelocity);
