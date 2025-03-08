@@ -1,4 +1,4 @@
-package frc.robot.util;
+package frc.robot.utils;
 
 import com.studica.frc.AHRS;
 

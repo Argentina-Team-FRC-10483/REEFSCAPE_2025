@@ -1,5 +1,9 @@
 package frc.robot.subsystems;
 
+import java.util.List;
+
+import org.photonvision.PhotonCamera;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPLTVController;
@@ -13,6 +17,9 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -27,7 +34,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.util.Gyro;
+import frc.robot.utils.CameraInterFace;
+import frc.robot.utils.Gyro;
+import frc.robot.utils.PositionCamera;
 
 public class MovementSubsystem extends SubsystemBase {
   private final SparkMax leftLeader;
@@ -36,6 +45,8 @@ public class MovementSubsystem extends SubsystemBase {
   private final SparkMax rightFollow;
 
   StructPublisher<Pose2d> posePublisher;
+
+  private final CameraInterFace cameraInterFace;
 
   public RelativeEncoder leftEncoder;
   public RelativeEncoder rightEncoder;
@@ -65,6 +76,24 @@ public class MovementSubsystem extends SubsystemBase {
     configureMotors();
     configureOdometry();
     configureAutoBuilder();
+    //  TODO: Investigar las unidades del Trasfrom3d, creemos metros.
+    cameraInterFace = new CameraInterFace(
+      List.of(
+        new PositionCamera(
+          new PhotonCamera("Camera_1"),
+          new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0))
+        ),
+        new PositionCamera(
+          new PhotonCamera("Camera_2"),
+          new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0))
+        ),
+        new PositionCamera(
+          new PhotonCamera("Camera_3"),
+          new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0))
+        )
+      ),
+      odometry::addVisionMeasurement
+    );
   }
 
   private void configureMotors() {
@@ -89,7 +118,8 @@ public class MovementSubsystem extends SubsystemBase {
   private void configureOdometry() {
     this.rightEncoder = rightLeader.getEncoder();
     this.leftEncoder = leftLeader.getEncoder();
-    // odometry = new DifferentialDriveOdometry(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition());
+    // odometry = new DifferentialDriveOdometry(Gyro.getInstance().getYawAngle2d(),
+    // getLeftEncoderPosition(), getRightEncoderPosition());
     odometry = new DifferentialDrivePoseEstimator(
         kinematics,
         Gyro.getInstance().getYawAngle2d(),
@@ -153,6 +183,7 @@ public class MovementSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Left sensor position", getLeftEncoderPosition());
     SmartDashboard.putNumber("Right sensor position", getRightEncoderPosition());
     posePublisher.accept(odometry.getEstimatedPosition());
+    cameraInterFace.periodic();
   }
 
   // Get encoder positions (converted to meters)
