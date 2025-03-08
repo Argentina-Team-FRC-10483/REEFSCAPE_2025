@@ -78,18 +78,18 @@ public class MovementSubsystem extends SubsystemBase {
                     .voltage(
                         m_appliedVoltage.mut_replace(
                             leftLeader.getAppliedOutput() * RobotController.getBatteryVoltage(), Volts))
-                    .linearPosition(m_distance.mut_replace(getLeftEncoderPosition(), Meters))
+                    .linearPosition(m_distance.mut_replace(getRightEncoderPosition(), Meters))
                     .linearVelocity(
-                        m_velocity.mut_replace(leftVelocity, MetersPerSecond));
+                        m_velocity.mut_replace(rightVelocity, MetersPerSecond));
                 // Record a frame for the right motors.  Since these share an encoder, we consider
                 // the entire group to be one motor.
                 log.motor("drive-right")
                     .voltage(
                         m_appliedVoltage.mut_replace(
                             rightLeader.getAppliedOutput() * RobotController.getBatteryVoltage(), Volts))
-                    .linearPosition(m_distance.mut_replace(getRightEncoderPosition(), Meters))
+                    .linearPosition(m_distance.mut_replace(getLeftEncoderPosition(), Meters))
                     .linearVelocity(
-                        m_velocity.mut_replace(rightVelocity, MetersPerSecond));
+                        m_velocity.mut_replace(leftVelocity, MetersPerSecond));
               }, this));
 
   public MovementSubsystem() {
