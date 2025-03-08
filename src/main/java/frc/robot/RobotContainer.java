@@ -59,8 +59,11 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    autoChooser = AutoBuilder.buildAutoChooser();
     NamedCommands.registerCommand("SubirElevador", new ElevatorToL4Command(elevatorSubsystem));
+    System.out.println(NamedCommands.getCommand("SubirElevador"));
+    autoChooser = AutoBuilder.buildAutoChooser();
+
+   
 
     configureBindings();
     SmartDashboard.putData("Auto Chooser", autoChooser);

@@ -183,6 +183,9 @@ public class MovementSubsystem extends SubsystemBase {
     leftVelocity  = calculoRPM(leftEncoder.getVelocity());
     rightVelocity = calculoRPM(-rightEncoder.getVelocity());
 
+    leftVelocity = calculoRPM(leftEncoder.getVelocity());
+    rightVelocity = calculoRPM(rightEncoder.getVelocity());
+
     SmartDashboard.putNumber("Left Motor Velocity", leftVelocity);
      SmartDashboard.putNumber("Right Motor Velocity", rightVelocity);
     posePublisher.accept(odometry.getPoseMeters());
