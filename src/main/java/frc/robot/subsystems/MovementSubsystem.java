@@ -226,7 +226,6 @@ public class MovementSubsystem extends SubsystemBase {
   public Pose2d getPose() {
     System.out.println("getPose");
     return odometry.getEstimatedPosition();
-    //return new Pose2d(odometry.getPoseMeters().getX()/10.0, odometry.getPoseMeters().getY()/10.0, odometry.getPoseMeters().getRotation());
   }
 
   public Pose2d resetPose(Pose2d pose2d) {
