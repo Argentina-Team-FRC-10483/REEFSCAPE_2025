@@ -1,5 +1,9 @@
 package frc.robot.subsystems;
 
+import java.util.List;
+
+import org.photonvision.PhotonCamera;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPLTVController;
@@ -11,6 +15,9 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -24,7 +31,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.util.Gyro;
+import frc.robot.utils.CameraInterFace;
+import frc.robot.utils.Gyro;
+import frc.robot.utils.PositionCamera;
 
 public class MovementSubsystem extends SubsystemBase {
   private final SparkMax leftLeader;
@@ -33,6 +42,8 @@ public class MovementSubsystem extends SubsystemBase {
   private final SparkMax rightFollow;
 
   StructPublisher<Pose2d> posePublisher;
+
+  private final CameraInterFace cameraInterFace;
 
   public RelativeEncoder leftEncoder;
   public RelativeEncoder rightEncoder;
@@ -45,49 +56,75 @@ public class MovementSubsystem extends SubsystemBase {
 
     final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.546);
 
-    public MovementSubsystem() {
-      // Create brushed motors for drive
-      leftLeader = new SparkMax(DriveConstants.LEFT_MOVEMENT_LEADER_MOTOR_ID, MotorType.kBrushed);
-      leftFollow = new SparkMax(DriveConstants.LEFT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
-      rightLeader = new SparkMax(DriveConstants.RIGHT_MOVEMENT_LEADER_MOTOR_ID, MotorType.kBrushed);
-      rightFollow = new SparkMax(DriveConstants.RIGHT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
-  
-      // Set up differential drive class
-      drive = new DifferentialDrive(leftLeader, rightLeader);
-      leftLeader.setCANTimeout(DriveConstants.CAN_TIMEOUT);
-      rightLeader.setCANTimeout(DriveConstants.CAN_TIMEOUT);
-      leftFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
-      rightFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
-  
-      configureMotors();
-      configureOdometry();;
-      configureAutoBuilder();
-    }
-  
-    private void configureMotors() {
-      SparkMaxConfig config = new SparkMaxConfig();
-      config.voltageCompensation(12);
-      config.smartCurrentLimit(DriveConstants.DRIVE_MOTOR_CURRENT_LIMIT);
-  
-      config.follow(leftLeader);
-      leftFollow.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-      config.follow(rightLeader);
-      rightFollow.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  
-      // Remove following, then apply config to right leader
-      config.disableFollowerMode();
-      rightLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-      // Set conifg to inverted and then apply to left leader.
-      // Set Left side inverted so that positive values drive both sides forward
-      config.inverted(true);
-      leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    }
-  
-    private void configureOdometry() {
-      this.rightEncoder = rightLeader.getEncoder();
-      this.leftEncoder = leftLeader.getEncoder();
-      odometry = new DifferentialDriveOdometry(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition());
-    
+  public MovementSubsystem() {
+    // Create brushed motors for drive
+    leftLeader = new SparkMax(DriveConstants.LEFT_MOVEMENT_LEADER_MOTOR_ID, MotorType.kBrushed);
+    leftFollow = new SparkMax(DriveConstants.LEFT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
+    rightLeader = new SparkMax(DriveConstants.RIGHT_MOVEMENT_LEADER_MOTOR_ID, MotorType.kBrushed);
+    rightFollow = new SparkMax(DriveConstants.RIGHT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
+
+    // Set up differential drive class
+    drive = new DifferentialDrive(leftLeader, rightLeader);
+    leftLeader.setCANTimeout(DriveConstants.CAN_TIMEOUT);
+    rightLeader.setCANTimeout(DriveConstants.CAN_TIMEOUT);
+    leftFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
+    rightFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
+
+    configureMotors();
+    configureOdometry();
+    configureAutoBuilder();
+    //  TODO: Investigar las unidades del Trasfrom3d, creemos metros.
+    cameraInterFace = new CameraInterFace(
+      List.of(
+        new PositionCamera(
+          new PhotonCamera("Camera_1"),
+          new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0))
+        ),
+        new PositionCamera(
+          new PhotonCamera("Camera_2"),
+          new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0))
+        ),
+        new PositionCamera(
+          new PhotonCamera("Camera_3"),
+          new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0))
+        )
+      ),
+      odometry::addVisionMeasurement
+    );
+  }
+
+  private void configureMotors() {
+    SparkMaxConfig config = new SparkMaxConfig();
+    config.voltageCompensation(12);
+    config.smartCurrentLimit(DriveConstants.DRIVE_MOTOR_CURRENT_LIMIT);
+
+    config.follow(leftLeader);
+    leftFollow.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    config.follow(rightLeader);
+    rightFollow.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    // Remove following, then apply config to right leader
+    config.disableFollowerMode();
+    rightLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // Set conifg to inverted and then apply to left leader.
+    // Set Left side inverted so that positive values drive both sides forward
+    config.inverted(true);
+    leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  }
+
+  private void configureOdometry() {
+    this.rightEncoder = rightLeader.getEncoder();
+    this.leftEncoder = leftLeader.getEncoder();
+    // odometry = new DifferentialDriveOdometry(Gyro.getInstance().getYawAngle2d(),
+    // getLeftEncoderPosition(), getRightEncoderPosition());
+    odometry = new DifferentialDrivePoseEstimator(
+        kinematics,
+        Gyro.getInstance().getYawAngle2d(),
+        getLeftEncoderPosition(),
+        getRightEncoderPosition(),
+        new Pose2d(),
+        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+        VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 
     field2d = new Field2d();
     SmartDashboard.putData(field2d);
@@ -138,7 +175,8 @@ public class MovementSubsystem extends SubsystemBase {
     field2d.setRobotPose(odometry.getPoseMeters());
     SmartDashboard.putNumber("Left sensor position", getLeftEncoderPosition());
     SmartDashboard.putNumber("Right sensor position", getRightEncoderPosition());
-    posePublisher.accept(odometry.getPoseMeters());
+    posePublisher.accept(odometry.getEstimatedPosition());
+    cameraInterFace.periodic();
   }
 
   // Get encoder positions (converted to meters)

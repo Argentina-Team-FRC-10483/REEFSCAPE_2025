@@ -17,8 +17,8 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.EngancheSubsystem;
-import frc.robot.subsystems.EyesSubsystem;
 import frc.robot.subsystems.MovementSubsystem;
+import frc.robot.utils.CameraInterFace;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -31,8 +31,6 @@ import frc.robot.subsystems.MovementSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-
-  private final EyesSubsystem eyesSubsystem = new EyesSubsystem();
 
   private final MovementSubsystem movementSubsystem = new MovementSubsystem();
 
