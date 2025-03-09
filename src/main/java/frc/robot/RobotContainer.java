@@ -24,6 +24,7 @@ import frc.robot.commands.RodLatTakeCoralCommand;
 import frc.robot.commands.RodLateralesCommand;
 import frc.robot.commands.TimedRollerScoreCommand;
 import frc.robot.commands.EngancheCommand;
+import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.MovementSubsystem;
@@ -133,6 +134,7 @@ operatorController.x().onTrue(
 
     operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
     operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
+    operatorController.rightBumper().whileTrue(new ShooterCommand(rodLateralesSubsystem, -1));
     operatorController.a().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
 
     movementSubsystem.setDefaultCommand(new MovementCommand(

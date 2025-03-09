@@ -39,4 +39,8 @@ public class RodLateralesSubsystem extends SubsystemBase {
     motor.set(power);
   }
 
+  public void shot(double shooterPower) {
+    motor.set(shooterPower);
+  }
+
 }
