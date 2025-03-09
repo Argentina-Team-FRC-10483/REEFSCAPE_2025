@@ -14,7 +14,7 @@
   "robotMass": 60.0,
   "robotMOI": 7.5,
   "robotTrackwidth": 0.546,
-  "driveWheelRadius": 0.0762,
+  "driveWheelRadius": 0.076,
   "driveGearing": 7.29,
   "maxDriveSpeed": 1.0,
   "driveMotorType": "CIM",
