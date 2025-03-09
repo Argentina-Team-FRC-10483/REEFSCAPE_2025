@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
@@ -106,7 +107,7 @@ public class RobotContainer {
     }
   ));
   
-
+//falta que la muñeca cuadno el elevador vaya por debajo de la rotacion 40 la muñeca suba osea que vaya por encima de las -10 rotaciones, ponele el limite inferior 
     elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.3));
     munecaSubsystem.setDefaultCommand(new MunecaCommand(munecaSubsystem, () -> operatorController.getRightY() * 0.2));
     
@@ -141,6 +142,11 @@ operatorController.x().onTrue(
         () -> -driverController.getRightX() * 0.5,
         movementSubsystem));
 
+
+    driverController.povUp().whileTrue(movementSubsystem.sysIdQuasistatic(Direction.kForward));
+    driverController.povRight().whileTrue(movementSubsystem.sysIdQuasistatic(Direction.kReverse));
+    driverController.povDown().whileTrue(movementSubsystem.sysIdDynamic(Direction.kForward));
+    driverController.povLeft().whileTrue(movementSubsystem.sysIdDynamic(Direction.kReverse));
   }
 
   /**

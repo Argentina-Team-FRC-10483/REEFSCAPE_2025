@@ -34,6 +34,7 @@ import frc.robot.util.Gyro;
 
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
 
 public class MovementSubsystem extends SubsystemBase {
@@ -65,7 +66,7 @@ public class MovementSubsystem extends SubsystemBase {
   private final MutLinearVelocity m_velocity = MetersPerSecond.mutable(0);
 
   // Creates a SysIdRoutine
-  SysIdRoutine routine = new SysIdRoutine(new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(voltage -> {
+  SysIdRoutine routine = new SysIdRoutine(new SysIdRoutine.Config(Volts.of(0.5).per(Second), Volts.of(4), null), new SysIdRoutine.Mechanism(voltage -> {
     leftLeader.setVoltage(voltage);
     rightLeader.setVoltage(voltage);
   }, log -> {
