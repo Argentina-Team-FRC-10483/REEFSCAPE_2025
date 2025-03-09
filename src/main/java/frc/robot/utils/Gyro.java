@@ -22,7 +22,6 @@ public class Gyro {
         resetPitch = 0;
 
         gyro = new ADXRS450_Gyro();
-        gyro.calibrate();
     }
 
     /**
@@ -39,8 +38,7 @@ public class Gyro {
     }
 
     public Rotation2d getYawAngle2d() {
-        Rotation2d angle = navx.getRotation2d();
-        return angle;
+      return navx.getRotation2d();
     }
 
     /**

@@ -3,9 +3,14 @@ package frc.robot.subsystems;
 
 import java.util.List;
 
+import com.revrobotics.sim.SparkRelativeEncoderSim;
+import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import org.photonvision.PhotonCamera;
 
@@ -19,10 +24,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -43,6 +44,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.utils.CameraInterFace;
 import frc.robot.utils.Gyro;
 import frc.robot.utils.PositionCamera;
+import edu.wpi.first.hal.SimDouble;
 
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
@@ -55,8 +57,11 @@ public class MovementSubsystem extends SubsystemBase {
   private final SparkMax rightLeader = new SparkMax(DriveConstants.RIGHT_MOVEMENT_LEADER_MOTOR_ID, MotorType.kBrushed);
   private final SparkMax rightFollow = new SparkMax(DriveConstants.RIGHT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
   private final DifferentialDrive drive;
+  private final DifferentialDrivetrainSim driveSim;
   public RelativeEncoder leftEncoder;
   public RelativeEncoder rightEncoder;
+  private SparkRelativeEncoderSim leftEncoderSim;
+  private SparkRelativeEncoderSim rightEncoderSim;
   double leftVelocity;
   double rightVelocity;
   private final CameraInterFace cameraInterFace;
@@ -67,7 +72,7 @@ public class MovementSubsystem extends SubsystemBase {
   private final MutVoltage m_appliedVoltage = Volts.mutable(0);
   private final MutDistance m_distance = Meters.mutable(0);  // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
   private final MutLinearVelocity m_velocity = MetersPerSecond.mutable(0);  // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
-
+  private final SimDouble gyroSimAngle;
   // Creates a SysIdRoutine
   SysIdRoutine routine = new SysIdRoutine(
     new SysIdRoutine.Config(),
@@ -76,7 +81,7 @@ public class MovementSubsystem extends SubsystemBase {
         leftLeader.setVoltage(voltage);
         rightLeader.setVoltage(voltage);
       }, log -> {
-      recordMotor(log, "drive-left", getAppliedOutput(), getLeftEncoderPosition(), leftVelocity);
+      recordMotor(log, "drive-left", leftLeader.getAppliedOutput(), getLeftEncoderPosition(), leftVelocity);
       recordMotor(log, "drive-right", rightLeader.getAppliedOutput(), getRightEncoderPosition(), rightVelocity);
     },
       this
@@ -91,13 +96,23 @@ public class MovementSubsystem extends SubsystemBase {
       .linearVelocity(m_velocity.mut_replace(velocity, MetersPerSecond));
   }
 
-  private double getAppliedOutput() {
-    return leftLeader.getAppliedOutput();
-  }
-
   public MovementSubsystem() {
     // Set up differential drive class
     drive = new DifferentialDrive(leftLeader, rightLeader);
+    driveSim = new DifferentialDrivetrainSim(
+      DCMotor.getCIM(2),
+      7.29,                    // 7.29:1 gearing reduction.
+      7.5,                     // MOI of 7.5 kg m^2 (from CAD model).
+      60.0,                    // The mass of the robot is 60 kg.
+      Units.inchesToMeters(3), // The robot uses 3" radius wheels.
+      0.7112,                  // The track width is 0.7112 meters.
+      // The standard deviations for measurement noise:
+      // x and y:          0.001 m
+      // heading:          0.001 rad
+      // l and r velocity: 0.1   m/s
+      // l and r position: 0.005 m
+      VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005)
+    );
     leftLeader.setCANTimeout(DriveConstants.CAN_TIMEOUT);
     rightLeader.setCANTimeout(DriveConstants.CAN_TIMEOUT);
     leftFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
@@ -124,6 +139,8 @@ public class MovementSubsystem extends SubsystemBase {
       ),
       odometry::addVisionMeasurement
     );
+    int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[4]");
+    gyroSimAngle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
   }
 
   private void configureMotors() {
@@ -148,6 +165,8 @@ public class MovementSubsystem extends SubsystemBase {
   private void configureOdometry() {
     this.rightEncoder = rightLeader.getEncoder();
     this.leftEncoder = leftLeader.getEncoder();
+    this.rightEncoderSim = new SparkRelativeEncoderSim(rightLeader);
+    this.leftEncoderSim = new SparkRelativeEncoderSim(leftLeader);
     odometry = new DifferentialDrivePoseEstimator(
       kinematics,
       Gyro.getInstance().getYawAngle2d(),
@@ -200,7 +219,7 @@ public class MovementSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putData(drive);
-    odometry.update(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition());
+    odometry.update(Rotation2d.fromDegrees(Gyro.getInstance().getYawAngle()), getLeftEncoderPosition(), getRightEncoderPosition());
     field2d.setRobotPose(odometry.getEstimatedPosition());
     SmartDashboard.putNumber("Left sensor position", getLeftEncoderPosition());
     SmartDashboard.putNumber("Right sensor position", getRightEncoderPosition());
@@ -212,6 +231,23 @@ public class MovementSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Right Motor Velocity", rightVelocity);
     posePublisher.accept(odometry.getEstimatedPosition());
     cameraInterFace.periodic();
+    Gyro.getInstance().outputValues();
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    driveSim.setInputs(
+      leftLeader.get() * RobotController.getInputVoltage(),
+      rightLeader.get() * RobotController.getInputVoltage()
+    );
+    driveSim.update(0.02);
+    leftEncoderSim.setPosition(driveSim.getLeftPositionMeters() / kDriveTickAMetros);
+    leftEncoderSim.setVelocity(driveSim.getLeftVelocityMetersPerSecond() / kDriveTickAMetros);
+    rightEncoderSim.setPosition(driveSim.getRightPositionMeters() / kDriveTickAMetros);
+    rightEncoderSim.setVelocity(driveSim.getRightVelocityMetersPerSecond() / kDriveTickAMetros);
+    gyroSimAngle.set(driveSim.getHeading().getDegrees());
+    SmartDashboard.putNumber("Simulated Heading", driveSim.getHeading().getDegrees());
+    posePublisher.accept(driveSim.getPose());
   }
 
   // Get encoder positions (converted to meters)
