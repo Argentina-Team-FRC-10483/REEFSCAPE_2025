@@ -58,6 +58,10 @@ public final class Constants {
   }
 
   public static final class LimitesEncoders {
+    /**
+     * This is used to add a minimum velocity for the motors when they are getting to a target.
+     * That way if it is very close they don't do near 0 force which could damage them.
+     */
     public static final double LimiteFuerzaAceleracion = 0.166666;
   }
 
