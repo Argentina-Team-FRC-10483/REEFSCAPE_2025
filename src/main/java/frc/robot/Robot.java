@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.pathfinding.LocalADStar;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.networktables.NetworkTable;
@@ -28,6 +30,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     // This will perform all our button bindings, and put our autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    Pathfinding.setPathfinder(new LocalADStar());
   }
 
   /**
@@ -90,7 +93,7 @@ public class Robot extends TimedRobot {
     }
     UsbCamera c1 = CameraServer.startAutomaticCapture(0);
 		UsbCamera c2 = CameraServer.startAutomaticCapture(1);
-		
+
 		while (true) {
 			try {
 				NetworkTable.getHierarchy("CameraSelection" + c1.getName());

@@ -29,16 +29,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CameraInterFace {
-
-    private final String Pose = "Pose";
-
     private final List<PositionCamera> cameras;
-
-    StructPublisher<Pose2d> posePublisher = NetworkTableInstance.getDefault().getStructTopic(Pose, Pose2d.struct)
-            .publish();
-
     private final BiConsumer<Pose2d, Double> addVisonConsumer;
-
     private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout
             .loadField(AprilTagFields.k2025Reefscape);
 

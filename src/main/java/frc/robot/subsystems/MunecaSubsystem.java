@@ -20,6 +20,7 @@ public class MunecaSubsystem extends SubsystemBase {
   private final SparkMax motor;
   private final RelativeEncoder munecaEncoder;
   private final MotorSlowdownLimits slowdownLimits;
+  private final ElevatorSubsystem elevatorSubsystem;
 
   public static final double SLOWDOWN_RANGE = 7.0;
   private static final double UPPER_LIMIT = 0.0;
@@ -27,7 +28,7 @@ public class MunecaSubsystem extends SubsystemBase {
   public static final String DASH_MUNECA_POS = "Muñeca Posicion";
   public static final String DASH_RESET_MUNECA_ENCODER = "Reiniciar Encoder Muñeca";
 
-  public MunecaSubsystem() {
+  public MunecaSubsystem(ElevatorSubsystem elevatorSubsystem) {
     motor = new SparkMax(MunecaConstants.MUNECA_MOTOR_ID, MotorType.kBrushless);
     motor.setCANTimeout(DriveConstants.CAN_TIMEOUT);
     motor.configure(getLeaderConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -41,6 +42,7 @@ public class MunecaSubsystem extends SubsystemBase {
       this::getMunecaPosition,
       motor::set
     );
+    this.elevatorSubsystem = elevatorSubsystem;
   }
 
   private static SparkMaxConfig getLeaderConfig() {
@@ -63,6 +65,9 @@ public class MunecaSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber(DASH_MUNECA_POS, getMunecaPosition());
+    if (elevatorSubsystem.getElevatorPosition() < 10 && getMunecaPosition() > -10) {
+      moveMuneca(-0.1);
+    }
   }
 
   public double getMunecaPosition() {

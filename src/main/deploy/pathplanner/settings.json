@@ -1,6 +1,6 @@
 {
   "robotWidth": 0.85,
-  "robotLength": 1.0,
+  "robotLength": 0.95,
   "holonomicMode": false,
   "pathFolders": [
     "New Folder"
@@ -11,14 +11,14 @@
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "defaultNominalVoltage": 12.0,
-  "robotMass": 50.0,
-  "robotMOI": 6.0,
+  "robotMass": 60.0,
+  "robotMOI": 7.5,
   "robotTrackwidth": 0.546,
-  "driveWheelRadius": 0.048,
-  "driveGearing": 8.46,
-  "maxDriveSpeed": 2.21,
+  "driveWheelRadius": 0.0762,
+  "driveGearing": 7.29,
+  "maxDriveSpeed": 1.0,
   "driveMotorType": "CIM",
-  "driveCurrentLimit": 60.0,
+  "driveCurrentLimit": 133.0,
   "wheelCOF": 0.5,
   "flModuleX": 0.273,
   "flModuleY": 0.273,
