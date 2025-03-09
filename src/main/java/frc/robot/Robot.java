@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -85,6 +88,19 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    UsbCamera c1 = CameraServer.startAutomaticCapture(0);
+		UsbCamera c2 = CameraServer.startAutomaticCapture(1);
+		
+		while (true) {
+			try {
+				NetworkTable.getHierarchy("CameraSelection" + c1.getName());
+				Thread.sleep(5000);
+				NetworkTable.getHierarchy("CameraSelection" + c2.getName());
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
   }
 
   /**

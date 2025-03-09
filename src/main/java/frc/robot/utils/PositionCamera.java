@@ -10,6 +10,7 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -28,6 +29,7 @@ public class PositionCamera {
         this.transform = transform;
         this.posePublisher = NetworkTableInstance.getDefault().getStructTopic(
                 "Pose " + camera.getName(), Pose3d.struct).publish();
+        camera.setDriverMode(true);
     }
 
     public void initPoseEstimator(AprilTagFieldLayout layout) {
