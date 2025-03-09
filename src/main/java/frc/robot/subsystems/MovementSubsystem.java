@@ -11,6 +11,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
@@ -20,8 +21,6 @@ import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.units.measure.MutLinearVelocity;
 import edu.wpi.first.units.measure.MutVoltage;
-import edu.wpi.first.units.measure.Velocity;
-import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -149,7 +148,8 @@ public class MovementSubsystem extends SubsystemBase {
       // Handle exception as needed
       e.printStackTrace();
     }
-    
+
+
     // Configure AutoBuilder last
     AutoBuilder.configure(
             this::getPose, // Robot pose supplier
@@ -182,9 +182,6 @@ public class MovementSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Right sensor position", getRightEncoderPosition());
     leftVelocity  = calculoRPM(leftEncoder.getVelocity());
     rightVelocity = calculoRPM(-rightEncoder.getVelocity());
-
-    leftVelocity = calculoRPM(leftEncoder.getVelocity());
-    rightVelocity = calculoRPM(rightEncoder.getVelocity());
 
     SmartDashboard.putNumber("Left Motor Velocity", leftVelocity);
      SmartDashboard.putNumber("Right Motor Velocity", rightVelocity);
@@ -222,8 +219,11 @@ public class MovementSubsystem extends SubsystemBase {
   }
 
   public void driveRobotRelative(ChassisSpeeds speeds) {
+    PIDController leftPID = new PIDController(0.1, 0, 0);
+    PIDController rightPID = new PIDController(0.1, 0, 0);
+
     var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
-    drive.tankDrive(wheelSpeeds.leftMetersPerSecond * 0.11, wheelSpeeds.rightMetersPerSecond * 0.11);
+    drive.tankDrive(leftPID.calculate(leftVelocity, wheelSpeeds.leftMetersPerSecond), rightPID.calculate(rightVelocity, wheelSpeeds.rightMetersPerSecond));
   }
 
   public static double calculoRPM(double rpm){
