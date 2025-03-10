@@ -81,7 +81,7 @@ public class RobotContainer {
   
 
     elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.3));
-    munecaSubsystem.setDefaultCommand(new MunecaCommand(munecaSubsystem, () -> operatorController.getRightY() * 0.2));
+    munecaSubsystem.setDefaultCommand(new MunecaCommand(munecaSubsystem, () -> operatorController.getRightY()));
     
     operatorController.povDown().onTrue(new ElevatorToPositionCommand(elevatorSubsystem, 10.0)); // Nivel 1
     operatorController.povLeft().onTrue(new ElevatorToPositionCommand(elevatorSubsystem, 20.0)); // Nivel 2

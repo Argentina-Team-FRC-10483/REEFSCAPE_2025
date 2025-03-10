@@ -26,6 +26,7 @@ public class MunecaSubsystem extends SubsystemBase {
   private static final double LOWER_LIMIT = -15.0;
   public static final String DASH_MUNECA_POS = "Muñeca Posicion";
   public static final String DASH_RESET_MUNECA_ENCODER = "Reiniciar Encoder Muñeca";
+  private double angleDesired = 0;
 
   public MunecaSubsystem() {
     motor = new SparkMax(MunecaConstants.MUNECA_MOTOR_ID, MotorType.kBrushless);
@@ -60,34 +61,23 @@ public class MunecaSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber(DASH_MUNECA_POS, getMunecaPosition());
+    SmartDashboard.putNumber("AngleSubSystem", this.angleDesired);
   }
 
   public double getMunecaPosition() {
     return munecaEncoder.getPosition();
   }
 
+  public void sumAngleDesired(double angle) {
+    double result = angle + this.angleDesired;
+    if(result <= 0) this.angleDesired = 0;
+    else if(result >= 180) this.angleDesired = 180;
+    else this.angleDesired = result;
+  }
+
   public void moveMuneca(double speed) {
     double currentPosition = getMunecaPosition();
 
-    boolean inLowerSlowdownZone = currentPosition <= LOWER_LIMIT + SLOWDOWN_RANGE;
-    boolean inUpperSlowdownZone = currentPosition >= UPPER_LIMIT - SLOWDOWN_RANGE;
-    if (speed < 0 && inLowerSlowdownZone) speed = speed * getLowerSlowdownFactor(currentPosition);
-    if (speed > 0 && inUpperSlowdownZone) speed = speed * getUpperSlowdownFactor(currentPosition);
     motor.set(speed);
   }
-
-  public double getUpperSlowdownFactor(double currentPosition) {
-    double resultado = Math.max((UPPER_LIMIT - currentPosition) / SLOWDOWN_RANGE, 0);
-    if (resultado == 0 ) return 0;
-    if (resultado <= Constants.LimitesEncoders.LimiteFuerzaAceleracion) return Constants.LimitesEncoders.LimiteFuerzaAceleracion;
-    return resultado;
-  }
-
-  public double getLowerSlowdownFactor(double currentPosition) {
-    double resultado = Math.max((currentPosition - LOWER_LIMIT) / SLOWDOWN_RANGE, 0);
-    if (resultado == 0 ) return 0;
-    if (resultado <= LimitesEncoders.LimiteFuerzaAceleracion) return LimitesEncoders.LimiteFuerzaAceleracion;
-    return resultado;
-  }
-
 }
