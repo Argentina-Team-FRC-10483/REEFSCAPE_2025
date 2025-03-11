@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.revrobotics.sim.SparkRelativeEncoderSim;
 import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkClosedLoopController;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -62,6 +63,8 @@ public class MovementSubsystem extends SubsystemBase {
   private final SparkMax leftFollow = new SparkMax(DriveConstants.LEFT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
   private final SparkMax rightLeader = new SparkMax(DriveConstants.RIGHT_MOVEMENT_LEADER_MOTOR_ID, MotorType.kBrushed);
   private final SparkMax rightFollow = new SparkMax(DriveConstants.RIGHT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
+  private final SparkClosedLoopController leftController = leftLeader.getClosedLoopController();
+  private final SparkClosedLoopController rightController = rightLeader.getClosedLoopController();
   private final DifferentialDrive drive;
   private final DifferentialDrivetrainSim driveSim;
   public RelativeEncoder leftEncoder;
@@ -83,8 +86,6 @@ public class MovementSubsystem extends SubsystemBase {
   private final float kMaxAcceleration = 10000.0f;
   private final TrapezoidProfile.Constraints m_constraints =
     new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
-  private ProfiledPIDController leftPidController = new ProfiledPIDController(1, 0.001, 0.001, m_constraints, 0.02);
-  private ProfiledPIDController rightPidController = new ProfiledPIDController(1, 0.001, 0.001, m_constraints, 0.02);
   // Creates a SysIdRoutine
   SysIdRoutine routine = new SysIdRoutine(
     new SysIdRoutine.Config(),
@@ -105,7 +106,7 @@ public class MovementSubsystem extends SubsystemBase {
 
   public MovementSubsystem() {
     // Set up differential drive class
-//    drive = new DifferentialDrive(leftSpeed -> setLeftSpeed(leftSpeed * 24), rightSpeed -> setRightSpeed(rightSpeed * 24));
+//    drive = new DifferentialDrive(leftSpeed -> setLeftSpeed(leftSpeed), rightSpeed -> setRightSpeed(rightSpeed));
     drive = new DifferentialDrive(leftLeader, rightLeader);
     driveSim = new DifferentialDrivetrainSim(
       DCMotor.getCIM(2),
@@ -114,12 +115,6 @@ public class MovementSubsystem extends SubsystemBase {
       60.0,                    // The mass of the robot is 60 kg.
       Units.inchesToMeters(3), // The robot uses 3" radius wheels.
       0.546,                  // The track width is 0.7112 meters.
-      // The standard deviations for measurement noise:
-      // x and y:          0.001 m
-      // heading:          0.001 rad
-      // l and r velocity: 0.1   m/s
-      // l and r position: 0.005 m
-//      VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005)
       VecBuilder.fill(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
     );
     leftLeader.setCANTimeout(DriveConstants.CAN_TIMEOUT);
@@ -156,7 +151,13 @@ public class MovementSubsystem extends SubsystemBase {
     SparkMaxConfig config = new SparkMaxConfig();
     config.voltageCompensation(12);
     config.smartCurrentLimit(DriveConstants.DRIVE_MOTOR_CURRENT_LIMIT);
-
+    config.closedLoop.
+      p(0.3)
+      .i(0)
+      .d(0);
+    config.closedLoop.maxMotion
+      .maxAcceleration(0.01)
+      .maxVelocity(0.01);
     config.follow(leftLeader);
     leftFollow.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     config.follow(rightLeader);
@@ -285,21 +286,13 @@ public class MovementSubsystem extends SubsystemBase {
   public void setLeftSpeed(double leftSpeed) {
     SmartDashboard.putNumber("Left Target", leftSpeed);
     SmartDashboard.putNumber("Left current", leftEncoder.getVelocity());
-    double error = leftEncoder.getVelocity() - leftSpeed;
-    SmartDashboard.putNumber("Left error", leftEncoder.getVelocity());
-    double leftOutput = leftPidController.calculate(error);
-    SmartDashboard.putNumber("Left output", leftOutput);
-    leftLeader.set(leftOutput);
+    leftController.setReference(leftSpeed, SparkBase.ControlType.kVelocity);
   }
 
   public void setRightSpeed(double rightSpeed) {
     SmartDashboard.putNumber("Right Target", rightSpeed);
     SmartDashboard.putNumber("Right current", rightEncoder.getVelocity());
-    double error = rightEncoder.getVelocity() - rightSpeed;
-    SmartDashboard.putNumber("Right error", rightEncoder.getVelocity());
-    double rightOutput = rightPidController.calculate(error);
-    SmartDashboard.putNumber("Right output", rightOutput);
-    rightLeader.set(rightOutput);
+    rightController.setReference(rightSpeed, SparkBase.ControlType.kVelocity);
   }
 
   public ChassisSpeeds getRobotRelativeSpeeds() {
@@ -316,10 +309,9 @@ public class MovementSubsystem extends SubsystemBase {
   public void driveRobotRelative(ChassisSpeeds speeds) {
     var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
     drive.tankDrive(
-      leftPidController.calculate(getLeftVelocity(), wheelSpeeds.leftMetersPerSecond),
-      rightPidController.calculate(getRightVelocity(), wheelSpeeds.rightMetersPerSecond),
+      wheelSpeeds.leftMetersPerSecond,
+      wheelSpeeds.rightMetersPerSecond,
       false
-
     );
   }
 

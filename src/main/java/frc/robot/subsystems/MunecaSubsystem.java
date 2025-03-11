@@ -1,58 +1,51 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.MunecaConstants;
 import frc.robot.Constants.NEOMotorsConstants;
-import frc.robot.utils.MotorSlowdownLimits;
 
-public class MunecaSubsystem extends SubsystemBase {
-  private final SparkMax motor;
+public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
+  private final SparkMax motor = new SparkMax(MunecaConstants.MUNECA_MOTOR_ID, MotorType.kBrushless);
+  private final SparkClosedLoopController controller = motor.getClosedLoopController();
   private final RelativeEncoder munecaEncoder;
-  private final MotorSlowdownLimits slowdownLimits;
-  private final ElevatorSubsystem elevatorSubsystem;
-
-  public static final double SLOWDOWN_RANGE = 7.0;
-  private static final double UPPER_LIMIT = 0.0;
-  private static final double LOWER_LIMIT = -15.0;
-  public static final String DASH_MUNECA_POS = "Muñeca Posicion";
+  private static final double UPPER_LIMIT = 0;
+  private static final double LOWER_LIMIT = -20;
+  public static final String DASH_MUNECA_POS = "Muneca Posicion";
   public static final String DASH_RESET_MUNECA_ENCODER = "Reiniciar Encoder Muñeca";
+  private double position;
 
-  public MunecaSubsystem(ElevatorSubsystem elevatorSubsystem) {
-    motor = new SparkMax(MunecaConstants.MUNECA_MOTOR_ID, MotorType.kBrushless);
+  public MunecaSubsystem() {
     motor.setCANTimeout(DriveConstants.CAN_TIMEOUT);
     motor.configure(getLeaderConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     munecaEncoder = motor.getEncoder();
-    munecaEncoder.setPosition(0);
-    SmartDashboard.putData(DASH_RESET_MUNECA_ENCODER, new InstantCommand(() -> munecaEncoder.setPosition(0)));
-    slowdownLimits = new MotorSlowdownLimits(
-      LOWER_LIMIT,
-      UPPER_LIMIT,
-      SLOWDOWN_RANGE,
-      this::getMunecaPosition,
-      motor::set
-    );
-    this.elevatorSubsystem = elevatorSubsystem;
+    reset();
+    SmartDashboard.putData(DASH_RESET_MUNECA_ENCODER, new InstantCommand(this::reset));
   }
 
   private static SparkMaxConfig getLeaderConfig() {
     SparkMaxConfig leaderConfig = new SparkMaxConfig();
 
-    leaderConfig.softLimit
-      .forwardSoftLimitEnabled(true)
-      .forwardSoftLimit(0)
-      .reverseSoftLimitEnabled(true)
-      .reverseSoftLimit(-15);
+    leaderConfig.closedLoop
+      .p(0.01)
+      .i(0)
+      .d(0)
+      .maxMotion
+      .maxVelocity(0.5)
+      .maxAcceleration(0.1);
 
     leaderConfig
       .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION_NEO)
@@ -63,18 +56,31 @@ public class MunecaSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    SmartDashboard.putNumber(DASH_MUNECA_POS, getMunecaPosition());
-    if (elevatorSubsystem.getElevatorPosition() < 10 && getMunecaPosition() > -10) {
-      moveMuneca(-0.1);
-    }
+  public void reset(){
+    munecaEncoder.setPosition(0);
+    position = 0;
+    controller.setReference(this.position, SparkBase.ControlType.kPosition);
   }
 
-  public double getMunecaPosition() {
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber(DASH_MUNECA_POS, getActualPosition());
+    SmartDashboard.putNumber("Targe Muneca pos", position);
+    controller.setReference(this.position, SparkBase.ControlType.kPosition);
+  }
+
+  @Override
+  public double getActualPosition() {
     return munecaEncoder.getPosition();
   }
 
-  public void moveMuneca(double speed) {
-    slowdownLimits.move(speed);
+  @Override
+  public double getTargetPosition() {
+    return position;
+  }
+
+  @Override
+  public void move(double position) {
+    this.position = MathUtil.clamp(position, LOWER_LIMIT, UPPER_LIMIT);
   }
 }

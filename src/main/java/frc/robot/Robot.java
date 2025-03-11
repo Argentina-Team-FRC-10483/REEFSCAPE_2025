@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     System.out.println("AutoInit initialize douu");
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+//    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -88,22 +88,23 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
-    UsbCamera c1 = CameraServer.startAutomaticCapture(0);
-		UsbCamera c2 = CameraServer.startAutomaticCapture(1);
-
-		while (true) {
-			try {
-				NetworkTable.getHierarchy("CameraSelection" + c1.getName());
-				Thread.sleep(5000);
-				NetworkTable.getHierarchy("CameraSelection" + c2.getName());
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+    CommandScheduler.getInstance().run();
+//    if (m_autonomousCommand != null) {
+//      m_autonomousCommand.cancel();
+//    }
+//    UsbCamera c1 = CameraServer.startAutomaticCapture(0);
+//		UsbCamera c2 = CameraServer.startAutomaticCapture(1);
+//
+//		while (true) {
+//			try {
+//				NetworkTable.getHierarchy("CameraSelection" + c1.getName());
+//				Thread.sleep(5000);
+//				NetworkTable.getHierarchy("CameraSelection" + c2.getName());
+//				Thread.sleep(5000);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
   }
 
   /**

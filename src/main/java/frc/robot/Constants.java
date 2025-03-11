@@ -4,8 +4,8 @@ public final class Constants {
   public static final class DriveConstants {
     public static final int LEFT_MOVEMENT_LEADER_MOTOR_ID = 1;
     public static final int LEFT_MOVEMENT_FOLLOW_MOTOR_ID = 2;
-    public static final int RIGHT_MOVEMENT_LEADER_MOTOR_ID = 3;
-    public static final int RIGHT_MOVEMENT_FOLLOW_MOTOR_ID = 4;
+    public static final int RIGHT_MOVEMENT_LEADER_MOTOR_ID = 4;
+    public static final int RIGHT_MOVEMENT_FOLLOW_MOTOR_ID = 3;
 
     public static final int DRIVE_MOTOR_CURRENT_LIMIT = 60;
     public static final double AXIS_VELOCIDAD_LIMIT = 0.5;
@@ -53,7 +53,7 @@ public final class Constants {
   }
 
   public static final class DeadZone {
-    public static final double ElevadorDeadZone = 0.15;
+    public static final double ElevadorDeadZone = 0.05;
     public static final double MovimientoDeadZone = 0.05;
   }
 
