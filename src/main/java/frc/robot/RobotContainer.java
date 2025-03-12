@@ -27,12 +27,11 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
 //  private final SendableChooser<Command> autoChooser;
-//  private final MovementSubsystem movementSubsystem = new MovementSubsystem();
+  private final MovementSubsystem movementSubsystem = new MovementSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
-//  private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
   private final MunecaSubsystem munecaSubsystem = new MunecaSubsystem();
   RodLateralesSubsystem rodLateralesSubsystem = new RodLateralesSubsystem();
-//  private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
+  private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
 //  private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
   private final CommandXboxController driverController =
     new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
@@ -43,8 +42,8 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-//     NamedCommands.registerCommand("Elevator to L4", new ElevatorToPositionCommand(elevatorSubsystem, 40));
-//     NamedCommands.registerCommand("Elevator to L3", new ElevatorToPositionCommand(elevatorSubsystem, 30));
+//     NamedCommands.registerCommand("Elevator to L4", new MoveToPositionCommand(40,elevatorSubsystem, 3));
+//     NamedCommands.registerCommand("Elevator to L3", new MoveToPositionCommand(30,elevatorSubsystem, 3));
 //     NamedCommands.registerCommand("Elevator to L2", new ElevatorToPositionCommand(elevatorSubsystem, 20));
 //     NamedCommands.registerCommand("Elevator to L1", new ElevatorToPositionCommand(elevatorSubsystem, 10));
 //     NamedCommands.registerCommand("RollerIntakeClaw", new RodLatTakeCoralCommand(rodLateralesSubsystem, 0.1, 2));
@@ -81,7 +80,6 @@ public class RobotContainer {
 //        return power;
 //      }
 //    ));
-//    elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.3));
     IncrementalMoveCommand defaultCommanda = new IncrementalMoveCommand(() -> operatorController.getRightY() * -0.2, munecaSubsystem);
     defaultCommanda.addRequirements(munecaSubsystem);
     munecaSubsystem.setDefaultCommand(defaultCommanda);
@@ -89,14 +87,14 @@ public class RobotContainer {
     defaultCommandb.addRequirements(elevatorSubsystem);
     elevatorSubsystem.setDefaultCommand(defaultCommandb);
 
-    operatorController.a().onTrue(new MoveToPositionCommand(0, munecaSubsystem, 1)); // Position debe ser 3 numeros menor que el valor que queres llegar, por ejemplo si queres que llegue a -11 hay que darle -8
-//    operatorController.rightStick().whileTrue(new MunecaCommand(munecaSubsystem, () -> operatorController.getRightY()));
-//    movementSubsystem.setDefaultCommand(new MovementCommand(
-//      () -> -driveshshrController.getLeftY() * 0.5,
-//      () -> driverController.leftBumper().getAsBoolean(),
-//      () -> -driverController.getRightX() * 0.5,
-//      movementSubsystem)
-//    );
+    operatorController.a().onTrue(new MoveToPositionCommand(-10, munecaSubsystem, 1)); // Position debe ser 3 numeros menor que el valor que queres llegar, por ejemplo si queres que llegue a -11 hay que darle -8
+
+    movementSubsystem.setDefaultCommand(new MovementCommand(
+      () -> -driverController.getLeftY() * 0.5,
+      () -> driverController.leftBumper().getAsBoolean(),
+      () -> -driverController.getRightX() * 0.5,
+      movementSubsystem)
+    );
 
 operatorController.povDown().onTrue(new MoveToPositionCommand(10, elevatorSubsystem, 3)); // Nivel 1
 operatorController.povLeft().onTrue(new MoveToPositionCommand(20, elevatorSubsystem, 3)); // Nivel 2
@@ -121,9 +119,7 @@ operatorController.povRight().onTrue(new MoveToPositionCommand(40, elevatorSubsy
 
 operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
 operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
-//    operatorController.a().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
-//    driverController.rightBumper().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
-//    driverController.rightTrigger().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.5));
+operatorController.a().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
 
 
   }

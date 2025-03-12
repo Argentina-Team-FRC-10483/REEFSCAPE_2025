@@ -41,12 +41,13 @@ public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
 
     leaderConfig.closedLoop
       .p(0.02)
-      // .iZone(0.5)
-      .i(0)
+      .iZone(1.7)
+      .i(0.00004) // 0.001
       .d(0)
       // .velocityFF(0)
       .maxMotion
       .maxVelocity(0.4)
+      .allowedClosedLoopError(1)
       .maxAcceleration(0.05);
 
     leaderConfig
@@ -67,7 +68,7 @@ public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
   @Override
   public void periodic() {
     SmartDashboard.putNumber(DASH_MUNECA_POS, getActualPosition());
-    SmartDashboard.putNumber("Targe Muneca pos", position);
+    SmartDashboard.putNumber("Target Muneca pos", position);
     controller.setReference(this.position, SparkBase.ControlType.kPosition);
   }
 
