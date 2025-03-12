@@ -56,12 +56,12 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
     SparkMaxConfig leaderConfig = new SparkMaxConfig();
 
     leaderConfig.closedLoop
-      .p(0.01)
+      .p(0.02)
       .i(0)
       .d(0)
       .maxMotion
-      .maxVelocity(0.5)
-      .maxAcceleration(0.1);
+      .maxVelocity(1)
+      .maxAcceleration(0.05);
 
     leaderConfig
       .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION_NEO)

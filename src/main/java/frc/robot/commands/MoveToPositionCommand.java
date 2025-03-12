@@ -10,10 +10,12 @@ import java.util.function.DoubleSupplier;
 public class MoveToPositionCommand extends Command {
   protected final MovableSubsystem subsystem;
   double targetPosition;
+  double tolerance;
 
-  public MoveToPositionCommand(double targetPosition, MovableSubsystem subsystem) {
+  public MoveToPositionCommand(double targetPosition, MovableSubsystem subsystem, double tolerance) {
     this.targetPosition = targetPosition;
     this.subsystem = subsystem;
+    this.tolerance = tolerance;
   }
 
   @Override
@@ -23,6 +25,6 @@ public class MoveToPositionCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return Math.abs(subsystem.getActualPosition() - targetPosition) < 0.1;
+    return Math.abs(subsystem.getActualPosition() - targetPosition) < tolerance;
   }
 }

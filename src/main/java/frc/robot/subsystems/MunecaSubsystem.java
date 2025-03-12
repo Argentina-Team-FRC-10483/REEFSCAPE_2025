@@ -22,7 +22,7 @@ public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
   private final SparkMax motor = new SparkMax(MunecaConstants.MUNECA_MOTOR_ID, MotorType.kBrushless);
   private final SparkClosedLoopController controller = motor.getClosedLoopController();
   private final RelativeEncoder munecaEncoder;
-  private static final double UPPER_LIMIT = 0;
+  private static final double UPPER_LIMIT = 2;
   private static final double LOWER_LIMIT = -20;
   public static final String DASH_MUNECA_POS = "Muneca Posicion";
   public static final String DASH_RESET_MUNECA_ENCODER = "Reiniciar Encoder Muñeca";
@@ -40,12 +40,14 @@ public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
     SparkMaxConfig leaderConfig = new SparkMaxConfig();
 
     leaderConfig.closedLoop
-      .p(0.01)
+      .p(0.02)
+      // .iZone(0.5)
       .i(0)
       .d(0)
+      // .velocityFF(0)
       .maxMotion
-      .maxVelocity(0.5)
-      .maxAcceleration(0.1);
+      .maxVelocity(0.4)
+      .maxAcceleration(0.05);
 
     leaderConfig
       .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION_NEO)
