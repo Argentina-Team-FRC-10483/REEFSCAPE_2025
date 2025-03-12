@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.pathfinding.LocalADStar;
+import com.pathplanner.lib.pathfinding.Pathfinding;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -25,6 +30,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     // This will perform all our button bindings, and put our autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    Pathfinding.setPathfinder(new LocalADStar());
   }
 
   /**
@@ -60,13 +66,13 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     System.out.println("AutoInit initialize douu");
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+//    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    
+
   }
 
   /**
@@ -82,9 +88,23 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+    CommandScheduler.getInstance().run();
+//    if (m_autonomousCommand != null) {
+//      m_autonomousCommand.cancel();
+//    }
+//    UsbCamera c1 = CameraServer.startAutomaticCapture(0);
+//		UsbCamera c2 = CameraServer.startAutomaticCapture(1);
+//
+//		while (true) {
+//			try {
+//				NetworkTable.getHierarchy("CameraSelection" + c1.getName());
+//				Thread.sleep(5000);
+//				NetworkTable.getHierarchy("CameraSelection" + c2.getName());
+//				Thread.sleep(5000);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
   }
 
   /**

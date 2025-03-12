@@ -1,6 +1,6 @@
 {
   "robotWidth": 0.85,
-  "robotLength": 1.0,
+  "robotLength": 0.95,
   "holonomicMode": false,
   "pathFolders": [
     "New Folder"
@@ -18,7 +18,7 @@
   "driveGearing": 8.46,
   "maxDriveSpeed": 2.22,
   "driveMotorType": "CIM",
-  "driveCurrentLimit": 60.0,
+  "driveCurrentLimit": 133.0,
   "wheelCOF": 0.5,
   "flModuleX": 0.273,
   "flModuleY": 0.273,

@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.199084563614455,
+        "x": 6.063475265614964,
         "y": 6.0
       },
       "isLocked": false,
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "SubirElevador",
+      "name": "Elevator to L4",
       "waypointRelativePos": 0.8038936372269703,
       "endWaypointRelativePos": null,
       "command": null

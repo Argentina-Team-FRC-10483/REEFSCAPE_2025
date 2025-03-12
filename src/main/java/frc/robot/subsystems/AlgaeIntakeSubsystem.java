@@ -22,13 +22,7 @@ public class AlgaeIntakeSubsystem extends SubsystemBase {
     rodilloMotor.configure(rodilloMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
-  @Override
-  public void periodic() {
-
-  }
-
   public void andarRodillo(double power) {
     rodilloMotor.set(power);
   }
-
 }

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.EngancheConstants;
 import frc.robot.Constants.NEOMotorsConstants;
+import frc.robot.utils.MotorSlowdownLimits;
 
 public class EngancheSubsystem extends SubsystemBase {
   private final SparkMax motor;
@@ -23,18 +24,22 @@ public class EngancheSubsystem extends SubsystemBase {
   private static final double LOWER_LIMIT = 0.0;
   public static final String DASH_ENGANCHE_POS = "Enganche Posicion";
   public static final String DASH_RESET_ENGANCHE_ENCODER = "Reiniciar Encoder Enganche";
+  private final MotorSlowdownLimits slowdownLimits;
 
   public EngancheSubsystem() {
     motor = new SparkMax(EngancheConstants.MOTOR_ENGANCHE_ID, MotorType.kBrushless);
-
     motor.setCANTimeout(DriveConstants.CAN_TIMEOUT);
-
     motor.configure(getLeaderConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
     engancheEncoder = motor.getEncoder();
     engancheEncoder.setPosition(0);
-
     SmartDashboard.putData(DASH_RESET_ENGANCHE_ENCODER, new InstantCommand(() -> engancheEncoder.setPosition(0)));
+    slowdownLimits = new MotorSlowdownLimits(
+      LOWER_LIMIT,
+      UPPER_LIMIT,
+      SLOWDOWN_RANGE,
+      this::getEnganchePosition,
+      motor::set
+    );
   }
 
   private static SparkMaxConfig getLeaderConfig() {
@@ -63,21 +68,6 @@ public class EngancheSubsystem extends SubsystemBase {
   }
 
   public void moveEnganche(double speed) {
-    double currentPosition = getEnganchePosition();
-
-    boolean inLowerSlowdownZone = currentPosition <= LOWER_LIMIT + SLOWDOWN_RANGE;
-    boolean inUpperSlowdownZone = currentPosition >= UPPER_LIMIT - SLOWDOWN_RANGE;
-    if (speed < 0 && inLowerSlowdownZone) speed = speed * getLowerSlowdownFactor(currentPosition);
-    if (speed > 0 && inUpperSlowdownZone) speed = speed * getUpperSlowdownFactor(currentPosition);
-    motor.set(speed);
+    slowdownLimits.move(speed);
   }
-
-  public double getUpperSlowdownFactor(double currentPosition) {
-    return Math.max((UPPER_LIMIT - currentPosition) / SLOWDOWN_RANGE, 0);
-  }
-
-  public double getLowerSlowdownFactor(double currentPosition) {
-    return Math.max((currentPosition - LOWER_LIMIT) / SLOWDOWN_RANGE, 0);
-  }
-
 }

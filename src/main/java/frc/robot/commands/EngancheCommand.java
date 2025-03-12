@@ -19,10 +19,6 @@ public class EngancheCommand extends Command {
   }
 
   @Override
-  public void initialize() {
-  }
-
-  @Override
   public void execute() {
     engancheSubsystem.moveEnganche(Utils.applyDeadZone(enganchePower.getAsDouble(), DeadZone.ElevadorDeadZone));
   }
@@ -30,10 +26,5 @@ public class EngancheCommand extends Command {
   @Override
   public void end(boolean isInterrupted) {
     engancheSubsystem.moveEnganche(0);
-  }
-
-  @Override
-  public boolean isFinished() {
-    return false;
   }
 }
