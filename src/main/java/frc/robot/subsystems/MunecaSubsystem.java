@@ -42,10 +42,12 @@ public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
 
     leaderConfig.closedLoop
       .p(0.02)
-      .i(0)
+      .i(0.00004)
+      .iZone(1.7)
       .d(0)
       .maxMotion
       .maxVelocity(0.4)
+      .allowedClosedLoopError(1)
       .maxAcceleration(0.05);
 
     leaderConfig
