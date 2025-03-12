@@ -24,8 +24,9 @@ public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
   private final RelativeEncoder munecaEncoder;
   private static final double UPPER_LIMIT = 0;
   private static final double LOWER_LIMIT = -20;
-  public static final String DASH_MUNECA_POS = "Muneca Posicion";
-  public static final String DASH_RESET_MUNECA_ENCODER = "Reiniciar Encoder Muñeca";
+  public static final String DASH_MUNECA_POS = "Muneca/Pos";
+  public static final String DASH_MUNECA_TARGET = "Muneca/Target";
+  public static final String DASH_RESET_MUNECA_ENCODER = "Muneca/Reset Encoder";
   private double position;
 
   public MunecaSubsystem() {
@@ -65,7 +66,7 @@ public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
   @Override
   public void periodic() {
     SmartDashboard.putNumber(DASH_MUNECA_POS, getActualPosition());
-    SmartDashboard.putNumber("Targe Muneca pos", position);
+    SmartDashboard.putNumber(DASH_MUNECA_TARGET, position);
     controller.setReference(this.position, SparkBase.ControlType.kPosition);
   }
 
