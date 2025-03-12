@@ -11,10 +11,10 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.MovementCommand;
-import frc.robot.commands.MunecaCommand;
 import frc.robot.commands.RodInteriorCommand;
 import frc.robot.commands.RodLateralesCommand;
 import frc.robot.commands.EngancheCommand;
+import frc.robot.commands.IncrementalMoveCommand;
 import frc.robot.subsystems.AlgaeIntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.MovementSubsystem;
@@ -76,7 +76,11 @@ public class RobotContainer {
   
 
     elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.3));
-    munecaSubsystem.setDefaultCommand(new MunecaCommand(munecaSubsystem, () -> operatorController.getRightY() * 0.5));
+    
+    // Muñeca Binding
+    IncrementalMoveCommand defaultCommandMuneca = new IncrementalMoveCommand(() -> operatorController.getRightY() * 0.2, munecaSubsystem);
+    defaultCommandMuneca.addRequirements(munecaSubsystem);
+    munecaSubsystem.setDefaultCommand(defaultCommandMuneca);
 
     operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
     operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
