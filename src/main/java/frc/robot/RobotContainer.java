@@ -92,7 +92,7 @@ public class RobotContainer {
     movementSubsystem.setDefaultCommand(new MovementCommand(
       () -> -driverController.getLeftY() * 0.5,
       () -> driverController.leftBumper().getAsBoolean(),
-      () -> -driverController.getRightX() * 0.5,
+      () -> -driverController.getRightX() * 0.3,
       movementSubsystem)
     );
 
@@ -119,7 +119,7 @@ operatorController.povRight().onTrue(new MoveToPositionCommand(40, elevatorSubsy
 
 operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
 operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
-operatorController.a().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
+operatorController.b().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
 
 
   }

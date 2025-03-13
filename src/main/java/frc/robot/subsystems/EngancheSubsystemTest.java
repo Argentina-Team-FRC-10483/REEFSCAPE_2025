@@ -18,22 +18,22 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.MunecaConstants;
 import frc.robot.Constants.NEOMotorsConstants;
 
-public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
+public class EngancheSubsystemTest extends SubsystemBase implements MovableSubsystem {
   private final SparkMax motor = new SparkMax(MunecaConstants.MUNECA_MOTOR_ID, MotorType.kBrushless);
   private final SparkClosedLoopController controller = motor.getClosedLoopController();
-  private final RelativeEncoder munecaEncoder;
-  private static final double UPPER_LIMIT = 0.5;
-  private static final double LOWER_LIMIT = -21;
-  public static final String DASH_MUNECA_POS = "Muneca Posicion";
-  public static final String DASH_RESET_MUNECA_ENCODER = "Reiniciar Encoder Muñeca";
+  private final RelativeEncoder engancheEncoderTest;
+  private static final double UPPER_LIMIT = 0;
+  private static final double LOWER_LIMIT = -22;
+  public static final String DASH_ENGANCHE_POS = "Enganche position";
+  public static final String DASH_RESET_ENGANCHE_ENCODER = "Reiniciar Encoder Enganche";
   private double position;
 
-  public MunecaSubsystem() {
+  public EngancheSubsystemTest() {
     motor.setCANTimeout(DriveConstants.CAN_TIMEOUT);
     motor.configure(getLeaderConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    munecaEncoder = motor.getEncoder();
+    engancheEncoderTest = motor.getEncoder();
     reset();
-    SmartDashboard.putData(DASH_RESET_MUNECA_ENCODER, new InstantCommand(this::reset));
+    SmartDashboard.putData(DASH_RESET_ENGANCHE_ENCODER, new InstantCommand(this::reset));
   }
 
   private static SparkMaxConfig getLeaderConfig() {
@@ -44,7 +44,7 @@ public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
       .iZone(1.7)
       .i(0.00004) // 0.001
       .d(0)
-      // .velocityFF(0)
+      // .velocityFF(0)hhhhhhhhhhhhhhhhhhh
       .maxMotion
       .maxVelocity(0.4)
       .allowedClosedLoopError(1)
@@ -60,21 +60,21 @@ public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
 
   @Override
   public void reset(){
-    munecaEncoder.setPosition(0);
+    engancheEncoderTest.setPosition(0);
     position = 0;
     controller.setReference(this.position, SparkBase.ControlType.kPosition);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber(DASH_MUNECA_POS, getActualPosition());
-    SmartDashboard.putNumber("Target Muneca pos", position);
+    SmartDashboard.putNumber(DASH_ENGANCHE_POS, getActualPosition());
+    SmartDashboard.putNumber("Target Enganche pos", position);
     controller.setReference(this.position, SparkBase.ControlType.kPosition);
   }
 
   @Override
   public double getActualPosition() {
-    return munecaEncoder.getPosition();
+    return engancheEncoderTest.getPosition();
   }
 
   @Override
