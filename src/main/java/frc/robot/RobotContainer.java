@@ -20,7 +20,6 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
   private final MovementSubsystem movementSubsystem = new MovementSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
-  private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
   private final MunecaSubsystem munecaSubsystem = new MunecaSubsystem();
   private final RodLateralesSubsystem rodLateralesSubsystem = new RodLateralesSubsystem();
   private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
@@ -50,9 +49,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    driverController.rightBumper().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
-    driverController.rightTrigger().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.5));
-
     engancheSubsystem.setDefaultCommand(new EngancheCommand(engancheSubsystem, 
     () -> {
       double power = 0;
