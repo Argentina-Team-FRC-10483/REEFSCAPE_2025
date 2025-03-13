@@ -8,19 +8,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.AlgaeIntakeCommand;
-import frc.robot.commands.MovementCommand;
-import frc.robot.commands.RodInteriorCommand;
-import frc.robot.commands.RodLateralesCommand;
-import frc.robot.commands.EngancheCommand;
-import frc.robot.commands.IncrementalMoveCommand;
-import frc.robot.subsystems.AlgaeIntakeSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.MovementSubsystem;
-import frc.robot.subsystems.MunecaSubsystem;
-import frc.robot.subsystems.RodLateralesSubsystem;
-import frc.robot.subsystems.RodInteriorSubsystem;
-import frc.robot.subsystems.EngancheSubsystem;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -31,7 +20,6 @@ import frc.robot.subsystems.EngancheSubsystem;
 public class RobotContainer {
   private final MovementSubsystem movementSubsystem = new MovementSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
-  private final AlgaeIntakeSubsystem algaeIntakeSubsystem = new AlgaeIntakeSubsystem();
   private final MunecaSubsystem munecaSubsystem = new MunecaSubsystem();
   private final RodLateralesSubsystem rodLateralesSubsystem = new RodLateralesSubsystem();
   private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
@@ -61,9 +49,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    driverController.rightBumper().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, 0.5));
-    driverController.rightTrigger().whileTrue(new AlgaeIntakeCommand(algaeIntakeSubsystem, -0.5));
-
     engancheSubsystem.setDefaultCommand(new EngancheCommand(engancheSubsystem, 
     () -> {
       double power = 0;
