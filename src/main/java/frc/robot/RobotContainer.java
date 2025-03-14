@@ -87,10 +87,10 @@ public class RobotContainer {
         () -> -driverController.getRightX() * 0.3,
         movementSubsystem));
 
-    // operatorController.povDown().onTrue(new MoveToPositionCommand(0, elevatorSubsystem, 3)); // Nivel 1
-    // operatorController.povLeft().onTrue(new MoveToPositionCommand(16.3, elevatorSubsystem, 3)); // Nivel 2
-    // operatorController.povUp().onTrue(new MoveToPositionCommand(41.1, elevatorSubsystem, 3)); // Nivel 3
-    // operatorController.povRight().onTrue(new MoveToPositionCommand(85, elevatorSubsystem, 3)); // Nivel 4
+    operatorController.povDown().onTrue(new MoveToPositionCommand(0, elevatorSubsystem, 3)); // Nivel 1
+    operatorController.povLeft().onTrue(new MoveToPositionCommand(16.3, elevatorSubsystem, 3)); // Nivel 2
+    operatorController.povUp().onTrue(new MoveToPositionCommand(41.1, elevatorSubsystem, 3)); // Nivel 3
+    operatorController.povRight().onTrue(new MoveToPositionCommand(85, elevatorSubsystem, 3)); // Nivel 4
   }
 
   /**
