@@ -59,12 +59,16 @@ public class RobotContainer {
   ));
   
 
-    elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> operatorController.getLeftY() * 0.3));
     
     // Muñeca Binding
     IncrementalMoveCommand defaultCommandMuneca = new IncrementalMoveCommand(() -> operatorController.getRightY() * 0.2, munecaSubsystem);
     defaultCommandMuneca.addRequirements(munecaSubsystem);
     munecaSubsystem.setDefaultCommand(defaultCommandMuneca);
+
+    //Elevator 
+    IncrementalMoveCommand defaultCommandElevator = new IncrementalMoveCommand(() -> operatorController.getLeftY() * -0.4, elevatorSubsystem);
+    defaultCommandElevator.addRequirements(elevatorSubsystem);
+    elevatorSubsystem.setDefaultCommand(defaultCommandElevator);
 
     operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
     operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
