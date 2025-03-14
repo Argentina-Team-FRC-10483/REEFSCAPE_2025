@@ -12,23 +12,26 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
 
-private final MovementSubsystem movementSubsystem = new MovementSubsystem();
-private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
-private final MunecaSubsystem munecaSubsystem = new MunecaSubsystem();
-RodLateralesSubsystem rodLateralesSubsystem = new RodLateralesSubsystem();
-private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
-//  private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
-private final CommandXboxController driverController =
-  new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
-private final CommandXboxController operatorController =
-  new CommandXboxController(OperatorConstants.OPERADOR_CONTROLLER_PORT);
+  private final MovementSubsystem movementSubsystem = new MovementSubsystem();
+  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  private final MunecaSubsystem munecaSubsystem = new MunecaSubsystem();
+  RodLateralesSubsystem rodLateralesSubsystem = new RodLateralesSubsystem();
+  private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
+  // private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
+  private final CommandXboxController driverController = new CommandXboxController(
+      OperatorConstants.DRIVER_CONTROLLER_PORT);
+  private final CommandXboxController operatorController = new CommandXboxController(
+      OperatorConstants.OPERADOR_CONTROLLER_PORT);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -38,47 +41,56 @@ private final CommandXboxController operatorController =
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link
+   * CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {
-    //enganche
-  //   engancheSubsystem.setDefaultCommand(new EngancheCommand(engancheSubsystem, 
-  //   () -> {
-  //     double power = 0;
-  //     if (driverController.x().getAsBoolean()) power += 0.5;
-  //     if (driverController.b().getAsBoolean()) power -= 0.5;
-  //     return power;
-  //   }
-  // ));
-  
+    // enganche
+    // engancheSubsystem.setDefaultCommand(new EngancheCommand(engancheSubsystem,
+    // () -> {
+    // double power = 0;
+    // if (driverController.x().getAsBoolean()) power += 0.5;
+    // if (driverController.b().getAsBoolean()) power -= 0.5;
+    // return power;
+    // }
+    // ));
 
-    
     // Muñeca Binding
-    IncrementalMoveCommand defaultCommandMuneca = new IncrementalMoveCommand(() -> operatorController.getRightY() * 0.2, munecaSubsystem);
+    IncrementalMoveCommand defaultCommandMuneca = new IncrementalMoveCommand(() -> operatorController.getRightY() * -0.2,
+        munecaSubsystem);
     defaultCommandMuneca.addRequirements(munecaSubsystem);
     munecaSubsystem.setDefaultCommand(defaultCommandMuneca);
 
-    //Elevator 
-    IncrementalMoveCommand defaultCommandElevator = new IncrementalMoveCommand(() -> operatorController.getLeftY() * -0.4, elevatorSubsystem);
+    // Elevator
+    IncrementalMoveCommand defaultCommandElevator = new IncrementalMoveCommand(
+        () -> operatorController.getLeftY() * -0.4, elevatorSubsystem);
     defaultCommandElevator.addRequirements(elevatorSubsystem);
     elevatorSubsystem.setDefaultCommand(defaultCommandElevator);
 
     operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
     operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
-    operatorController.b().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
+    operatorController.b().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.2));
 
     movementSubsystem.setDefaultCommand(new MovementCommand(
-      () -> -driverController.getLeftY() * 0.5,
-      () -> driverController.getHID().getLeftBumperButton(),
-      () -> -driverController.getRightX() * 0.3,
-      movementSubsystem
-    ));
+        () -> -driverController.getLeftY() * 0.5,
+        () -> driverController.getHID().getLeftBumperButton(),
+        () -> -driverController.getRightX() * 0.3,
+        movementSubsystem));
+
+    operatorController.povDown().onTrue(new MoveToPositionCommand(0, elevatorSubsystem, 3)); // Nivel 1
+    operatorController.povLeft().onTrue(new MoveToPositionCommand(16.3, elevatorSubsystem, 3)); // Nivel 2
+    operatorController.povUp().onTrue(new MoveToPositionCommand(41.1, elevatorSubsystem, 3)); // Nivel 3
+    operatorController.povRight().onTrue(new MoveToPositionCommand(85, elevatorSubsystem, 3)); // Nivel 4
   }
 
   /**

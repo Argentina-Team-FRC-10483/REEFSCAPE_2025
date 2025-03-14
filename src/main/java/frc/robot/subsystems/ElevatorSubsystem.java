@@ -60,8 +60,8 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
       .i(0)
       .d(0)
       .maxMotion
-      .maxVelocity(1)
-      .maxAcceleration(0.05);
+      .maxVelocity(0.4)
+      .maxAcceleration(0.001);
 
     leaderConfig
       .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION_NEO)
