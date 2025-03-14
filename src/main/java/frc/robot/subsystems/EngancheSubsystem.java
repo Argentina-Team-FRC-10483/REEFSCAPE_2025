@@ -22,8 +22,8 @@ public class EngancheSubsystem extends SubsystemBase implements MovableSubsystem
   private final SparkMax motor = new SparkMax(EngancheConstants.MOTOR_ENGANCHE_ID, MotorType.kBrushless);
   private final SparkClosedLoopController controller = motor.getClosedLoopController();
   private final RelativeEncoder engancheEncoder;
-  private static final double UPPER_LIMIT = 0.25;
-  private static final double LOWER_LIMIT = -22;
+  private static final double UPPER_LIMIT = 0;
+  private static final double LOWER_LIMIT = 10;
   public static final String DASH_ENGANCHE_POS = "Enganche/Pos";
   public static final String DASH_ENGANCHE_TARGET = "Enganche/Target";
   public static final String DASH_RESET_ENGANCHE_ENCODER = "Enganche/Reset Encoder";
