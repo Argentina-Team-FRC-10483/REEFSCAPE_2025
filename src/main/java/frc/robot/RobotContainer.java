@@ -18,19 +18,17 @@ import frc.robot.subsystems.*;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  private final MovementSubsystem movementSubsystem = new MovementSubsystem();
-  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
-  private final MunecaSubsystem munecaSubsystem = new MunecaSubsystem();
-  private final RodLateralesSubsystem rodLateralesSubsystem = new RodLateralesSubsystem();
-  private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
-  private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
 
-  private final CommandXboxController driverController = new CommandXboxController(
-    OperatorConstants.DRIVER_CONTROLLER_PORT
-  );
-  private final CommandXboxController operatorController = new CommandXboxController(
-    OperatorConstants.OPERADOR_CONTROLLER_PORT
-  );
+private final MovementSubsystem movementSubsystem = new MovementSubsystem();
+private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+private final MunecaSubsystem munecaSubsystem = new MunecaSubsystem();
+RodLateralesSubsystem rodLateralesSubsystem = new RodLateralesSubsystem();
+private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
+//  private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
+private final CommandXboxController driverController =
+  new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
+private final CommandXboxController operatorController =
+  new CommandXboxController(OperatorConstants.OPERADOR_CONTROLLER_PORT);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -49,14 +47,15 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    engancheSubsystem.setDefaultCommand(new EngancheCommand(engancheSubsystem, 
-    () -> {
-      double power = 0;
-      if (driverController.x().getAsBoolean()) power += 0.5;
-      if (driverController.b().getAsBoolean()) power -= 0.5;
-      return power;
-    }
-  ));
+    //enganche
+  //   engancheSubsystem.setDefaultCommand(new EngancheCommand(engancheSubsystem, 
+  //   () -> {
+  //     double power = 0;
+  //     if (driverController.x().getAsBoolean()) power += 0.5;
+  //     if (driverController.b().getAsBoolean()) power -= 0.5;
+  //     return power;
+  //   }
+  // ));
   
 
     
@@ -72,12 +71,12 @@ public class RobotContainer {
 
     operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
     operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
-    operatorController.a().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
+    operatorController.b().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.5));
 
     movementSubsystem.setDefaultCommand(new MovementCommand(
       () -> -driverController.getLeftY() * 0.5,
       () -> driverController.getHID().getLeftBumperButton(),
-      () -> -driverController.getRightX() * 0.5,
+      () -> -driverController.getRightX() * 0.3,
       movementSubsystem
     ));
   }

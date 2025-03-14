@@ -63,7 +63,7 @@ public class MovementSubsystem extends SubsystemBase {
 
   // sets the speed of the drive motors
   public void driveArcade(double xSpeed, double zRotation) {
-    drive.arcadeDrive(xSpeed, zRotation);
+    drive.arcadeDrive(xSpeed, zRotation, false);
   }
 
   public void curvatureArcade(double xSpeed, double zRotation) {
