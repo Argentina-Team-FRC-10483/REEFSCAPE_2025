@@ -22,10 +22,10 @@ public class MovementSubsystem extends SubsystemBase {
 
   public MovementSubsystem() {
     // Create brushed motors for drive
-    leftLeader = new SparkMax(DriveConstants.LEFT_MOVEMENT_LEADER_MOTOR_ID, MotorType.kBrushed);
-    leftFollow = new SparkMax(DriveConstants.LEFT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
-    rightLeader = new SparkMax(DriveConstants.RIGHT_MOVEMENT_LEADER_MOTOR_ID, MotorType.kBrushed);
-    rightFollow = new SparkMax(DriveConstants.RIGHT_MOVEMENT_FOLLOW_MOTOR_ID, MotorType.kBrushed);
+    leftLeader = new SparkMax(DriveConstants.LEFT_LEADER_CAN_ID, MotorType.kBrushed);
+    leftFollow = new SparkMax(DriveConstants.LEFT_FOLLOW_CAN_ID, MotorType.kBrushed);
+    rightLeader = new SparkMax(DriveConstants.RIGHT_LEADER_CAN_ID, MotorType.kBrushed);
+    rightFollow = new SparkMax(DriveConstants.RIGHT_FOLLOW_CAN_ID, MotorType.kBrushed);
 
     // Set up differential drive class
     drive = new DifferentialDrive(leftLeader, rightLeader);
