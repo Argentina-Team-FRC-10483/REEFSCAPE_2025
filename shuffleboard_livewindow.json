@@ -1,0 +1,577 @@
+{
+  "tabPane": [
+    {
+      "title": "SmartDashboard",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "SmartDashboard/",
+      "widgetPane": {
+        "gridSize": 35.0,
+        "showGrid": true,
+        "hgap": 10.0,
+        "vgap": 10.0,
+        "titleType": 0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///SmartDashboard/Muneca",
+              "_title": "/SmartDashboard/Muneca",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "1,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///SmartDashboard/Elevador",
+              "_title": "/SmartDashboard/Elevador",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "2,0": {
+            "size": [
+              10,
+              6
+            ],
+            "content": {
+              "_type": "Differential Drivebase",
+              "_source0": "network_table:///SmartDashboard/DifferentialDrive[1]",
+              "_title": "/SmartDashboard/DifferentialDrive[1]",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Wheels/Number of wheels": 4,
+              "Wheels/Wheel diameter": 80.0,
+              "Visuals/Show velocity vectors": true
+            }
+          },
+          "12,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Giro",
+              "_title": "/SmartDashboard/Giro",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Velocidad",
+              "_title": "/SmartDashboard/Velocidad",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "16,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Aceleracion",
+              "_title": "/SmartDashboard/Aceleracion",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "18,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Giro Total",
+              "_title": "/SmartDashboard/Giro Total",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "20,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Velocidad Total",
+              "_title": "/SmartDashboard/Velocidad Total",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "22,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Tiempo",
+              "_title": "/SmartDashboard/Tiempo",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "LiveWindow",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "LiveWindow/",
+      "widgetPane": {
+        "gridSize": 34.0,
+        "showGrid": true,
+        "hgap": 8.0,
+        "vgap": 8.0,
+        "titleType": 2,
+        "tiles": {
+          "10,0": {
+            "size": [
+              12,
+              16
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "List Layout",
+              "_glyph": 149,
+              "_showGlyph": false,
+              "Layout/Label position": "HIDDEN",
+              "_children": [
+                {
+                  "_type": "Camera Stream",
+                  "_source0": "camera_server://DESKTOP-56H89HK_Port_1188_Output_MJPEG_Server",
+                  "_title": "DESKTOP-56H89HK_Port_1188_Output_MJPEG_Server",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Crosshair/Show crosshair": false,
+                  "Crosshair/Crosshair color": "#FFFFFFFF",
+                  "Controls/Show controls": false,
+                  "Controls/Rotation": "NONE",
+                  "compression": 0.0,
+                  "fps": 20,
+                  "imageWidth": 800,
+                  "imageHeight": 600
+                },
+                {
+                  "_type": "Camera Stream",
+                  "_source0": "camera_server://DESKTOP-56H89HK_Port_1188_Output_MJPEG_Server",
+                  "_title": "DESKTOP-56H89HK_Port_1188_Output_MJPEG_Server",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Crosshair/Show crosshair": false,
+                  "Crosshair/Crosshair color": "#FFFFFFFF",
+                  "Controls/Show controls": false,
+                  "Controls/Rotation": "NONE",
+                  "compression": 0.0,
+                  "fps": 20,
+                  "imageWidth": 800,
+                  "imageHeight": 600
+                }
+              ]
+            }
+          },
+          "0,0": {
+            "size": [
+              10,
+              7
+            ],
+            "content": {
+              "_type": "Differential Drivebase",
+              "_source0": "network_table:///SmartDashboard/DifferentialDrive[1]",
+              "_title": "/SmartDashboard/DifferentialDrive[1]",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Wheels/Number of wheels": 4,
+              "Wheels/Wheel diameter": 80.0,
+              "Visuals/Show velocity vectors": true
+            }
+          },
+          "0,7": {
+            "size": [
+              5,
+              5
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "",
+              "_glyph": 149,
+              "_showGlyph": false,
+              "Layout/Label position": "TOP",
+              "_children": [
+                {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/Velocidad Total",
+                  "_title": "Velocidad",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Range/Min": 0.0,
+                  "Range/Max": 1.0,
+                  "Visuals/Show value": true
+                }
+              ]
+            }
+          },
+          "0,12": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Auto Chooser",
+              "_title": "/SmartDashboard/Auto Chooser",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,14": {
+            "size": [
+              5,
+              1
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Grid Layout",
+              "_glyph": 149,
+              "_showGlyph": false,
+              "Layout/Number of columns": 2,
+              "Layout/Number of rows": 1,
+              "Layout/Label position": "HIDDEN",
+              "_children": {
+                "0,0": {
+                  "_type": "Text View",
+                  "_source0": "network_table:///FMSInfo/StationNumber",
+                  "_title": "/FMSInfo/StationNumber",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                "1,0": {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///FMSInfo/IsRedAlliance",
+                  "_title": "/FMSInfo/IsRedAlliance",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Colors/Color when true": "#FF0000FF",
+                  "Colors/Color when false": "#0000FFFF"
+                }
+              }
+            }
+          },
+          "22,0": {
+            "size": [
+              8,
+              16
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "List Layout",
+              "_glyph": 149,
+              "_showGlyph": false,
+              "Layout/Label position": "BOTTOM",
+              "_children": [
+                {
+                  "_type": "Graph",
+                  "_source0": "network_table:///SmartDashboard/Elevador/Posicion",
+                  "_source1": "network_table:///SmartDashboard/Elevador/Target",
+                  "_title": "/SmartDashboard/Elevador/Posicion",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Graph/Visible time": 30.0,
+                  "Graph/X-axis auto scrolling": true,
+                  "Y-axis/Automatic bounds": true,
+                  "Y-axis/Upper bound": 1.0,
+                  "Y-axis/Lower bound": -1.0,
+                  "Y-axis/Unit": "ul",
+                  "Visible data//SmartDashboard/Elevador/Posicion": true,
+                  "Visible data//SmartDashboard/Elevador/Target": true
+                },
+                {
+                  "_type": "Graph",
+                  "_source0": "network_table:///SmartDashboard/Muneca/Pos",
+                  "_source1": "network_table:///SmartDashboard/Muneca/Target",
+                  "_title": "/SmartDashboard/Muneca/Pos",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Graph/Visible time": 30.0,
+                  "Graph/X-axis auto scrolling": true,
+                  "Y-axis/Automatic bounds": true,
+                  "Y-axis/Upper bound": 1.0,
+                  "Y-axis/Lower bound": -1.0,
+                  "Y-axis/Unit": "ul",
+                  "Visible data//SmartDashboard/Muneca/Pos": true,
+                  "Visible data//SmartDashboard/Muneca/Target": true
+                }
+              ]
+            }
+          },
+          "30,0": {
+            "size": [
+              2,
+              8
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///SmartDashboard/Elevador/Target",
+              "_title": "/SmartDashboard/Elevador/Target",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": 0.0,
+              "Range/Max": 87.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true,
+              "Visuals/Orientation": "VERTICAL"
+            }
+          },
+          "30,8": {
+            "size": [
+              2,
+              7
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///SmartDashboard/Muneca/Target",
+              "_title": "/SmartDashboard/Muneca/Target",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": -21.0,
+              "Range/Max": -1.6,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true,
+              "Visuals/Orientation": "VERTICAL"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Camaras ",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 40.0,
+        "showGrid": true,
+        "hgap": 10.0,
+        "vgap": 10.0,
+        "titleType": 0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              3,
+              6
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///CameraPublisher/Camera_1",
+              "_title": "/CameraPublisher/Camera_1",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,6": {
+            "size": [
+              3,
+              6
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///CameraPublisher/Camera_2",
+              "_title": "/CameraPublisher/Camera_2",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "24,6": {
+            "size": [
+              3,
+              6
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///CameraPublisher/Camera_4",
+              "_title": "/CameraPublisher/Camera_4",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,6": {
+            "size": [
+              9,
+              6
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://DESKTOP-56H89HK_Port_1188_Output_MJPEG_Server",
+              "_title": "DESKTOP-56H89HK_Port_1188_Output_MJPEG_Server",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": 0.0,
+              "fps": 20,
+              "imageWidth": 800,
+              "imageHeight": 600
+            }
+          },
+          "3,0": {
+            "size": [
+              9,
+              6
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://DESKTOP-56H89HK_Port_1184_Output_MJPEG_Server",
+              "_title": "DESKTOP-56H89HK_Port_1184_Output_MJPEG_Server",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": 0.0,
+              "fps": 20,
+              "imageWidth": 800,
+              "imageHeight": 600
+            }
+          },
+          "15,0": {
+            "size": [
+              9,
+              6
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://DESKTOP-56H89HK_Port_1182_Output_MJPEG_Server",
+              "_title": "DESKTOP-56H89HK_Port_1182_Output_MJPEG_Server",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": 0.0,
+              "fps": 20,
+              "imageWidth": 800,
+              "imageHeight": 600
+            }
+          },
+          "15,6": {
+            "size": [
+              9,
+              6
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://DESKTOP-56H89HK_Port_1186_Output_MJPEG_Server",
+              "_title": "DESKTOP-56H89HK_Port_1186_Output_MJPEG_Server",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": 0.0,
+              "fps": 20,
+              "imageWidth": 800,
+              "imageHeight": 600
+            }
+          },
+          "12,6": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///CameraPublisher/DESKTOP-56H89HK_Port_1182_Output_MJPEG_Server",
+              "_title": "/CameraPublisher/DESKTOP-56H89HK_Port_1182_Output_MJPEG_Server",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "12,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///CameraPublisher/DESKTOP-56H89HK_Port_1184_Output_MJPEG_Server",
+              "_title": "/CameraPublisher/DESKTOP-56H89HK_Port_1184_Output_MJPEG_Server",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "12,9": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///CameraPublisher/DESKTOP-56H89HK_Port_1186_Output_MJPEG_Server",
+              "_title": "/CameraPublisher/DESKTOP-56H89HK_Port_1186_Output_MJPEG_Server",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "12,3": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///CameraPublisher/DESKTOP-56H89HK_Port_1188_Output_MJPEG_Server",
+              "_title": "/CameraPublisher/DESKTOP-56H89HK_Port_1188_Output_MJPEG_Server",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Tab 5",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {}
+      }
+    }
+  ],
+  "windowGeometry": {
+    "x": -8.0,
+    "y": -8.0,
+    "width": 1382.0,
+    "height": 784.0
+  }
+}
