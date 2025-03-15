@@ -65,7 +65,6 @@ public class RobotContainer {
       engancheSubsystem
     );
 
-    // Muñeca Binding
     subsystemDefault(
       new IncrementalMoveCommand(() -> operatorController.getRightY() * -0.2, munecaSubsystem),
       munecaSubsystem
@@ -84,6 +83,16 @@ public class RobotContainer {
         movementSubsystem
       ),
       movementSubsystem
+    );
+
+    subsystemDefault(
+      new MoveToTargetCommand(0, interiorRodSubsystem),
+      interiorRodSubsystem
+    );
+
+    subsystemDefault(
+      new MoveToTargetCommand(0, sideRodSubsystem),
+      sideRodSubsystem
     );
 
     operatorController.leftTrigger().onTrue(new MoveToTargetCommand(1, sideRodSubsystem, 0.1, false));

@@ -5,12 +5,16 @@ import frc.robot.subsystems.MovableSubsystem;
 
 public class MoveToTargetCommand extends Command {
   protected final MovableSubsystem subsystem;
-  double targetPosition;
+  double target;
   double tolerance;
   private final boolean waitForCompletion;
 
-  public MoveToTargetCommand(double targetPosition, MovableSubsystem subsystem, double tolerance, boolean waitForCompletion) {
-    this.targetPosition = targetPosition;
+  public MoveToTargetCommand(double target, MovableSubsystem subsystem) {
+    this(target, subsystem, 0.01, false);
+  }
+
+  public MoveToTargetCommand(double target, MovableSubsystem subsystem, double tolerance, boolean waitForCompletion) {
+    this.target = target;
     this.subsystem = subsystem;
     this.tolerance = tolerance;
     this.waitForCompletion = waitForCompletion;
@@ -18,11 +22,11 @@ public class MoveToTargetCommand extends Command {
 
   @Override
   public void execute() {
-    subsystem.move(targetPosition);
+    subsystem.move(target);
   }
 
   @Override
   public boolean isFinished() {
-    return !waitForCompletion || Math.abs(subsystem.getActual() - targetPosition) < tolerance;
+    return !waitForCompletion || Math.abs(subsystem.getActual() - target) < tolerance;
   }
 }
