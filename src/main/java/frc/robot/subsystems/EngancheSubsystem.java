@@ -21,11 +21,11 @@ public class EngancheSubsystem extends SubsystemBase {
   private static final double SLOWDOWN_RANGE = 7.0;
   private static final double UPPER_LIMIT = 30.0;
   private static final double LOWER_LIMIT = 0.0;
-  public static final String DASH_ENGANCHE_POS = "Enganche Posicion";
-  public static final String DASH_RESET_ENGANCHE_ENCODER = "Reiniciar Encoder Enganche";
+  public static final String DASH_POS = "Enganche/Posicion";
+  public static final String DASH_RESET_ENCODER = "Enganche/Reset Encoder";
 
   public EngancheSubsystem() {
-    motor = new SparkMax(EngancheConstants.MOTOR_ENGANCHE_ID, MotorType.kBrushless);
+    motor = new SparkMax(EngancheConstants.CAN_ID, MotorType.kBrushless);
 
     motor.setCANTimeout(DriveConstants.CAN_TIMEOUT);
 
@@ -34,7 +34,7 @@ public class EngancheSubsystem extends SubsystemBase {
     engancheEncoder = motor.getEncoder();
     engancheEncoder.setPosition(0);
 
-    SmartDashboard.putData(DASH_RESET_ENGANCHE_ENCODER, new InstantCommand(() -> engancheEncoder.setPosition(0)));
+    SmartDashboard.putData(DASH_RESET_ENCODER, new InstantCommand(() -> engancheEncoder.setPosition(0)));
   }
 
   private static SparkMaxConfig getLeaderConfig() {
@@ -47,15 +47,15 @@ public class EngancheSubsystem extends SubsystemBase {
       .reverseSoftLimit(0);
 
     leaderConfig
-      .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION_NEO)
-      .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT_NEO);
+      .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION)
+      .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT);
 
     return leaderConfig;
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber(DASH_ENGANCHE_POS, getEnganchePosition());
+    SmartDashboard.putNumber(DASH_POS, getEnganchePosition());
   }
 
   public double getEnganchePosition() {

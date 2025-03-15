@@ -31,7 +31,7 @@ public class RobotContainer {
   private final CommandXboxController driverController = new CommandXboxController(
       OperatorConstants.DRIVER_CONTROLLER_PORT);
   private final CommandXboxController operatorController = new CommandXboxController(
-      OperatorConstants.OPERADOR_CONTROLLER_PORT);
+      OperatorConstants.OPERATOR_CONTROLLER_PORT);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -87,10 +87,10 @@ public class RobotContainer {
         () -> -driverController.getRightX() * 0.3,
         movementSubsystem));
 
-    operatorController.povDown().onTrue(new MoveToPositionCommand(0, elevatorSubsystem, 3)); // Nivel 1
-    operatorController.povLeft().onTrue(new MoveToPositionCommand(16.3, elevatorSubsystem, 3)); // Nivel 2
-    operatorController.povUp().onTrue(new MoveToPositionCommand(41.1, elevatorSubsystem, 3)); // Nivel 3
-    operatorController.povRight().onTrue(new MoveToPositionCommand(85, elevatorSubsystem, 3)); // Nivel 4
+    operatorController.povDown().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L0, elevatorSubsystem, 3, true)); // Nivel 1
+    operatorController.povLeft().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L1, elevatorSubsystem, 3, true)); // Nivel 2
+    operatorController.povUp().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L2, elevatorSubsystem, 3, true)); // Nivel 3
+    operatorController.povRight().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L3, elevatorSubsystem, 3, true)); // Nivel 4
   }
 
   /**
