@@ -23,7 +23,7 @@ public final class Constants {
   }
 
   public static final class EngancheConstants {
-    public static final int CAN_ID = 11;
+    public static final int CAN_ID = 8;
   }
 
   public static final class ElevatorConstants {
@@ -51,6 +51,6 @@ public final class Constants {
 
   public static final class HandConstants {
     public static final int INTERIOR_CAN_ID = 10;
-    public static final int SIDE_CAN_ID = 8;
+    public static final int SIDE_CAN_ID = 11;
   }
 }
