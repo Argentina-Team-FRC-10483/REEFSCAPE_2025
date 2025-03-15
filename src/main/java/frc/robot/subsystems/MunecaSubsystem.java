@@ -22,8 +22,8 @@ public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
   private final SparkMax motor = new SparkMax(MunecaConstants.CAN_ID, MotorType.kBrushless);
   private final SparkClosedLoopController controller = motor.getClosedLoopController();
   private final RelativeEncoder munecaEncoder;
-  private static final double UPPER_LIMIT = 0.25;
-  private static final double LOWER_LIMIT = -22;
+  private static final double UPPER_LIMIT = -1.6;
+  private static final double LOWER_LIMIT = -23;
   public static final String DASH_MUNECA_POS = "Muneca/Pos";
   public static final String DASH_MUNECA_TARGET = "Muneca/Target";
   public static final String DASH_RESET_MUNECA_ENCODER = "Muneca/Reset Encoder";
