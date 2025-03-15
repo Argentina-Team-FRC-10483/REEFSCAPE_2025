@@ -18,7 +18,7 @@ public class IncrementalMoveCommand extends Command {
 
   @Override
   public void execute() {
-    double targetPosition = subsystem.getTargetPosition();
+    double targetPosition = subsystem.getTarget();
     // TODO: Make constant generic yay
     targetPosition += Utils.applyDeadZone(positionChanger.getAsDouble(), Constants.DeadZone.ELEVATOR);
     subsystem.move(targetPosition);
