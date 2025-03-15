@@ -12,6 +12,7 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -87,7 +88,7 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
     SmartDashboard.putNumber(DASH_POS, getActualPosition());
     SmartDashboard.putNumber(DASH_TARGET, position);
 
-    if (isRestrictedArea()) {
+    if (isRestrictedArea() && RobotState.isTeleop() && RobotState.isEnabled()) {
       SmartDashboard.putString(DASH_ELEVATOR_WARNING, "⚠ Elevador restringido! Muñeca muy baja.");
     }
 
