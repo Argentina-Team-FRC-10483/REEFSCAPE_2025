@@ -6,12 +6,14 @@ import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+import static com.revrobotics.spark.SparkBase.ControlType.kMAXMotionVelocityControl;
 import static com.revrobotics.spark.SparkBase.ControlType.kVelocity;
 
 public class MovementMotor extends SubsystemBase {
@@ -48,7 +50,8 @@ public class MovementMotor extends SubsystemBase {
     config.closedLoop.
       p(0.3)
       .i(0)
-      .d(0);
+      .d(0)
+      .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder);
     config.closedLoop.maxMotion
       .maxAcceleration(0.01)
       .maxVelocity(0.05);
@@ -64,7 +67,8 @@ public class MovementMotor extends SubsystemBase {
 
   @Override
   public void periodic(){
-    controller.setReference(this.targetVelocity, kVelocity);
+//    controller.setReference(this.targetVelocity, kMAXMotionVelocityControl);
+    leader.set(targetVelocity);
     positionPublisher.accept(encoder.getPosition());
     velocityPublisher.accept(encoder.getVelocity());
     targetVelocityPublisher.accept(targetVelocity);

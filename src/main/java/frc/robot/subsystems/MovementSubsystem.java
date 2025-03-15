@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import frc.robot.utils.MovementMotor;
 import org.photonvision.PhotonCamera;
@@ -140,14 +141,16 @@ public class MovementSubsystem extends SubsystemBase {
     field2d.setRobotPose(getPose());
     posePublisher.accept(getPose());
     cameraInterFace.periodic();
+    left.periodic();
+    right.periodic();
     Gyro.getInstance().outputValues();
   }
 
   @Override
   public void simulationPeriodic() {
     driveSim.setInputs(
-      left.leader.getAppliedOutput(),
-      right.leader.getAppliedOutput()
+      left.leader.getAppliedOutput() * RobotController.getBatteryVoltage(),
+      right.leader.getAppliedOutput() * RobotController.getBatteryVoltage()
     );
     driveSim.update(0.02);
     left.updateSimulation(driveSim.getLeftPositionMeters(), driveSim.getLeftVelocityMetersPerSecond());
