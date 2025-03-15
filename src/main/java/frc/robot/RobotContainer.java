@@ -69,16 +69,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // enganche
-    // engancheSubsystem.setDefaultCommand(new EngancheCommand(engancheSubsystem,
-    // () -> {
-    // double power = 0;
-    // if (driverController.x().getAsBoolean()) power += 0.5;
-    // if (driverController.b().getAsBoolean()) power -= 0.5;
-    // return power;
-    // }
-    // ));
-
     // Muñeca Binding
     IncrementalMoveCommand defaultCommandMuneca = new IncrementalMoveCommand(() -> operatorController.getRightY() * -0.2,
       munecaSubsystem);
