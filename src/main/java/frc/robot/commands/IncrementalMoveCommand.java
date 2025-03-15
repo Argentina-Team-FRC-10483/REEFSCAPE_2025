@@ -22,7 +22,7 @@ public class IncrementalMoveCommand extends Command {
   public void execute() {
     double targetPosition = subsystem.getTargetPosition();
     // TODO: Make constant generic yay
-    targetPosition += Utils.applyDeadZone(positionChanger.getAsDouble(), Constants.DeadZone.ElevadorDeadZone);
+    targetPosition += Utils.applyDeadZone(positionChanger.getAsDouble(), Constants.DeadZone.ELEVATOR);
     subsystem.move(targetPosition);
   }
 }

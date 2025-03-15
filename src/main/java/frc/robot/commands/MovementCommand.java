@@ -69,8 +69,8 @@ public class MovementCommand extends Command {
       this.accel = Math.max(this.accel, DriveConstants.DEAD_POINT);
     }
 
-    speed = Utils.applyDeadZone(speed, DeadZone.MovimientoDeadZone);
-    rotation = Utils.applyDeadZone(rotation, DeadZone.MovimientoDeadZone);
+    speed = Utils.applyDeadZone(speed, DeadZone.MOVEMENT);
+    rotation = Utils.applyDeadZone(rotation, DeadZone.MOVEMENT);
 
     updateDashboard(deltaTime, rotation, speed);
 

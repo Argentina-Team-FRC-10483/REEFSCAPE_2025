@@ -17,10 +17,10 @@ public class RodInteriorSubsystem extends SubsystemBase {
   private final RelativeEncoder rodInteriorEncoder;
 
   public RodInteriorSubsystem() {
-    motor = new SparkMax(HandConstants.ROD_INTERIOR_ID, MotorType.kBrushless);
+    motor = new SparkMax(HandConstants.INTERIOR_CAN_ID, MotorType.kBrushless);
     SparkMaxConfig motorConfig = new SparkMaxConfig();
-    motorConfig.voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION_NEO);
-    motorConfig.smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT_NEO);
+    motorConfig.voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION);
+    motorConfig.smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT);
     motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     rodInteriorEncoder = motor.getEncoder();
   }

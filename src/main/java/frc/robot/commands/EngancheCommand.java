@@ -20,7 +20,7 @@ public class EngancheCommand extends Command {
 
   @Override
   public void execute() {
-    engancheSubsystem.moveEnganche(Utils.applyDeadZone(enganchePower.getAsDouble(), DeadZone.ElevadorDeadZone));
+    engancheSubsystem.moveEnganche(Utils.applyDeadZone(enganchePower.getAsDouble(), DeadZone.ELEVATOR));
   }
 
   @Override
