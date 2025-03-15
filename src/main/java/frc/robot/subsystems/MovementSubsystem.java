@@ -4,6 +4,9 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPLTVController;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -38,6 +41,10 @@ public class MovementSubsystem extends SubsystemBase {
     private Field2d field2d;
     StructPublisher<Pose2d> posePublisher;
 
+
+    static final double kDriveRotToMts = (15.24 * Math.PI * 1.0 / 100.0) / 2.1;
+    static final double kDriveRPMToMps = (2 * Math.PI * 0.0762) / 60;
+
   public MovementSubsystem() {
     // Create brushed motors for drive
     leftLeader = new SparkMax(DriveConstants.LEFT_LEADER_CAN_ID, MotorType.kBrushed);
@@ -51,8 +58,14 @@ public class MovementSubsystem extends SubsystemBase {
     rightLeader.setCANTimeout(DriveConstants.CAN_TIMEOUT);
     leftFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
     rightFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
+    
+    leftEncoder = leftLeader.getEncoder();
+    rightEncoder = rightLeader.getEncoder();
+
 
     configureMotors();
+    configureAutoBuilder();
+    configureOdometry();
   }
 
   private void configureMotors() {
@@ -135,11 +148,11 @@ public class MovementSubsystem extends SubsystemBase {
 
   // Get encoder positions (converted to meters)
   public double getLeftEncoderPosition() {
-    return leftLeader.encoder.getPosition();
+    return leftEncoder.getPosition();
 }
 
 public double getRightEncoderPosition() {
-    return -rightLeader.encoder.getPosition();
+    return -rightEncoder.getPosition();
 }
 
 public Pose2d getPose() {
@@ -149,14 +162,13 @@ public Pose2d getPose() {
 
     public void resetPose(Pose2d pose2d) {
         resetOdometry();
-        driveSim.setPose(pose2d);
         odometry.resetPosition(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition(), pose2d);
     }
 
     public ChassisSpeeds getRobotRelativeSpeeds() {
         ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds(
-                left.encoder.getVelocity(),
-                right.encoder.getVelocity()
+                leftEncoder.getVelocity(),
+                rightEncoder.getVelocity()
         ));
         SmartDashboard.putNumber("VX m/s", chassisSpeeds.vxMetersPerSecond);
         SmartDashboard.putNumber("VY m/s", chassisSpeeds.vyMetersPerSecond);
