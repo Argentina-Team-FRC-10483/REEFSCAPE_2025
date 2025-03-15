@@ -1,22 +1,17 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,6 +28,7 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
   private final MunecaSubsystem munecaSubsystem; // Referencia a la muñeca
   private double targetPosition = 0;
   private PIDController pidFeedback = new PIDController(0.02, 0.0, 0.0);
+  private SlewRateLimiter filter = new SlewRateLimiter(0.5);
 
   private static final double UPPER_LIMIT = 87.0;
   private static final double LOWER_LIMIT = 0.0;
@@ -43,13 +39,9 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
   public static final String DASH_POS = "Elevador/Posicion";
   public static final String DASH_TARGET = "Elevador/Target";
   public static final String DASH_RESET_ENCODER = "Elevador/Reset Encoder";
+  public static final String DASH_OUTPUT = "Elevador/Output";
   public static final String DASH_ELEVATOR_WARNING = "Elevador Restricción";
 
-  public static final GenericEntry maxSpeedWidget = Shuffleboard.getTab("Drive")
-    .add("Elevator/Max Speed", 1)
-    .withWidget(BuiltInWidgets.kNumberSlider)
-    .withProperties(Map.of("min", 0, "max", 1)) // specify widget properties here
-    .getEntry();
 
   public ElevatorSubsystem(MunecaSubsystem munecaSubsystem) {
     this.munecaSubsystem = munecaSubsystem;
@@ -105,8 +97,12 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
     }
 
     double output = pidFeedback.calculate(this.getActualPosition(), this.getTargetPosition());
-    output = MathUtil.clamp(output, -maxSpeedWidget.getDouble(MAX_OUTPUT), maxSpeedWidget.getDouble(MAX_OUTPUT));
+    output = MathUtil.clamp(output, -MAX_OUTPUT, MAX_OUTPUT);
+    output = filter.calculate(output);
+    if(pidFeedback.atSetpoint()) output = 0;
+    SmartDashboard.putNumber(DASH_OUTPUT, output);
     leftMotorLeader.set(output);
+    SmartDashboard.putBoolean("atSetpoint", pidFeedback.atSetpoint());
   }
 
   @Override
