@@ -27,11 +27,11 @@ public class RobotContainer {
   private final MunecaSubsystem munecaSubsystem = new MunecaSubsystem();
   RodLateralesSubsystem rodLateralesSubsystem = new RodLateralesSubsystem();
   private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
-  // private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
+  private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
   private final CommandXboxController driverController = new CommandXboxController(
-      OperatorConstants.DRIVER_CONTROLLER_PORT);
+    OperatorConstants.DRIVER_CONTROLLER_PORT);
   private final CommandXboxController operatorController = new CommandXboxController(
-      OperatorConstants.OPERATOR_CONTROLLER_PORT);
+    OperatorConstants.OPERATOR_CONTROLLER_PORT);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -55,25 +55,21 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // enganche
-    // engancheSubsystem.setDefaultCommand(new EngancheCommand(engancheSubsystem,
-    // () -> {
-    // double power = 0;
-    // if (driverController.x().getAsBoolean()) power += 0.5;
-    // if (driverController.b().getAsBoolean()) power -= 0.5;
-    // return power;
-    // }
-    // ));
+    IncrementalMoveCommand defaultCommand = new IncrementalMoveCommand(() -> operatorController.getRightX() * -0.2, engancheSubsystem
+    );
+    defaultCommand.addRequirements(engancheSubsystem);
+      .setDefaultCommand(
+      defaultCommand);
 
     // Muñeca Binding
     IncrementalMoveCommand defaultCommandMuneca = new IncrementalMoveCommand(() -> operatorController.getRightY() * -0.2,
-        munecaSubsystem);
+      munecaSubsystem);
     defaultCommandMuneca.addRequirements(munecaSubsystem);
     munecaSubsystem.setDefaultCommand(defaultCommandMuneca);
 
     // Elevator
     IncrementalMoveCommand defaultCommandElevator = new IncrementalMoveCommand(
-        () -> operatorController.getLeftY() * -0.4, elevatorSubsystem);
+      () -> operatorController.getLeftY() * -0.4, elevatorSubsystem);
     defaultCommandElevator.addRequirements(elevatorSubsystem);
     elevatorSubsystem.setDefaultCommand(defaultCommandElevator);
 
@@ -82,15 +78,16 @@ public class RobotContainer {
     operatorController.b().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.2));
 
     movementSubsystem.setDefaultCommand(new MovementCommand(
-        () -> -driverController.getLeftY() * 0.5,
-        () -> driverController.getHID().getLeftBumperButton(),
-        () -> -driverController.getRightX() * 0.3,
-        movementSubsystem));
+      () -> -driverController.getLeftY() * 0.5,
+      () -> driverController.getHID().getLeftBumperButton(),
+      () -> -driverController.getRightX() * 0.3,
+      movementSubsystem));
 
     operatorController.povDown().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L0, elevatorSubsystem, 3, false)); // Nivel 1
     operatorController.povLeft().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L1, elevatorSubsystem, 3, false)); // Nivel 2
     operatorController.povUp().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L2, elevatorSubsystem, 3, false)); // Nivel 3
     operatorController.povRight().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L3, elevatorSubsystem, 3, false)); // Nivel 4
+
   }
 
   /**
