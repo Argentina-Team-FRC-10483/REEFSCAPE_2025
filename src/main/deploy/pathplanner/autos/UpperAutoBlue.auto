@@ -1,0 +1,105 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "UpperPos1Blue"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator to L3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Lift claw"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Drop coral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Backwards"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "UpperPos2Blue"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Grab coral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Elevator to L1"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CoralScore"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator to L3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Lift claw"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Drop coral"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

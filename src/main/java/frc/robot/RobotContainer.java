@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -45,12 +50,21 @@ public class RobotContainer {
     OperatorConstants.DRIVER_CONTROLLER_PORT);
   private final CommandXboxController operatorController = new CommandXboxController(
     OperatorConstants.OPERATOR_CONTROLLER_PORT);
-
+  private final SendableChooser<Command> autoChooser;
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    NamedCommands.registerCommand("Elevator to L3", new MoveToPositionCommand(Constants.ElevatorConstants.L3, elevatorSubsystem, 3, true));
+    NamedCommands.registerCommand("Elevator to L1", new MoveToPositionCommand(Constants.ElevatorConstants.L1, elevatorSubsystem, 3, true));
+    NamedCommands.registerCommand("Lift claw", new MoveToPositionCommand(-1, munecaSubsystem, 1, true));
+    NamedCommands.registerCommand("Drop coral", new MoveToPositionCommand(-11, munecaSubsystem, 1, true));
+    NamedCommands.registerCommand("Grab coral", new MoveToPositionCommand(-23, munecaSubsystem, 1, true));
+
+    autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -102,6 +116,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return autoChooser.getSelected();
   }
 }

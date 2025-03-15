@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.5,
-        "y": 6.0
+        "x": 5.532483552631578,
+        "y": 2.196875
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.063475265614964,
-        "y": 6.0
+        "x": 4.397121710526315,
+        "y": 1.8986019736842106
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "LowerPos2Blue"
     },
     {
       "anchor": {
-        "x": 3.7161885245901636,
-        "y": 5.523463114754098
+        "x": 1.35,
+        "y": 0.95
       },
       "prevControl": {
-        "x": 2.7571721311475414,
-        "y": 7.345594262295082
+        "x": 2.210364654526569,
+        "y": 2.1787280664334876
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,14 +31,7 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Elevator to L4",
-      "waypointRelativePos": 0.8038936372269703,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -51,8 +44,8 @@
     "velocity": 0,
     "rotation": 0.0
   },
-  "reversed": false,
-  "folder": null,
+  "reversed": true,
+  "folder": "LowerPosBlue",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0
