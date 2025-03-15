@@ -13,7 +13,10 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,10 +24,11 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.NEOMotorsConstants;
 
+import java.util.Map;
+
 public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem {
   private final SparkMax leftMotorLeader;
   private final SparkMax rightMotorFollow;
-  // private final SparkClosedLoopController controller;
   private final RelativeEncoder elevatorEncoder;
   private final MunecaSubsystem munecaSubsystem; // Referencia a la muñeca
   private double targetPosition = 0;
@@ -34,12 +38,18 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
   private static final double LOWER_LIMIT = 0.0;
   private static final double MUNECA_THRESHOLD = -18; // Límite de la muñeca
   private static final double RESTRICTED_LOWER_LIMIT = 30; // Restricción del elevador cuando la muñeca está baja
-  private static final double MAX_OUTPUT = 0.3;
+  private static final double MAX_OUTPUT = 0.1;
 
   public static final String DASH_POS = "Elevador/Posicion";
   public static final String DASH_TARGET = "Elevador/Target";
   public static final String DASH_RESET_ENCODER = "Elevador/Reset Encoder";
   public static final String DASH_ELEVATOR_WARNING = "Elevador Restricción";
+
+  public static final GenericEntry maxSpeedWidget = Shuffleboard.getTab("Drive")
+    .add("Elevator/Max Speed", 1)
+    .withWidget(BuiltInWidgets.kNumberSlider)
+    .withProperties(Map.of("min", 0, "max", 1)) // specify widget properties here
+    .getEntry();
 
   public ElevatorSubsystem(MunecaSubsystem munecaSubsystem) {
     this.munecaSubsystem = munecaSubsystem;
@@ -76,16 +86,6 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
   private static SparkMaxConfig getLeaderConfig() {
     SparkMaxConfig leaderConfig = new SparkMaxConfig();
 
-    // leaderConfig.closedLoop
-    //   .p(0.02)
-    //   .i(0)
-    //   .d(0)
-    //   .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
-    //   .maxMotion
-    //   .maxVelocity(1)
-    //   .maxAcceleration(0.05)
-    //   .allowedClosedLoopError(0.5);
-
     leaderConfig
       .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION)
       .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT)
@@ -105,10 +105,8 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
     }
 
     double output = pidFeedback.calculate(this.getActualPosition(), this.getTargetPosition());
-    output = Math.max(output, MAX_OUTPUT);
+    output = MathUtil.clamp(output, -maxSpeedWidget.getDouble(MAX_OUTPUT), maxSpeedWidget.getDouble(MAX_OUTPUT));
     leftMotorLeader.set(output);
-
-    // controller.setReference(this.position, SparkBase.ControlType.kPosition);
   }
 
   @Override
@@ -131,7 +129,6 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
   public void reset() {
     this.targetPosition = 0;
     elevatorEncoder.setPosition(0);
-    // controller.setReference(this.position, SparkBase.ControlType.kPosition);
   }
 
   public boolean isRestrictedArea() {
