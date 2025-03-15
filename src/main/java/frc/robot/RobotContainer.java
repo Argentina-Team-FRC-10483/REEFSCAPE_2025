@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -25,19 +26,22 @@ public class RobotContainer {
   private final MovementSubsystem movementSubsystem = new MovementSubsystem();
   private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private final MunecaSubsystem munecaSubsystem = new MunecaSubsystem();
-  RodLateralesSubsystem rodLateralesSubsystem = new RodLateralesSubsystem();
-  private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
+  private final SideRodSubsystem sideRodSubsystem = new SideRodSubsystem();
+  private final InteriorRodSubsystem interiorRodSubsystem = new InteriorRodSubsystem();
   private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
-  private final CommandXboxController driverController = new CommandXboxController(
-    OperatorConstants.DRIVER_CONTROLLER_PORT);
-  private final CommandXboxController operatorController = new CommandXboxController(
-    OperatorConstants.OPERATOR_CONTROLLER_PORT);
+  private final CommandXboxController driverController = new CommandXboxController(OperatorConstants.DRIVER);
+  private final CommandXboxController operatorController = new CommandXboxController(OperatorConstants.OPERATOR);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     configureBindings();
+  }
+
+  public void subsystemDefault(Command command, SubsystemBase subsystem) {
+    command.addRequirements(subsystem);
+    subsystem.setDefaultCommand(command);
   }
 
   /**
@@ -55,39 +59,42 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    IncrementalMoveCommand defaultCommand = new IncrementalMoveCommand(() -> operatorController.getRightX() * -0.2, engancheSubsystem
+    // TODO: This binding is not ideal, we can move it to R1 or L1 maybe?
+    subsystemDefault(
+      new IncrementalMoveCommand(() -> operatorController.getRightX() * -0.2, engancheSubsystem),
+      engancheSubsystem
     );
-    defaultCommand.addRequirements(engancheSubsystem);
-      .setDefaultCommand(
-      defaultCommand);
 
     // Muñeca Binding
-    IncrementalMoveCommand defaultCommandMuneca = new IncrementalMoveCommand(() -> operatorController.getRightY() * -0.2,
-      munecaSubsystem);
-    defaultCommandMuneca.addRequirements(munecaSubsystem);
-    munecaSubsystem.setDefaultCommand(defaultCommandMuneca);
+    subsystemDefault(
+      new IncrementalMoveCommand(() -> operatorController.getRightY() * -0.2, munecaSubsystem),
+      munecaSubsystem
+    );
 
-    // Elevator
-    IncrementalMoveCommand defaultCommandElevator = new IncrementalMoveCommand(
-      () -> operatorController.getLeftY() * -0.4, elevatorSubsystem);
-    defaultCommandElevator.addRequirements(elevatorSubsystem);
-    elevatorSubsystem.setDefaultCommand(defaultCommandElevator);
+    subsystemDefault(
+      new IncrementalMoveCommand(() -> operatorController.getLeftY() * -0.4, elevatorSubsystem),
+      elevatorSubsystem
+    );
 
-    operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
-    operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
-    operatorController.b().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.2));
+    subsystemDefault(
+      new MovementCommand(
+        () -> -driverController.getLeftY() * 0.5,
+        () -> driverController.getHID().getLeftBumperButton(),
+        () -> -driverController.getRightX() * 0.3,
+        movementSubsystem
+      ),
+      movementSubsystem
+    );
 
-    movementSubsystem.setDefaultCommand(new MovementCommand(
-      () -> -driverController.getLeftY() * 0.5,
-      () -> driverController.getHID().getLeftBumperButton(),
-      () -> -driverController.getRightX() * 0.3,
-      movementSubsystem));
+    operatorController.leftTrigger().onTrue(new MoveToTargetCommand(1, sideRodSubsystem, 0.1, false));
+    operatorController.rightTrigger().onTrue(new MoveToTargetCommand(-1, sideRodSubsystem, 0.1, false));
+    operatorController.b().onTrue(new MoveToTargetCommand(0.2, interiorRodSubsystem, 0.05, false));
 
-    operatorController.povDown().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L0, elevatorSubsystem, 3, false)); // Nivel 1
-    operatorController.povLeft().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L1, elevatorSubsystem, 3, false)); // Nivel 2
-    operatorController.povUp().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L2, elevatorSubsystem, 3, false)); // Nivel 3
-    operatorController.povRight().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L3, elevatorSubsystem, 3, false)); // Nivel 4
 
+    operatorController.povDown().onTrue(new MoveToTargetCommand(Constants.ElevatorConstants.L0, elevatorSubsystem, 3, false));
+    operatorController.povLeft().onTrue(new MoveToTargetCommand(Constants.ElevatorConstants.L1, elevatorSubsystem, 3, false));
+    operatorController.povUp().onTrue(new MoveToTargetCommand(Constants.ElevatorConstants.L2, elevatorSubsystem, 3, false));
+    operatorController.povRight().onTrue(new MoveToTargetCommand(Constants.ElevatorConstants.L3, elevatorSubsystem, 3, false));
   }
 
   /**

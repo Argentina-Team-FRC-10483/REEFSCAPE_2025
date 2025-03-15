@@ -68,18 +68,18 @@ public class EngancheSubsystem extends SubsystemBase implements MovableSubsystem
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber(DASH_MUNECA_POS, getActualPosition());
+    SmartDashboard.putNumber(DASH_MUNECA_POS, getActual());
     SmartDashboard.putNumber(DASH_MUNECA_TARGET, position);
     controller.setReference(this.position, SparkBase.ControlType.kMAXMotionPositionControl);
   }
 
   @Override
-  public double getActualPosition() {
+  public double getActual() {
     return engancheEncoder.getPosition();
   }
 
   @Override
-  public double getTargetPosition() {
+  public double getTarget() {
     return position;
   }
 

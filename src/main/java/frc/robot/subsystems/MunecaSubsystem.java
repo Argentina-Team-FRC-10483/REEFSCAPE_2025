@@ -46,9 +46,9 @@ public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
       .iZone(1.7)
       .d(0)
       .maxMotion
-      .maxVelocity(0.4)
-      .allowedClosedLoopError(1)
-      .maxAcceleration(0.05);
+      .maxVelocity(1000)
+      .allowedClosedLoopError(0.25)
+      .maxAcceleration(500);
 
     leaderConfig
       .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION)
@@ -62,23 +62,27 @@ public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
   public void reset(){
     munecaEncoder.setPosition(0);
     position = 0;
-    controller.setReference(this.position, SparkBase.ControlType.kPosition);
+    setReference();
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber(DASH_MUNECA_POS, getActualPosition());
+    SmartDashboard.putNumber(DASH_MUNECA_POS, getActual());
     SmartDashboard.putNumber(DASH_MUNECA_TARGET, position);
-    controller.setReference(this.position, SparkBase.ControlType.kPosition);
+    setReference();
+  }
+
+  private void setReference() {
+    controller.setReference(this.position, SparkBase.ControlType.kMAXMotionPositionControl);
   }
 
   @Override
-  public double getActualPosition() {
+  public double getActual() {
     return munecaEncoder.getPosition();
   }
 
   @Override
-  public double getTargetPosition() {
+  public double getTarget() {
     return position;
   }
 

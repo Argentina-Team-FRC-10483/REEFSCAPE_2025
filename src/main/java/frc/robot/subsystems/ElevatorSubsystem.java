@@ -62,9 +62,9 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
       .d(0)
       .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
       .maxMotion
-      .maxVelocity(0.4)
-      .maxAcceleration(0.001)
-      .allowedClosedLoopError(0.5);
+      .maxVelocity(2000)
+      .maxAcceleration(1000)
+      .allowedClosedLoopError(0.25);
 
     leaderConfig
       .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION)
@@ -77,13 +77,17 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber(DASH_POS, getActualPosition());
+    SmartDashboard.putNumber(DASH_POS, getActual());
     SmartDashboard.putNumber(DASH_TARGET, position);
-    controller.setReference(this.position, SparkBase.ControlType.kPosition);
+    setReference();
+  }
+
+  private void setReference() {
+    controller.setReference(this.position, SparkBase.ControlType.kMAXMotionPositionControl);
   }
 
   @Override
-  public double getActualPosition() {
+  public double getActual() {
     return elevatorEncoder.getPosition();
   }
 
@@ -93,7 +97,7 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
   }
 
   @Override
-  public double getTargetPosition() {
+  public double getTarget() {
     return position;
   }
 
@@ -101,6 +105,6 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
   public void reset() {
     this.position = 0;
     elevatorEncoder.setPosition(0);
-    controller.setReference(this.position, SparkBase.ControlType.kPosition);
+    setReference();
   }
 }
