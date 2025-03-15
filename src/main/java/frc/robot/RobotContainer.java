@@ -25,14 +25,14 @@ public class RobotContainer {
 
   private final MovementSubsystem movementSubsystem = new MovementSubsystem(
     new MovementMotor(
-      Constants.DriveConstants.LEFT_MOVEMENT_LEADER_MOTOR_ID,
-      Constants.DriveConstants.LEFT_MOVEMENT_FOLLOW_MOTOR_ID,
+      Constants.DriveConstants.LEFT_LEADER_CAN_ID,
+      Constants.DriveConstants.LEFT_FOLLOW_CAN_ID,
       false,
       "Left"
     ),
     new MovementMotor(
-      Constants.DriveConstants.RIGHT_MOVEMENT_LEADER_MOTOR_ID,
-      Constants.DriveConstants.RIGHT_MOVEMENT_FOLLOW_MOTOR_ID,
+      Constants.DriveConstants.RIGHT_LEADER_CAN_ID,
+      Constants.DriveConstants.RIGHT_FOLLOW_CAN_ID,
       true,
       "Right"
     )
@@ -45,7 +45,7 @@ public class RobotContainer {
   private final CommandXboxController driverController = new CommandXboxController(
     OperatorConstants.DRIVER_CONTROLLER_PORT);
   private final CommandXboxController operatorController = new CommandXboxController(
-    OperatorConstants.OPERADOR_CONTROLLER_PORT);
+    OperatorConstants.OPERATOR_CONTROLLER_PORT);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -101,10 +101,10 @@ public class RobotContainer {
       () -> -driverController.getRightX() * 0.3,
       movementSubsystem));
 
-    operatorController.povDown().onTrue(new MoveToPositionCommand(0, elevatorSubsystem, 3)); // Nivel 1
-    operatorController.povLeft().onTrue(new MoveToPositionCommand(16.3, elevatorSubsystem, 3)); // Nivel 2
-    operatorController.povUp().onTrue(new MoveToPositionCommand(41.1, elevatorSubsystem, 3)); // Nivel 3
-    operatorController.povRight().onTrue(new MoveToPositionCommand(85, elevatorSubsystem, 3)); // Nivel 4
+    operatorController.povDown().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L0, elevatorSubsystem, 3, false)); // Nivel 1
+    operatorController.povLeft().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L1, elevatorSubsystem, 3, false)); // Nivel 2
+    operatorController.povUp().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L2, elevatorSubsystem, 3, false)); // Nivel 3
+    operatorController.povRight().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L3, elevatorSubsystem, 3, false)); // Nivel 4
   }
 
   /**

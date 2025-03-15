@@ -7,6 +7,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -15,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.ElevadorConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.NEOMotorsConstants;
 
 public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem {
@@ -27,13 +28,13 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
 
   private static final double UPPER_LIMIT = 87.0;
   private static final double LOWER_LIMIT = 0.0;
-  public static final String DASH_ELEVATOR_POS = "Elevador Posicion";
-  public static final String DASH_ELEVATOR_TARGET = "Elevador Target";
-  public static final String DASH_RESET_ELEVATOR_ENCODER = "Reiniciar Encoder Elevador";
+  public static final String DASH_POS = "Elevador/Posicion";
+  public static final String DASH_TARGET = "Elevador/Target";
+  public static final String DASH_RESET_ENCODER = "Elevador/Reset Encoder";
 
   public ElevatorSubsystem() {
-    leftMotorLeader = new SparkMax(ElevadorConstants.LEFT_ELEVATOR_LEADER_MOTOR_ID, MotorType.kBrushless);
-    rightMotorFollow = new SparkMax(ElevadorConstants.RIGHT_ELEVATOR_FOLLOW_MOTOR_ID, MotorType.kBrushless);
+    leftMotorLeader = new SparkMax(ElevatorConstants.LEFT_LEADER_CAN_ID, MotorType.kBrushless);
+    rightMotorFollow = new SparkMax(ElevatorConstants.RIGHT_FOLLOW_CAN_ID, MotorType.kBrushless);
 
     leftMotorLeader.setCANTimeout(DriveConstants.CAN_TIMEOUT);
     rightMotorFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
@@ -43,7 +44,7 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
 
     elevatorEncoder = leftMotorLeader.getEncoder();
     reset();
-    SmartDashboard.putData(DASH_RESET_ELEVATOR_ENCODER, new InstantCommand(this::reset));
+    SmartDashboard.putData(DASH_RESET_ENCODER, new InstantCommand(this::reset));
   }
 
   private SparkBaseConfig getFollowConfig() {
@@ -59,13 +60,15 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
       .p(0.02)
       .i(0)
       .d(0)
+      .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
       .maxMotion
       .maxVelocity(0.4)
-      .maxAcceleration(0.001);
+      .maxAcceleration(0.001)
+      .allowedClosedLoopError(0.5);
 
     leaderConfig
-      .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION_NEO)
-      .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT_NEO)
+      .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION)
+      .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT)
       .idleMode(SparkBaseConfig.IdleMode.kBrake) //  Modo Brake para evitar caída
       .inverted(false);
 
@@ -74,8 +77,8 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber(DASH_ELEVATOR_POS, getActualPosition());
-    SmartDashboard.putNumber(DASH_ELEVATOR_TARGET, position);
+    SmartDashboard.putNumber(DASH_POS, getActualPosition());
+    SmartDashboard.putNumber(DASH_TARGET, position);
     controller.setReference(this.position, SparkBase.ControlType.kPosition);
   }
 

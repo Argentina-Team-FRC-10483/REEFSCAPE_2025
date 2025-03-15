@@ -19,7 +19,7 @@ import frc.robot.Constants.MunecaConstants;
 import frc.robot.Constants.NEOMotorsConstants;
 
 public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
-  private final SparkMax motor = new SparkMax(MunecaConstants.MUNECA_MOTOR_ID, MotorType.kBrushless);
+  private final SparkMax motor = new SparkMax(MunecaConstants.CAN_ID, MotorType.kBrushless);
   private final SparkClosedLoopController controller = motor.getClosedLoopController();
   private final RelativeEncoder munecaEncoder;
   private static final double UPPER_LIMIT = 0.25;
@@ -51,8 +51,8 @@ public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
       .maxAcceleration(0.05);
 
     leaderConfig
-      .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION_NEO)
-      .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT_NEO)
+      .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION)
+      .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT)
       .idleMode(SparkBaseConfig.IdleMode.kBrake);
 
     return leaderConfig;
