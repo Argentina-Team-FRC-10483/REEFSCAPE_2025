@@ -30,11 +30,7 @@ public class Gyro {
      * @return The angle in degrees limited to the range -180 to 180.
      */
     public double getYawAngle() {
-        double angle = -navx.getAngle() - resetYaw;
-//        while(angle <= -180) angle += 360;
-//        while(angle > 180) angle -= 360;
-
-        return angle;
+        return -navx.getAngle();
     }
   /**
      * Gets the current yaw angle velocity in deg / s
@@ -67,7 +63,7 @@ public class Gyro {
      * Sets the current yaw angle to "0".
      */
     public void zeroYawAngle() {
-        navx.setAngleAdjustment(-getYawAngle());
+//        navx.setAngleAdjustment(-getYawAngle());
 //        navx.zeroYaw();
 //        resetYaw = navx.getAngle();
     }

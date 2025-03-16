@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.397121710526315,
-        "y": 1.8986019736842106
+        "x": 5.784720442158099,
+        "y": 1.5038598416724138
       },
       "isLocked": false,
       "linkedName": "LowerPos2Blue"
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 1.0,
+    "maxVelocity": 0.5,
+    "maxAcceleration": 0.5,
     "maxAngularVelocity": 200.0,
     "maxAngularAcceleration": 200.0,
     "nominalVoltage": 12.0,

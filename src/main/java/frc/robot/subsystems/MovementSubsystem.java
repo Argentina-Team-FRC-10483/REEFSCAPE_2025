@@ -42,7 +42,7 @@ public class MovementSubsystem extends SubsystemBase {
   private Field2d field2d;
   StructPublisher<Pose2d> posePublisher;
 
-  static final double kDriveRotToMts = (15.24 * Math.PI * 1.0 / 100.0) / 2.1;
+  static final double kDriveRotToMts = (15.24 * Math.PI * 1.0 / 100.0);
   static final double kDriveRPMToMps = (2 * Math.PI * 0.0762) / 60;
 
   public MovementSubsystem() {
@@ -151,11 +151,11 @@ public class MovementSubsystem extends SubsystemBase {
 
   // Get encoder positions (converted to meters)
   public double getLeftEncoderPosition() {
-    return leftEncoder.getPosition();
+    return leftEncoder.getPosition() * kDriveRotToMts;
   }
 
   public double getRightEncoderPosition() {
-    return -rightEncoder.getPosition();
+    return -rightEncoder.getPosition() * kDriveRotToMts;
   }
 
   public Pose2d getPose() {
@@ -170,8 +170,8 @@ public class MovementSubsystem extends SubsystemBase {
   public ChassisSpeeds getRobotRelativeSpeeds() {
     ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(
       new DifferentialDriveWheelSpeeds(
-        leftEncoder.getVelocity(),
-        -rightEncoder.getVelocity()
+        leftEncoder.getVelocity() * kDriveRPMToMps,
+        -rightEncoder.getVelocity() * kDriveRPMToMps
       )
     );
     SmartDashboard.putNumber("VX m/s", chassisSpeeds.vxMetersPerSecond);
@@ -183,8 +183,8 @@ public class MovementSubsystem extends SubsystemBase {
   public void driveRobotRelative(ChassisSpeeds speeds) {
     var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
     drive.tankDrive(
-      wheelSpeeds.leftMetersPerSecond * 0.02,
-      wheelSpeeds.rightMetersPerSecond * 0.02,
+      wheelSpeeds.leftMetersPerSecond,
+      wheelSpeeds.rightMetersPerSecond,
       false);
   }
 
