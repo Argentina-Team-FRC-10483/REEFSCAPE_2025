@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -23,21 +27,26 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
 
   private final MovementSubsystem movementSubsystem = new MovementSubsystem();
-  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  //private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private final MunecaSubsystem munecaSubsystem = new MunecaSubsystem();
-  RodLateralesSubsystem rodLateralesSubsystem = new RodLateralesSubsystem();
-  private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
+  //RodLateralesSubsystem rodLateralesSubsystem = new RodLateralesSubsystem();
+  //private final RodInteriorSubsystem rodInteriorSubsystem = new RodInteriorSubsystem();
   // private final EngancheSubsystem engancheSubsystem = new EngancheSubsystem();
   private final CommandXboxController driverController = new CommandXboxController(
       OperatorConstants.DRIVER_CONTROLLER_PORT);
   private final CommandXboxController operatorController = new CommandXboxController(
       OperatorConstants.OPERATOR_CONTROLLER_PORT);
 
+    private final SendableChooser<Command> autoChooser;
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+     autoChooser = AutoBuilder.buildAutoChooser();
     configureBindings();
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -69,17 +78,17 @@ public class RobotContainer {
     IncrementalMoveCommand defaultCommandMuneca = new IncrementalMoveCommand(() -> operatorController.getRightY() * -0.2,
         munecaSubsystem);
     defaultCommandMuneca.addRequirements(munecaSubsystem);
-    munecaSubsystem.setDefaultCommand(defaultCommandMuneca);
+    //munecaSubsystem.setDefaultCommand(defaultCommandMuneca);
 
     // Elevator
-    IncrementalMoveCommand defaultCommandElevator = new IncrementalMoveCommand(
-        () -> operatorController.getLeftY() * -0.4, elevatorSubsystem);
-    defaultCommandElevator.addRequirements(elevatorSubsystem);
-    elevatorSubsystem.setDefaultCommand(defaultCommandElevator);
+    //IncrementalMoveCommand defaultCommandElevator = new IncrementalMoveCommand(
+    //    () -> operatorController.getLeftY() * -0.4, elevatorSubsystem);
+    //defaultCommandElevator.addRequirements(elevatorSubsystem);
+    //elevatorSubsystem.setDefaultCommand(defaultCommandElevator);
 
-    operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
-    operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
-    operatorController.b().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.2));
+    //operatorController.leftTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, 0.5));
+    //operatorController.rightTrigger().whileTrue(new RodLateralesCommand(rodLateralesSubsystem, -0.5));
+    //operatorController.b().whileTrue(new RodInteriorCommand(rodInteriorSubsystem, 0.2));
 
     movementSubsystem.setDefaultCommand(new MovementCommand(
         () -> -driverController.getLeftY() * 0.5,
@@ -87,10 +96,10 @@ public class RobotContainer {
         () -> -driverController.getRightX() * 0.3,
         movementSubsystem));
 
-    operatorController.povDown().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L0, elevatorSubsystem, 3, false)); // Nivel 1
-    operatorController.povLeft().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L1, elevatorSubsystem, 3, false)); // Nivel 2
-    operatorController.povUp().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L2, elevatorSubsystem, 3, false)); // Nivel 3
-    operatorController.povRight().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L3, elevatorSubsystem, 3, false)); // Nivel 4
+    //operatorController.povDown().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L0, elevatorSubsystem, 3, false)); // Nivel 1
+    //operatorController.povLeft().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L1, elevatorSubsystem, 3, false)); // Nivel 2
+    //operatorController.povUp().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L2, elevatorSubsystem, 3, false)); // Nivel 3
+    //operatorController.povRight().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L3, elevatorSubsystem, 3, false)); // Nivel 4
   }
 
   /**
@@ -99,6 +108,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return autoChooser.getSelected();
   }
 }
