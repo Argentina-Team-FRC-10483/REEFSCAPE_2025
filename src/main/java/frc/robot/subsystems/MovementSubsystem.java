@@ -88,15 +88,16 @@ public class MovementSubsystem extends SubsystemBase {
 
   private void configureOdometry() {
     odometry = new DifferentialDrivePoseEstimator(
-        kinematics,
-        Gyro.getInstance().getYawAngle2d(),
-        getLeftEncoderPosition(),
-        getRightEncoderPosition(),
-        new Pose2d());
+      kinematics,
+      Rotation2d.fromDegrees(Gyro.getInstance().getYawAngle()),
+      getLeftEncoderPosition(),
+      getRightEncoderPosition(),
+      new Pose2d());
     field2d = new Field2d();
     SmartDashboard.putData(field2d);
     SmartDashboard.putData("Reset encoders", new InstantCommand(this::resetOdometry));
     posePublisher = NetworkTableInstance.getDefault().getStructTopic("Pose", Pose2d.struct).publish();
+    resetOdometry();
   }
 
   private void configureAutoBuilder() {
@@ -112,25 +113,25 @@ public class MovementSubsystem extends SubsystemBase {
     PPLTVController controller = new PPLTVController(0.02);
     // controller.setEnabled(false);
     AutoBuilder.configure(
-        this::getPose, // Robot pose supplier
-        this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-        this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-        (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE
-                                                              // ChassisSpeeds. Also optionally outputs individual
-                                                              // module feedforwards
-        controller, // PPLTVController is the built in path following controller for differential
-                    // drive trains
-        configAuto, // The robot configuration
-        () -> {
-          // Boolean supplier that controls when the path will be mirrored for the red
-          // alliance
-          // This will flip the path being followed to the red side of the field.
-          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+      this::getPose, // Robot pose supplier
+      this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+      this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+      (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE
+      // ChassisSpeeds. Also optionally outputs individual
+      // module feedforwards
+      controller, // PPLTVController is the built in path following controller for differential
+      // drive trains
+      configAuto, // The robot configuration
+      () -> {
+        // Boolean supplier that controls when the path will be mirrored for the red
+        // alliance
+        // This will flip the path being followed to the red side of the field.
+        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-          var alliance = DriverStation.getAlliance();
-          return alliance.filter(value -> value == DriverStation.Alliance.Blue).isPresent();
-        },
-        this // Reference to this subsystem to set requirements
+        var alliance = DriverStation.getAlliance();
+        return alliance.filter(value -> value == DriverStation.Alliance.Blue).isPresent();
+      },
+      this // Reference to this subsystem to set requirements
     );
   }
 
@@ -138,9 +139,10 @@ public class MovementSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putData(drive);
     odometry.update(
-        Rotation2d.fromDegrees(Gyro.getInstance().getYawAngle()),
-        getLeftEncoderPosition(),
-        getRightEncoderPosition());
+      Rotation2d.fromDegrees(Gyro.getInstance().getYawAngle()),
+      getLeftEncoderPosition(),
+      getRightEncoderPosition()
+    );
     field2d.setRobotPose(getPose());
     posePublisher.accept(getPose());
     // cameraInterFace.periodic();
@@ -162,15 +164,16 @@ public class MovementSubsystem extends SubsystemBase {
   }
 
   public void resetPose(Pose2d pose2d) {
-    resetOdometry();
-    odometry.resetPosition(Gyro.getInstance().getYawAngle2d(), getLeftEncoderPosition(), getRightEncoderPosition(),
-        pose2d);
+    odometry.resetPose(pose2d);
   }
 
   public ChassisSpeeds getRobotRelativeSpeeds() {
-    ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds(
+    ChassisSpeeds chassisSpeeds = kinematics.toChassisSpeeds(
+      new DifferentialDriveWheelSpeeds(
         leftEncoder.getVelocity(),
-        rightEncoder.getVelocity()));
+        -rightEncoder.getVelocity()
+      )
+    );
     SmartDashboard.putNumber("VX m/s", chassisSpeeds.vxMetersPerSecond);
     SmartDashboard.putNumber("VY m/s", chassisSpeeds.vyMetersPerSecond);
     SmartDashboard.putNumber("VO r/s", chassisSpeeds.omegaRadiansPerSecond);
@@ -180,9 +183,9 @@ public class MovementSubsystem extends SubsystemBase {
   public void driveRobotRelative(ChassisSpeeds speeds) {
     var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
     drive.tankDrive(
-        wheelSpeeds.leftMetersPerSecond * 0.02,
-        wheelSpeeds.rightMetersPerSecond * 0.02,
-        false);
+      wheelSpeeds.leftMetersPerSecond * 0.02,
+      wheelSpeeds.rightMetersPerSecond * 0.02,
+      false);
   }
 
   // sets the speed of the drive motors
@@ -195,6 +198,9 @@ public class MovementSubsystem extends SubsystemBase {
   }
 
   private void resetOdometry() {
-    odometry.resetPose(new Pose2d());
+    Gyro.getInstance().zeroYawAngle();
+    leftEncoder.setPosition(0);
+    rightEncoder.setPosition(0);
+    odometry.resetPose(new Pose2d(0, 0, new Rotation2d(0)));
   }
 }
