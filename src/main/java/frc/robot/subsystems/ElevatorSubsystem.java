@@ -26,7 +26,7 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
   private final RelativeEncoder elevatorEncoder;
   private double position = 0;
 
-  private static final double UPPER_LIMIT = 87.0;
+  private static final double UPPER_LIMIT = 89.0;
   private static final double LOWER_LIMIT = 0.0;
   public static final String DASH_POS = "Elevador/Posicion";
   public static final String DASH_TARGET = "Elevador/Target";

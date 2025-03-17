@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 7.5,
-        "y": 2.0
+        "y": 1.9
       },
       "prevControl": null,
       "nextControl": {
         "x": 5.5,
-        "y": 2.0000000000000004
+        "y": 1.9000000000000001
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.061019736842105,
-        "y": 2.7453125
+        "x": 5.1,
+        "y": 3.05
       },
       "prevControl": {
-        "x": 5.290450311382523,
-        "y": 2.417651682284403
+        "x": 5.594974746830583,
+        "y": 2.5550252531694166
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,12 +31,19 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Elevator to L3",
+      "waypointRelativePos": 0.7,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 0.5,
     "maxAcceleration": 0.5,
-    "maxAngularVelocity": 200.0,
-    "maxAngularAcceleration": 200.0,
+    "maxAngularVelocity": 150.0,
+    "maxAngularAcceleration": 150.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },

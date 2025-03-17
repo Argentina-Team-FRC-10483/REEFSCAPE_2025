@@ -19,8 +19,8 @@ public class EngancheSubsystem extends SubsystemBase {
   private final RelativeEncoder engancheEncoder;
 
   private static final double SLOWDOWN_RANGE = 7.0;
-  private static final double UPPER_LIMIT = 30.0;
-  private static final double LOWER_LIMIT = 0.0;
+  private static final double UPPER_LIMIT = 37.0;
+  private static final double LOWER_LIMIT = -48.0;
   public static final String DASH_POS = "Enganche/Posicion";
   public static final String DASH_RESET_ENCODER = "Enganche/Reset Encoder";
 
@@ -42,9 +42,9 @@ public class EngancheSubsystem extends SubsystemBase {
 
     leaderConfig.softLimit
       .forwardSoftLimitEnabled(true)
-      .forwardSoftLimit(30)
+      .forwardSoftLimit(UPPER_LIMIT)
       .reverseSoftLimitEnabled(true)
-      .reverseSoftLimit(0);
+      .reverseSoftLimit(LOWER_LIMIT);
 
     leaderConfig
       .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION)
@@ -69,6 +69,7 @@ public class EngancheSubsystem extends SubsystemBase {
     boolean inUpperSlowdownZone = currentPosition >= UPPER_LIMIT - SLOWDOWN_RANGE;
     if (speed < 0 && inLowerSlowdownZone) speed = speed * getLowerSlowdownFactor(currentPosition);
     if (speed > 0 && inUpperSlowdownZone) speed = speed * getUpperSlowdownFactor(currentPosition);
+    SmartDashboard.putNumber("velocidad enganche", speed);
     motor.set(speed);
   }
 

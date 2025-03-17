@@ -11,6 +11,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -110,7 +111,9 @@ public class MovementSubsystem extends SubsystemBase {
     }
 
     // Configure AutoBuilder last
-    PPLTVController controller = new PPLTVController(0.02);
+    PPLTVController controller = new PPLTVController(VecBuilder.fill(0.0925, 0.17, 2.7), VecBuilder.fill(1.0, 2.0), 0.02, 7.0 );
+
+    
     // controller.setEnabled(false);
     AutoBuilder.configure(
       this::getPose, // Robot pose supplier
