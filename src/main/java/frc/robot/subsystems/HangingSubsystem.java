@@ -11,30 +11,30 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.EngancheConstants;
+import frc.robot.Constants.HangingConstants;
 import frc.robot.Constants.NEOMotorsConstants;
 
-public class EngancheSubsystem extends SubsystemBase {
+public class HangingSubsystem extends SubsystemBase {
   private final SparkMax motor;
-  private final RelativeEncoder engancheEncoder;
+  private final RelativeEncoder hangingEncoder;
 
   private static final double SLOWDOWN_RANGE = 7.0;
   private static final double UPPER_LIMIT = 37.0;
   private static final double LOWER_LIMIT = -48.0;
-  public static final String DASH_POS = "Enganche/Posicion";
-  public static final String DASH_RESET_ENCODER = "Enganche/Reset Encoder";
+  public static final String DASH_POS = "Hanging/Pos";
+  public static final String DASH_RESET_ENCODER = "Hanging/Reset Encoder";
 
-  public EngancheSubsystem() {
-    motor = new SparkMax(EngancheConstants.CAN_ID, MotorType.kBrushless);
+  public HangingSubsystem() {
+    motor = new SparkMax(HangingConstants.CAN_ID, MotorType.kBrushless);
 
     motor.setCANTimeout(DriveConstants.CAN_TIMEOUT);
 
     motor.configure(getLeaderConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    engancheEncoder = motor.getEncoder();
-    engancheEncoder.setPosition(0);
+    hangingEncoder = motor.getEncoder();
+    hangingEncoder.setPosition(0);
 
-    SmartDashboard.putData(DASH_RESET_ENCODER, new InstantCommand(() -> engancheEncoder.setPosition(0)));
+    SmartDashboard.putData(DASH_RESET_ENCODER, new InstantCommand(() -> hangingEncoder.setPosition(0)));
   }
 
   private static SparkMaxConfig getLeaderConfig() {
@@ -55,15 +55,15 @@ public class EngancheSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber(DASH_POS, getEnganchePosition());
+    SmartDashboard.putNumber(DASH_POS, getHangingPosition());
   }
 
-  public double getEnganchePosition() {
-    return engancheEncoder.getPosition();
+  public double getHangingPosition() {
+    return hangingEncoder.getPosition();
   }
 
-  public void moveEnganche(double speed) {
-    double currentPosition = getEnganchePosition();
+  public void move(double speed) {
+    double currentPosition = getHangingPosition();
 
     boolean inLowerSlowdownZone = currentPosition <= LOWER_LIMIT + SLOWDOWN_RANGE;
     boolean inUpperSlowdownZone = currentPosition >= UPPER_LIMIT - SLOWDOWN_RANGE;

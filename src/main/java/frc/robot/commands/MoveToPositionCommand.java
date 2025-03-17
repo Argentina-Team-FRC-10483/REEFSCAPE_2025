@@ -5,8 +5,8 @@ import frc.robot.subsystems.MovableSubsystem;
 
 public class MoveToPositionCommand extends Command {
   protected final MovableSubsystem subsystem;
-  double targetPosition;
-  double tolerance;
+  final double targetPosition;
+  final double tolerance;
   private final boolean waitForCompletion;
 
   public MoveToPositionCommand(double targetPosition, MovableSubsystem subsystem, double tolerance, boolean waitForCompletion) {
