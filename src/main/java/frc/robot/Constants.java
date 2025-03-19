@@ -23,7 +23,7 @@ public final class Constants {
   }
 
   public static final class HangingConstants {
-    public static final int CAN_ID = 8;
+    public static final int CAN_ID = 7;
   }
 
   public static final class ElevatorConstants {
