@@ -13,8 +13,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -28,7 +27,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
+import frc.robot.utils.CameraInterFace;
 import frc.robot.utils.Gyro;
+import frc.robot.utils.PositionCamera;
+import org.photonvision.PhotonCamera;
+
+import java.util.List;
 
 public class MovementSubsystem extends SubsystemBase {
   private final SparkMax leftLeader;
@@ -40,6 +44,7 @@ public class MovementSubsystem extends SubsystemBase {
   private final DifferentialDrive drive;
   final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.546);
   private DifferentialDrivePoseEstimator odometry;
+  private final CameraInterFace cameraInterFace;
   private Field2d field2d;
   StructPublisher<Pose2d> posePublisher;
 
@@ -66,6 +71,23 @@ public class MovementSubsystem extends SubsystemBase {
     configureMotors();
     configureAutoBuilder();
     configureOdometry();
+    cameraInterFace = new CameraInterFace(
+      List.of(
+        new PositionCamera(
+          new PhotonCamera("Camera_1"),
+          new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0))
+        ),
+        new PositionCamera(
+          new PhotonCamera("Camera_2"),
+          new Transform3d(new Translation3d(0.275, 0.325, 0.42), new Rotation3d(0, 0, 3.14))
+        ),
+        new PositionCamera(
+          new PhotonCamera("Camera_3"),
+          new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0))
+        )
+      ),
+      odometry::addVisionMeasurement
+    );
   }
 
   private void configureMotors() {
@@ -93,7 +115,8 @@ public class MovementSubsystem extends SubsystemBase {
       Rotation2d.fromDegrees(Gyro.getInstance().getYawAngle()),
       getLeftEncoderPosition(),
       getRightEncoderPosition(),
-      new Pose2d());
+      new Pose2d()
+    );
     field2d = new Field2d();
     SmartDashboard.putData(field2d);
     SmartDashboard.putData("Reset encoders", new InstantCommand(this::resetOdometry));
@@ -106,23 +129,28 @@ public class MovementSubsystem extends SubsystemBase {
     try {
       configAuto = RobotConfig.fromGUISettings();
     } catch (Exception e) {
-      // Handle exception as needed
+      // TODO: Handle exception as needed; Maybe display in shuffleboard?
       e.printStackTrace();
+      return;
     }
 
     // Configure AutoBuilder last
-    PPLTVController controller = new PPLTVController(VecBuilder.fill(0.0925, 0.17, 2.7), VecBuilder.fill(1.0, 2.0), 0.02, 7.0 );
+    PPLTVController controller = new PPLTVController(
+      VecBuilder.fill(0.0925, 0.17, 2.7),
+      VecBuilder.fill(1.0, 2.0),
+      0.02,
+      7.0
+    );
 
-    
-    // controller.setEnabled(false);
+
     AutoBuilder.configure(
-      this::getPose, // Robot pose supplier
+      this::getPose,
       this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
       this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
       (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE
-      // ChassisSpeeds. Also optionally outputs individual
+      // ChassisSpeeds. Also, optionally outputs individual
       // module feedforwards
-      controller, // PPLTVController is the built in path following controller for differential
+      controller, // PPLTVController is the built-in path following controller for differential
       // drive trains
       configAuto, // The robot configuration
       () -> {
@@ -148,7 +176,7 @@ public class MovementSubsystem extends SubsystemBase {
     );
     field2d.setRobotPose(getPose());
     posePublisher.accept(getPose());
-    // cameraInterFace.periodic();
+    cameraInterFace.periodic();
     Gyro.getInstance().outputValues();
   }
 
@@ -188,7 +216,8 @@ public class MovementSubsystem extends SubsystemBase {
     drive.tankDrive(
       wheelSpeeds.leftMetersPerSecond,
       wheelSpeeds.rightMetersPerSecond,
-      false);
+      false
+    );
   }
 
   // sets the speed of the drive motors
@@ -196,12 +225,7 @@ public class MovementSubsystem extends SubsystemBase {
     drive.arcadeDrive(xSpeed, zRotation, false);
   }
 
-  public void curvatureArcade(double xSpeed, double zRotation) {
-    drive.curvatureDrive(xSpeed, zRotation, false);
-  }
-
   private void resetOdometry() {
-    Gyro.getInstance().zeroYawAngle();
     leftEncoder.setPosition(0);
     rightEncoder.setPosition(0);
     odometry.resetPose(new Pose2d(0, 0, new Rotation2d(0)));

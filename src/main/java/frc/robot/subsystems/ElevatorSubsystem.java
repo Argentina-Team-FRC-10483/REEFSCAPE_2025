@@ -25,21 +25,21 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
   private final SparkMax rightMotorFollow;
   private final SparkClosedLoopController controller;
   private final RelativeEncoder elevatorEncoder;
-  private final MunecaSubsystem munecaSubsystem; // Referencia a la muñeca
+  private final ArmSubsystem armSubsystem; // Referencia a la muñeca
   private double position = 0;
 
   private static final double UPPER_LIMIT = 89.0;
   private static final double LOWER_LIMIT = 0.0;
-  private static final double MUNECA_THRESHOLD = -18; // Límite de la muñeca
+  private static final double ARM_THRESHOLD = -18; // Límite de la muñeca
   private static final double RESTRICTED_LOWER_LIMIT = 30; // Restricción del elevador cuando la muñeca está baja
 
-  public static final String DASH_POS = "Elevador/Posicion";
+  public static final String DASH_POS = "Elevador/Pos";
   public static final String DASH_TARGET = "Elevador/Target";
   public static final String DASH_RESET_ENCODER = "Elevador/Reset Encoder";
   public static final String DASH_ELEVATOR_WARNING = "Elevador Restricción";
 
-  public ElevatorSubsystem(MunecaSubsystem munecaSubsystem) {
-    this.munecaSubsystem = munecaSubsystem;
+  public ElevatorSubsystem(ArmSubsystem armSubsystem) {
+    this.armSubsystem = armSubsystem;
 
     leftMotorLeader = new SparkMax(ElevatorConstants.LEFT_LEADER_CAN_ID, MotorType.kBrushless);
     rightMotorFollow = new SparkMax(ElevatorConstants.RIGHT_FOLLOW_CAN_ID, MotorType.kBrushless);
@@ -119,6 +119,6 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
   }
 
   public boolean isRestrictedArea() {
-    return munecaSubsystem.getActualPosition() < MUNECA_THRESHOLD;
+    return armSubsystem.getActualPosition() < ARM_THRESHOLD;
   }
 }

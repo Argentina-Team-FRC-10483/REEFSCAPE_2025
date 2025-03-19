@@ -15,26 +15,26 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.MunecaConstants;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.NEOMotorsConstants;
 
-public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
-  private final SparkMax motor = new SparkMax(MunecaConstants.CAN_ID, MotorType.kBrushless);
+public class ArmSubsystem extends SubsystemBase implements MovableSubsystem {
+  private final SparkMax motor = new SparkMax(ArmConstants.CAN_ID, MotorType.kBrushless);
   private final SparkClosedLoopController controller = motor.getClosedLoopController();
-  private final RelativeEncoder munecaEncoder;
+  private final RelativeEncoder armEncoder;
   private static final double UPPER_LIMIT = -1.6;
   private static final double LOWER_LIMIT = -24;
-  public static final String DASH_MUNECA_POS = "Muneca/Pos";
-  public static final String DASH_MUNECA_TARGET = "Muneca/Target";
-  public static final String DASH_RESET_MUNECA_ENCODER = "Muneca/Reset Encoder";
+  public static final String DASH_ARM_POS = "Arm/Pos";
+  public static final String DASH_ARM_TARGET = "Arm/Target";
+  public static final String DASH_RESET_ARM_ENCODER = "Arm/Reset Encoder";
   private double position;
 
-  public MunecaSubsystem() {
+  public ArmSubsystem() {
     motor.setCANTimeout(DriveConstants.CAN_TIMEOUT);
     motor.configure(getLeaderConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    munecaEncoder = motor.getEncoder();
+    armEncoder = motor.getEncoder();
     reset();
-    SmartDashboard.putData(DASH_RESET_MUNECA_ENCODER, new InstantCommand(this::reset));
+    SmartDashboard.putData(DASH_RESET_ARM_ENCODER, new InstantCommand(this::reset));
   }
 
   private static SparkMaxConfig getLeaderConfig() {
@@ -59,22 +59,22 @@ public class MunecaSubsystem extends SubsystemBase implements MovableSubsystem {
   }
 
   @Override
-  public void reset(){
-    munecaEncoder.setPosition(0);
+  public void reset() {
+    armEncoder.setPosition(0);
     position = 0;
     controller.setReference(this.position, SparkBase.ControlType.kPosition);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber(DASH_MUNECA_POS, getActualPosition());
-    SmartDashboard.putNumber(DASH_MUNECA_TARGET, position);
+    SmartDashboard.putNumber(DASH_ARM_POS, getActualPosition());
+    SmartDashboard.putNumber(DASH_ARM_TARGET, position);
     controller.setReference(this.position, SparkBase.ControlType.kPosition);
   }
 
   @Override
   public double getActualPosition() {
-    return munecaEncoder.getPosition();
+    return armEncoder.getPosition();
   }
 
   @Override

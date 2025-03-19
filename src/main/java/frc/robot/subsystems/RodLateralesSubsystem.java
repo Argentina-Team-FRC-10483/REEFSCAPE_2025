@@ -22,11 +22,6 @@ public class RodLateralesSubsystem extends SubsystemBase {
     motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
-  @Override
-  public void periodic() {
-
-  }
-
   public void andarRodillo(double power) {
     motor.set(power);
   }
