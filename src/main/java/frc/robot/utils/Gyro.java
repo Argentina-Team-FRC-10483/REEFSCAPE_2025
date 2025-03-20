@@ -2,14 +2,20 @@ package frc.robot.utils;
 
 import com.studica.frc.AHRS;
 
+import edu.wpi.first.hal.SimDouble;
+import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Gyro {
   private static Gyro instance = null;
   private final AHRS navx;
+  private final SimDouble gyroSimAngle;
 
   private Gyro() {
     navx = new AHRS(AHRS.NavXComType.kMXP_SPI);
+    int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[4]");
+    gyroSimAngle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
   }
 
   /**
@@ -18,7 +24,7 @@ public class Gyro {
    * @return The angle in degrees limited to the range -180 to 180.
    */
   public double getYawAngle() {
-    return -navx.getAngle();
+    return RobotBase.isReal() ? -navx.getAngle() : gyroSimAngle.get();
   }
 
   /**
@@ -67,6 +73,10 @@ public class Gyro {
 
     SmartDashboard.putNumber("Robot Angle", getRobotAngle());
     SmartDashboard.putBoolean("Gyro Connected", navXConnected());
+  }
+
+  public void setSimAngle(double angle){
+    gyroSimAngle.set(angle);
   }
 
   public static Gyro getInstance() {

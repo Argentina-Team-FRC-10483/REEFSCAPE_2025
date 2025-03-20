@@ -10,6 +10,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -36,6 +37,8 @@ public class RobotContainer {
     OperatorConstants.DRIVER_CONTROLLER_PORT);
   private final CommandXboxController operatorController = new CommandXboxController(
     OperatorConstants.OPERATOR_CONTROLLER_PORT);
+
+  private MoveToPoseCommand moveToPoseCommand;
 
   private final SendableChooser<Command> autoChooser;
 
@@ -109,6 +112,35 @@ public class RobotContainer {
       () -> -driverController.getRightX() * 0.3,
       movementSubsystem
     ));
+
+    driverController.a().onTrue(new InstantCommand(()-> {
+      moveToPoseCommand = new MoveToPoseCommand(Constants.SavedPoses.EF_CORAL, movementSubsystem);
+      System.out.println("Trajectory ready!");
+    }));
+    driverController.b().whileTrue(new Command() {
+      @Override
+      public void initialize() {
+        if (moveToPoseCommand != null) {
+          moveToPoseCommand.initialize();
+        }
+      }
+
+      @Override
+      public void execute() {
+        if (moveToPoseCommand != null) {
+          moveToPoseCommand.execute();
+        }
+      }
+
+      @Override
+      public boolean isFinished() {
+        if (moveToPoseCommand != null) {
+          return moveToPoseCommand.isFinished();
+        }
+        return true;
+      }
+    });
+
     if (Constants.ElevatorConstants.ENABLE_ELEVATOR_SETPOINTS) {
       operatorController.povDown().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L0, elevatorSubsystem, 3, false)); // Nivel 1
       operatorController.povLeft().onTrue(new MoveToPositionCommand(Constants.ElevatorConstants.L1, elevatorSubsystem, 3, false)); // Nivel 2
