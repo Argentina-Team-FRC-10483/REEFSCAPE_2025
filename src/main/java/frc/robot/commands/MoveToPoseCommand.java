@@ -30,7 +30,7 @@ public class MoveToPoseCommand extends Command {
 
   public MoveToPoseCommand(Pose2d targetPose, MovementSubsystem movementSubsystem) {
     var alliance = DriverStation.getAlliance();
-    if (alliance.filter(value -> value == DriverStation.Alliance.Blue).isPresent()){
+    if (alliance.filter(value -> value != DriverStation.Alliance.Blue).isPresent()){
       this.targetPose = new Pose2d(
         FlippingUtil.flipFieldPosition(targetPose.getTranslation()),
         targetPose.getRotation().rotateBy(Rotation2d.k180deg)

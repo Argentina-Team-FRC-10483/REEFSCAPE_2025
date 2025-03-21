@@ -159,7 +159,7 @@ public class MovementSubsystem extends SubsystemBase {
 
     // Configure AutoBuilder last
     PPLTVController controller = new PPLTVController(
-      VecBuilder.fill(0.0925, 0.17, 2.7),
+      VecBuilder.fill(0.1, 0.1, 0.1),
       VecBuilder.fill(1.0, 2.0),
       0.02,
       7.0
@@ -183,7 +183,7 @@ public class MovementSubsystem extends SubsystemBase {
         // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
         var alliance = DriverStation.getAlliance();
-        return alliance.filter(value -> value == DriverStation.Alliance.Blue).isPresent();
+        return alliance.filter(value -> value != DriverStation.Alliance.Blue).isPresent();
       },
       this // Reference to this subsystem to set requirements
     );
