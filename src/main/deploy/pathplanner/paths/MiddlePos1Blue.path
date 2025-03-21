@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 5.85,
-        "y": 3.85
+        "y": 3.9
       },
       "prevControl": {
         "x": 6.591121582948437,
-        "y": 3.85
+        "y": 3.9
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,14 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Elevator to L3",
+      "waypointRelativePos": 0.6508474576271196,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 0.5,
     "maxAcceleration": 0.5,

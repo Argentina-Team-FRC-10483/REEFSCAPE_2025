@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LowerPos1Blue"
+            "pathName": "MiddlePos1Blue"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Elevator to L1"
+            "name": "Elevator to L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Drop coral"
           }
         }
       ]

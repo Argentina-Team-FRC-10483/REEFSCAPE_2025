@@ -80,8 +80,8 @@ public class RobotContainer {
       hangingSubsystem,
       () -> {
         double power = 0;
-        if (driverController.x().getAsBoolean()) power += 0.1;
-        if (driverController.b().getAsBoolean()) power -= 0.1;
+        if (driverController.x().getAsBoolean()) power += 1;
+        if (driverController.b().getAsBoolean()) power -= 1;
         return power;
       }
     ));
@@ -96,7 +96,7 @@ public class RobotContainer {
 
     // Elevator
     IncrementalMoveCommand defaultCommandElevator = new IncrementalMoveCommand(
-      () -> operatorController.getLeftY() * -0.5, elevatorSubsystem);
+      () -> operatorController.getLeftY() * -0.8, elevatorSubsystem);
     defaultCommandElevator.addRequirements(elevatorSubsystem);
     elevatorSubsystem.setDefaultCommand(defaultCommandElevator);
 
