@@ -1,13 +1,16 @@
 package frc.robot.commands;
 
+import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.LTVUnicycleController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.MovementSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -26,19 +29,28 @@ public class MoveToPoseCommand extends Command {
 
 
   public MoveToPoseCommand(Pose2d targetPose, MovementSubsystem movementSubsystem) {
-    this.targetPose = targetPose;
+    var alliance = DriverStation.getAlliance();
+    if (alliance.filter(value -> value == DriverStation.Alliance.Blue).isPresent()){
+      this.targetPose = new Pose2d(
+        FlippingUtil.flipFieldPosition(targetPose.getTranslation()),
+        targetPose.getRotation().rotateBy(Rotation2d.k180deg)
+      );
+    }else{
+      this.targetPose = targetPose;
+    }
+
     this.movementSubsystem = movementSubsystem;
     addRequirements(movementSubsystem);
     controller = new LTVUnicycleController(
-      VecBuilder.fill(0.0625, 0.0625, 0.5),
-      VecBuilder.fill(1.0, 1.0),
+      VecBuilder.fill(0.1, 0.1, 0.1),
+      VecBuilder.fill(1.0, 2.0),
       0.02
     );
   }
 
   public void computeTrajectory() {
     TrajectoryConfig config = new TrajectoryConfig(2.0, 1.0);
-    config.addConstraint(new CentripetalAccelerationConstraint(0.1));
+    config.addConstraint(new CentripetalAccelerationConstraint(0.5));
     trajectory = TrajectoryGenerator.generateTrajectory(
       movementSubsystem.getPose(),
       List.of(),
