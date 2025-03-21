@@ -1,5 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+
 public final class Constants {
   public static final class DriveConstants {
     public static final int LEFT_LEADER_CAN_ID = 1;
@@ -52,5 +55,9 @@ public final class Constants {
 
   public static final class HandConstants {
     public static final int SIDE_CAN_ID = 11;
+  }
+
+  public static final class SavedPoses {
+    public static final Pose2d EF_CORAL = new Pose2d(5.1, 3.05, Rotation2d.fromDegrees(135));
   }
 }

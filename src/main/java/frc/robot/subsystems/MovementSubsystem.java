@@ -1,6 +1,7 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -11,16 +12,24 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.hal.SimDouble;
+import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.simulation.ADXRS450_GyroSim;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -31,7 +40,6 @@ import frc.robot.utils.CameraInterFace;
 import frc.robot.utils.Gyro;
 import frc.robot.utils.PositionCamera;
 import org.photonvision.PhotonCamera;
-
 import java.util.List;
 
 public class MovementSubsystem extends SubsystemBase {
@@ -42,6 +50,9 @@ public class MovementSubsystem extends SubsystemBase {
   private final RelativeEncoder leftEncoder;
   private final RelativeEncoder rightEncoder;
   private final DifferentialDrive drive;
+  private final DifferentialDrivetrainSim driveSim;
+  private final SparkMaxSim leftSim;
+  private final SparkMaxSim rightSim;
   final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.546);
   private DifferentialDrivePoseEstimator odometry;
   private final CameraInterFace cameraInterFace;
@@ -64,6 +75,18 @@ public class MovementSubsystem extends SubsystemBase {
     rightLeader.setCANTimeout(DriveConstants.CAN_TIMEOUT);
     leftFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
     rightFollow.setCANTimeout(DriveConstants.CAN_TIMEOUT);
+
+    leftSim = new SparkMaxSim(leftLeader, DCMotor.getCIM(2));
+    rightSim = new SparkMaxSim(rightLeader, DCMotor.getCIM(2));
+    driveSim = new DifferentialDrivetrainSim(
+      DCMotor.getCIM(2),
+      7.29,                    // 7.29:1 gearing reduction.
+      7.5,                     // MOI of 7.5 kg m^2 (from CAD model).
+      60.0,                    // The mass of the robot is 60 kg.
+      Units.inchesToMeters(3), // The robot uses 3" radius wheels.
+      0.546,                  // The track width is 0.7112 meters.
+      VecBuilder.fill(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+    );
 
     leftEncoder = leftLeader.getEncoder();
     rightEncoder = rightLeader.getEncoder();
@@ -136,7 +159,7 @@ public class MovementSubsystem extends SubsystemBase {
 
     // Configure AutoBuilder last
     PPLTVController controller = new PPLTVController(
-      VecBuilder.fill(0.0925, 0.17, 2.7),
+      VecBuilder.fill(0.1, 0.1, 0.1),
       VecBuilder.fill(1.0, 2.0),
       0.02,
       7.0
@@ -160,7 +183,7 @@ public class MovementSubsystem extends SubsystemBase {
         // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
         var alliance = DriverStation.getAlliance();
-        return alliance.filter(value -> value == DriverStation.Alliance.Blue).isPresent();
+        return alliance.filter(value -> value != DriverStation.Alliance.Blue).isPresent();
       },
       this // Reference to this subsystem to set requirements
     );
@@ -180,6 +203,20 @@ public class MovementSubsystem extends SubsystemBase {
     Gyro.getInstance().outputValues();
   }
 
+  @Override
+  public void simulationPeriodic() {
+    driveSim.setInputs(
+      leftLeader.get() * RobotController.getInputVoltage(),
+      rightLeader.get() * RobotController.getInputVoltage()
+    );
+    driveSim.update(0.02);
+    leftSim.setPosition(driveSim.getLeftPositionMeters() / kDriveRotToMts);
+    leftSim.setVelocity(driveSim.getLeftVelocityMetersPerSecond() / kDriveRotToMts);
+    rightSim.setPosition(driveSim.getRightPositionMeters() / kDriveRotToMts);
+    rightSim.setVelocity(driveSim.getRightVelocityMetersPerSecond() / kDriveRotToMts);
+    Gyro.getInstance().setSimAngle(driveSim.getHeading().getDegrees());
+  }
+
   // Get encoder positions (converted to meters)
   public double getLeftEncoderPosition() {
     return leftEncoder.getPosition() * kDriveRotToMts;
@@ -191,7 +228,7 @@ public class MovementSubsystem extends SubsystemBase {
 
   public Pose2d getPose() {
     // If is simulated, return drivetrainSim pose
-    return odometry.getEstimatedPosition();
+    return RobotBase.isReal() ? odometry.getEstimatedPosition() : driveSim.getPose();
   }
 
   public void resetPose(Pose2d pose2d) {

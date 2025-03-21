@@ -40,6 +40,7 @@ public class PositionCamera {
       .map(x -> poseEstimator.update(x))
       .filter(Optional::isPresent)
       .map(Optional::get)
+      .filter(pose -> pose.targetsUsed.size() >= 2) // Ensure at least 2 tags are used
       .toList();
     if (poses.isEmpty())
       return Optional.empty();
