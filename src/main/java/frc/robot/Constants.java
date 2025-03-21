@@ -32,7 +32,7 @@ public final class Constants {
     public static final int L0 = 0;
     public static final double L1 = 16.3;
     public static final double L2 = 41.1;
-    public static final int L3 = 85;
+    public static final int L3 = 92;
     public static final boolean ENABLE_ELEVATOR_SETPOINTS = false;
   }
 

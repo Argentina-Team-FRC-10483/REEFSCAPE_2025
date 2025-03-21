@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -75,15 +76,15 @@ public class MovementSubsystem extends SubsystemBase {
       List.of(
         new PositionCamera(
           new PhotonCamera("Camera_1"),
-          new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0))
+          new Transform3d(new Translation3d(-0.356, -0.001, 0.571), new Rotation3d(0, 0, Math.PI))
         ),
         new PositionCamera(
           new PhotonCamera("Camera_2"),
-          new Transform3d(new Translation3d(0.275, 0.325, 0.42), new Rotation3d(0, 0, 3.14))
+          new Transform3d(new Translation3d(0.084, -0.01, 0.971), new Rotation3d(0, Units.degreesToRadians(10), 0))
         ),
         new PositionCamera(
           new PhotonCamera("Camera_3"),
-          new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0))
+          new Transform3d(new Translation3d(-0.356, -0.001, 0.571), new Rotation3d(0, 0, Math.PI))
         )
       ),
       odometry::addVisionMeasurement
@@ -136,10 +137,10 @@ public class MovementSubsystem extends SubsystemBase {
 
     // Configure AutoBuilder last
     PPLTVController controller = new PPLTVController(
-      VecBuilder.fill(0.0925, 0.17, 2.7),
-      VecBuilder.fill(1.0, 2.0),
-      0.02,
-      7.0
+      //VecBuilder.fill(0.0925, 0.17, 2.7),
+      //VecBuilder.fill(1.0, 2.0),
+      0.02
+      //7.0
     );
 
 
