@@ -28,7 +28,7 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
   private final ArmSubsystem armSubsystem; // Referencia a la muñeca
   private double position = 0;
 
-  private static final double UPPER_LIMIT = 82.0;
+  private static final double UPPER_LIMIT = 88.0;
   private static final double LOWER_LIMIT = 0.0;
   private static final double ARM_THRESHOLD = -18; // Límite de la muñeca
   private static final double RESTRICTED_LOWER_LIMIT = 10; // Restricción del elevador cuando la muñeca está baja

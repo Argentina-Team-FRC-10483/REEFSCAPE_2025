@@ -50,6 +50,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Drop coral", new MoveToPositionCommand(-11, armSubsystem, 1, true));
     NamedCommands.registerCommand("Lift claw", new MoveToPositionCommand(-1.6, armSubsystem, 1, true));
     NamedCommands.registerCommand("Fix claw", new MoveToPositionCommand(-5, armSubsystem, 1, true));
+    NamedCommands.registerCommand("Roll 1s", new SideRodCommandTimed(rodLateralesSubsystem, -0.3, 2));
 
     autoChooser = AutoBuilder.buildAutoChooser();
 

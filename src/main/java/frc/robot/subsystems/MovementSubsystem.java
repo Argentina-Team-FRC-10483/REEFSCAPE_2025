@@ -119,7 +119,7 @@ public class MovementSubsystem extends SubsystemBase {
       new Pose2d()
     );
     field2d = new Field2d();
-    SmartDashboard.putData(field2d);
+    //SmartDashboard.putData(field2d);
     SmartDashboard.putData("Reset encoders", new InstantCommand(this::resetOdometry));
     posePublisher = NetworkTableInstance.getDefault().getStructTopic("Pose", Pose2d.struct).publish();
     resetOdometry();
@@ -206,9 +206,9 @@ public class MovementSubsystem extends SubsystemBase {
         -rightEncoder.getVelocity() * kDriveRPMToMps
       )
     );
-    SmartDashboard.putNumber("VX m/s", chassisSpeeds.vxMetersPerSecond);
-    SmartDashboard.putNumber("VY m/s", chassisSpeeds.vyMetersPerSecond);
-    SmartDashboard.putNumber("VO r/s", chassisSpeeds.omegaRadiansPerSecond);
+    //SmartDashboard.putNumber("VX m/s", chassisSpeeds.vxMetersPerSecond);
+    //SmartDashboard.putNumber("VY m/s", chassisSpeeds.vyMetersPerSecond);
+    //SmartDashboard.putNumber("VO r/s", chassisSpeeds.omegaRadiansPerSecond);
     return chassisSpeeds;
   }
 
