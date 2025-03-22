@@ -7,6 +7,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,10 +18,11 @@ import frc.robot.Constants.NEOMotorsConstants;
 public class HangingSubsystem extends SubsystemBase {
   private final SparkMax motor;
   private final RelativeEncoder hangingEncoder;
+  private final SlewRateLimiter filter = new SlewRateLimiter(1.5);
 
-  private static final double SLOWDOWN_RANGE = 7.0;
-  private static final double UPPER_LIMIT = 37.0;
-  private static final double LOWER_LIMIT = -48.0;
+  private static final double SLOWDOWN_RANGE = 1.0;
+  private static final double UPPER_LIMIT = 47.0;
+  private static final double LOWER_LIMIT = -52.0;
   public static final String DASH_POS = "Hanging/Pos";
   public static final String DASH_RESET_ENCODER = "Hanging/Reset Encoder";
 
@@ -70,6 +72,7 @@ public class HangingSubsystem extends SubsystemBase {
     if (speed < 0 && inLowerSlowdownZone) speed = speed * getLowerSlowdownFactor(currentPosition);
     if (speed > 0 && inUpperSlowdownZone) speed = speed * getUpperSlowdownFactor(currentPosition);
     SmartDashboard.putNumber("velocidad enganche", speed);
+    speed = filter.calculate(speed);
     motor.set(speed);
   }
 

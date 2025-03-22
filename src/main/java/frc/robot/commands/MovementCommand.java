@@ -16,7 +16,7 @@ public class MovementCommand extends Command {
   private final DoubleSupplier zRotation;
   private final BooleanSupplier bumper;
   private final MovementSubsystem driveSubsystem;
-  private final SlewRateLimiter filter = new SlewRateLimiter(0.8);
+  private final SlewRateLimiter filter = new SlewRateLimiter(1.5);
   private double lastTime;
   private double accel;
 

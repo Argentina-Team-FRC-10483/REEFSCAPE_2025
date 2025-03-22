@@ -80,15 +80,15 @@ public class RobotContainer {
       hangingSubsystem,
       () -> {
         double power = 0;
-        if (driverController.x().getAsBoolean()) power += 0.1;
-        if (driverController.b().getAsBoolean()) power -= 0.1;
+        if (driverController.x().getAsBoolean()) power += 1;
+        if (driverController.b().getAsBoolean()) power -= 1;
         return power;
       }
     ));
 
     // Muñeca Binding
     IncrementalMoveCommand defaultCommandArm = new IncrementalMoveCommand(
-      () -> operatorController.getRightY() * -0.2,
+      () -> operatorController.getRightY() * -0.3,
       armSubsystem
     );
     defaultCommandArm.addRequirements(armSubsystem);
@@ -96,7 +96,7 @@ public class RobotContainer {
 
     // Elevator
     IncrementalMoveCommand defaultCommandElevator = new IncrementalMoveCommand(
-      () -> operatorController.getLeftY() * -0.4, elevatorSubsystem);
+      () -> operatorController.getLeftY() * -0.8, elevatorSubsystem);
     defaultCommandElevator.addRequirements(elevatorSubsystem);
     elevatorSubsystem.setDefaultCommand(defaultCommandElevator);
 
@@ -106,7 +106,7 @@ public class RobotContainer {
     movementSubsystem.setDefaultCommand(new MovementCommand(
       () -> -driverController.getLeftY() * 0.5,
       () -> driverController.getHID().getLeftBumperButton(),
-      () -> -driverController.getRightX() * 0.3,
+      () -> -driverController.getRightX() * 0.4,
       movementSubsystem
     ));
     if (Constants.ElevatorConstants.ENABLE_ELEVATOR_SETPOINTS) {
