@@ -11,7 +11,7 @@ public final class Constants {
     public static final double AXIS_SPEED_LIMIT = 0.5;
     public static final double AXIS_TURN_LIMIT = 0.5;
     public static final double BUMPER_ACCEL_LIMIT = 0.5;
-    public static final double ACCEL_INCREASE = 0.15;
+    public static final double ACCEL_INCREASE = 0.45;
     public static final double DEAD_POINT = 0.0;
 
     public static final int CAN_TIMEOUT = 250;
@@ -32,7 +32,7 @@ public final class Constants {
     public static final int L0 = 0;
     public static final double L1 = 16.3;
     public static final double L2 = 41.1;
-    public static final int L3 = 85;
+    public static final int L3 = 86;
     public static final boolean ENABLE_ELEVATOR_SETPOINTS = false;
   }
 
@@ -42,8 +42,8 @@ public final class Constants {
   }
 
   public static final class DeadZone {
-    public static final double ELEVATOR = 0.05;
-    public static final double MOVEMENT = 0.05;
+    public static final double ELEVATOR = 0.1;
+    public static final double MOVEMENT = 0.1;
   }
 
   public static final class ArmConstants {

@@ -11,6 +11,7 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,8 +23,8 @@ public class ArmSubsystem extends SubsystemBase implements MovableSubsystem {
   private final SparkMax motor = new SparkMax(ArmConstants.CAN_ID, MotorType.kBrushless);
   private final SparkClosedLoopController controller = motor.getClosedLoopController();
   private final RelativeEncoder armEncoder;
-  private static final double UPPER_LIMIT = -1.6;
-  private static final double LOWER_LIMIT = -24;
+  public static double UPPER_LIMIT = -1.6;
+  public static double LOWER_LIMIT = -22;
   public static final String DASH_ARM_POS = "Arm/Pos";
   public static final String DASH_ARM_TARGET = "Arm/Target";
   public static final String DASH_RESET_ARM_ENCODER = "Arm/Reset Encoder";
