@@ -33,7 +33,7 @@ public final class Constants {
     public static final double L1 = 16.3;
     public static final double L2 = 41.1;
     public static final int L3 = 86;
-    public static final boolean ENABLE_ELEVATOR_SETPOINTS = false;
+    public static final boolean ENABLE_ELEVATOR_SETPOINTS = true;
   }
 
   public static final class NEOMotorsConstants {

@@ -70,7 +70,7 @@ public class ElevatorSubsystem extends SubsystemBase implements MovableSubsystem
       .d(0)
       .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
       .maxMotion
-      .maxVelocity(1)
+      .maxVelocity(1.5)
       .maxAcceleration(0.05)
       .allowedClosedLoopError(0.5);
 

@@ -88,22 +88,25 @@ public class RobotContainer {
     ));
 
     // Muñeca Binding
-    IncrementalMoveCommand defaultCommandArm = new IncrementalMoveCommand(
-      () -> operatorController.getRightY() * -0.3,
-      armSubsystem
+    AccelIncrementalMoveCommand defaultCommandArm = new AccelIncrementalMoveCommand(
+      () -> operatorController.getRightY() * -0.7,
+      armSubsystem,
+      3.6
     );
     defaultCommandArm.addRequirements(armSubsystem);
     armSubsystem.setDefaultCommand(defaultCommandArm);
 
     // Elevator
     IncrementalMoveCommand defaultCommandElevator = new IncrementalMoveCommand(
-      () -> operatorController.getLeftY() * -0.8, elevatorSubsystem);
+      () -> operatorController.getLeftY() * -0.8,
+      elevatorSubsystem
+    );
     defaultCommandElevator.addRequirements(elevatorSubsystem);
     elevatorSubsystem.setDefaultCommand(defaultCommandElevator);
 
     operatorController.leftTrigger().whileTrue(new SideRodCommand(rodLateralesSubsystem, 0.5));
     operatorController.rightTrigger().whileTrue(new SideRodCommand(rodLateralesSubsystem, -0.5));
-    operatorController.y().onTrue(new IncreaseArmLimitCommand(armSubsystem, 2, 2));
+    operatorController.y().onTrue(new IncreaseArmLimitCommand(armSubsystem, 0.5, 0.5));
     operatorController.x().onTrue(new IncreaseElevatorLimitCommand(elevatorSubsystem, 3, 3));
     movementSubsystem.setDefaultCommand(new MovementCommand(
       () -> -driverController.getLeftY() * 0.5,
