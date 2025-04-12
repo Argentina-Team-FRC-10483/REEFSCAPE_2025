@@ -106,8 +106,8 @@ public class RobotContainer {
 
     operatorController.leftTrigger().whileTrue(new SideRodCommand(rodLateralesSubsystem, 0.5));
     operatorController.rightTrigger().whileTrue(new SideRodCommand(rodLateralesSubsystem, -0.5));
-    operatorController.y().onTrue(new IncreaseArmLimitCommand(armSubsystem, 0.5, 0.5));
-    operatorController.x().onTrue(new IncreaseElevatorLimitCommand(elevatorSubsystem, 3, 3));
+    operatorController.rightStick().onTrue(new IncreaseArmLimitCommand(armSubsystem, 0.5, 0.5));
+    operatorController.leftStick().onTrue(new IncreaseElevatorLimitCommand(elevatorSubsystem, 3, 3));
     movementSubsystem.setDefaultCommand(new MovementCommand(
       () -> -driverController.getLeftY() * 0.5,
       () -> driverController.getHID().getLeftBumperButton(),
