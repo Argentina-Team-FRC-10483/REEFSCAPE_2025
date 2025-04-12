@@ -13,13 +13,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Elevator to L3"
+            "name": "Elevator to L1"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Drop coral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Roll 1s"
           }
         }
       ]
