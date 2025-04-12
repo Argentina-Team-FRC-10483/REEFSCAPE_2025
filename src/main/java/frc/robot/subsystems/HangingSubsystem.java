@@ -1,3 +1,9 @@
+/*
+ * HangingSubsystem.java
+ * 
+ * Subsistema que controla el mecanismo de enganche (trepado) del robot.
+ * Utiliza un motor NEO con SparkMax y control de límites suaves.
+ */
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -6,7 +12,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -15,73 +20,118 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.HangingConstants;
 import frc.robot.Constants.NEOMotorsConstants;
 
+/////////////////////////////////////////////////////////////
+// SUBSISTEMA DE ENGANCHE (HANGING)
+/////////////////////////////////////////////////////////////
 public class HangingSubsystem extends SubsystemBase {
-  private final SparkMax motor;
-  private final RelativeEncoder hangingEncoder;
-  private final SlewRateLimiter filter = new SlewRateLimiter(1.5);
 
-  private static final double SLOWDOWN_RANGE = 1.0;
-  private static final double UPPER_LIMIT = 47.0;
-  private static final double LOWER_LIMIT = -52.0;
-  public static final String DASH_POS = "Hanging/Pos";
-  public static final String DASH_RESET_ENCODER = "Hanging/Reset Encoder";
+    /////////////////////////////////////////////////////////////
+    // COMPONENTES PRINCIPALES
+    /////////////////////////////////////////////////////////////
+    private final SparkMax motor;                // Controlador SparkMax para el motor
+    private final RelativeEncoder hangingEncoder; // Encoder del mecanismo
+    private final SlewRateLimiter filter;        // Filtro para suavizar movimientos
 
-  public HangingSubsystem() {
-    motor = new SparkMax(HangingConstants.CAN_ID, MotorType.kBrushless);
+    /////////////////////////////////////////////////////////////
+    // CONSTANTES Y CONFIGURACIONES
+    /////////////////////////////////////////////////////////////
+    private static final double SLOWDOWN_RANGE = 1.0;  // Rango para reducción de velocidad (metros)
+    private static final double UPPER_LIMIT = 47.0;    // Límite superior del mecanismo
+    private static final double LOWER_LIMIT = -52.0;   // Límite inferior del mecanismo
+    
+    // Nombres para Dashboard
+    public static final String DASH_POS = "Hanging/Pos";
+    public static final String DASH_RESET_ENCODER = "Hanging/Reset Encoder";
 
-    motor.setCANTimeout(DriveConstants.CAN_TIMEOUT);
+    /////////////////////////////////////////////////////////////
+    // CONSTRUCTOR
+    /////////////////////////////////////////////////////////////
+    public HangingSubsystem() {
+        // Configuración del motor
+        motor = new SparkMax(HangingConstants.CAN_ID, MotorType.kBrushless);
+        motor.setCANTimeout(DriveConstants.CAN_TIMEOUT);
+        motor.configure(getLeaderConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    motor.configure(getLeaderConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        // Configuración del encoder
+        hangingEncoder = motor.getEncoder();
+        hangingEncoder.setPosition(0);
 
-    hangingEncoder = motor.getEncoder();
-    hangingEncoder.setPosition(0);
+        // Configuración del filtro de movimiento
+        filter = new SlewRateLimiter(1.5); // Limita la aceleración a 1.5 unidades/seg²
 
-    SmartDashboard.putData(DASH_RESET_ENCODER, new InstantCommand(() -> hangingEncoder.setPosition(0)));
-  }
+        // Botón para resetear encoder en Dashboard
+        SmartDashboard.putData(DASH_RESET_ENCODER, new InstantCommand(() -> hangingEncoder.setPosition(0)));
+    }
 
-  private static SparkMaxConfig getLeaderConfig() {
-    SparkMaxConfig leaderConfig = new SparkMaxConfig();
+    /////////////////////////////////////////////////////////////
+    // CONFIGURACIÓN DEL MOTOR
+    /////////////////////////////////////////////////////////////
+    private static SparkMaxConfig getLeaderConfig() {
+        SparkMaxConfig leaderConfig = new SparkMaxConfig();
 
-    leaderConfig.softLimit
-      .forwardSoftLimitEnabled(true)
-      .forwardSoftLimit(UPPER_LIMIT)
-      .reverseSoftLimitEnabled(true)
-      .reverseSoftLimit(LOWER_LIMIT);
+        // Configuración de límites suaves
+        leaderConfig.softLimit
+            .forwardSoftLimitEnabled(true)
+            .forwardSoftLimit(UPPER_LIMIT)
+            .reverseSoftLimitEnabled(true)
+            .reverseSoftLimit(LOWER_LIMIT);
 
-    leaderConfig
-      .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION)
-      .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT);
+        // Configuración eléctrica
+        leaderConfig
+            .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION)
+            .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT);
 
-    return leaderConfig;
-  }
+        return leaderConfig;
+    }
 
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber(DASH_POS, getHangingPosition());
-  }
+    /////////////////////////////////////////////////////////////
+    // MÉTODOS PERIÓDICOS
+    /////////////////////////////////////////////////////////////
+    @Override
+    public void periodic() {
+        // Actualización de valores en Dashboard
+        SmartDashboard.putNumber(DASH_POS, getHangingPosition());
+    }
 
-  public double getHangingPosition() {
-    return hangingEncoder.getPosition();
-  }
+    /////////////////////////////////////////////////////////////
+    // MÉTODOS DE OBTENCIÓN DE ESTADO
+    /////////////////////////////////////////////////////////////
+    public double getHangingPosition() {
+        return hangingEncoder.getPosition();
+    }
 
-  public void move(double speed) {
-    double currentPosition = getHangingPosition();
+    /////////////////////////////////////////////////////////////
+    // MÉTODOS DE CONTROL
+    /////////////////////////////////////////////////////////////
+    /**
+     * Mueve el mecanismo de enganche con control de velocidad
+     * @param speed Velocidad deseada (-1.0 a 1.0)
+     */
+    public void move(double speed) {
+        double currentPosition = getHangingPosition();
 
-    boolean inLowerSlowdownZone = currentPosition <= LOWER_LIMIT + SLOWDOWN_RANGE;
-    boolean inUpperSlowdownZone = currentPosition >= UPPER_LIMIT - SLOWDOWN_RANGE;
-    if (speed < 0 && inLowerSlowdownZone) speed = speed * getLowerSlowdownFactor(currentPosition);
-    if (speed > 0 && inUpperSlowdownZone) speed = speed * getUpperSlowdownFactor(currentPosition);
-    SmartDashboard.putNumber("velocidad enganche", speed);
-    speed = filter.calculate(speed);
-    motor.set(speed);
-  }
+        // Control de reducción de velocidad cerca de los límites
+        boolean inLowerSlowdownZone = currentPosition <= LOWER_LIMIT + SLOWDOWN_RANGE;
+        boolean inUpperSlowdownZone = currentPosition >= UPPER_LIMIT - SLOWDOWN_RANGE;
+        
+        if (speed < 0 && inLowerSlowdownZone) 
+            speed = speed * getLowerSlowdownFactor(currentPosition);
+        if (speed > 0 && inUpperSlowdownZone) 
+            speed = speed * getUpperSlowdownFactor(currentPosition);
+        
+        // Aplicar filtro y mover
+        speed = filter.calculate(speed);
+        motor.set(speed);
+    }
 
-  public double getUpperSlowdownFactor(double currentPosition) {
-    return Math.max((UPPER_LIMIT - currentPosition) / SLOWDOWN_RANGE, 0);
-  }
+    /////////////////////////////////////////////////////////////
+    // MÉTODOS DE CÁLCULO DE VELOCIDAD
+    /////////////////////////////////////////////////////////////
+    private double getUpperSlowdownFactor(double currentPosition) {
+        return Math.max((UPPER_LIMIT - currentPosition) / SLOWDOWN_RANGE, 0);
+    }
 
-  public double getLowerSlowdownFactor(double currentPosition) {
-    return Math.max((currentPosition - LOWER_LIMIT) / SLOWDOWN_RANGE, 0);
-  }
-
+    private double getLowerSlowdownFactor(double currentPosition) {
+        return Math.max((currentPosition - LOWER_LIMIT) / SLOWDOWN_RANGE, 0);
+    }
 }

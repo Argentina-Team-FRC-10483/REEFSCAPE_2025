@@ -1,119 +1,151 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
+/*
+ * Robot.java
+ * 
+ * Clase principal del robot que implementa TimedRobot.
+ * Contiene los métodos llamados automáticamente en cada modo de operación.
+ */
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-/**
- * The methods in this class are called automatically corresponding to each mode, as described in
- * the TimedRobot documentation. If you change the name of this class or the package after creating
- * this project, you must also update the Main.java file in the project.
- */
+/////////////////////////////////////////////////////////////
+// CLASE PRINCIPAL DEL ROBOT
+/////////////////////////////////////////////////////////////
 public class Robot extends TimedRobot {
+  // Comando autónomo seleccionado
   private Command m_autonomousCommand;
 
+  // Contenedor principal del robot
   private final RobotContainer m_robotContainer;
 
+  /////////////////////////////////////////////////////////////
+  // CONSTRUCTOR - INICIALIZACIÓN
+  /////////////////////////////////////////////////////////////
   /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
+   * Constructor llamado cuando el robot se inicia por primera vez.
+   * Realiza:
+   * - Inicialización del RobotContainer
+   * - Configuración de bindings de botones
+   * - Coloca el selector autónomo en el dashboard
    */
   public Robot() {
-    // This will perform all our button bindings, and put our autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
   }
 
+  /////////////////////////////////////////////////////////////
+  // MÉTODOS DEL CICLO DEL ROBOT
+  /////////////////////////////////////////////////////////////
+
   /**
-   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
-   * that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
+   * Llamado cada 20ms en todos los modos.
+   * Responsable de:
+   * - Procesar comandos programados
+   * - Ejecutar métodos periódicos de subsistemas
    */
   @Override
   public void robotPeriodic() {
-    // This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
   }
 
+  /////////////////////////////////////////////////////////////
+  // MÉTODOS DEL MODO DISABLED
+  /////////////////////////////////////////////////////////////
+  
   /**
-   * This function is called once each time the robot enters Disabled mode.
+   * Llamado una vez al entrar en modo Disabled.
    */
   @Override
   public void disabledInit() {
   }
 
+  /**
+   * Llamado periódicamente en modo Disabled.
+   */
   @Override
   public void disabledPeriodic() {
   }
 
+  /////////////////////////////////////////////////////////////
+  // MÉTODOS DEL MODO AUTÓNOMO
+  /////////////////////////////////////////////////////////////
+
   /**
-   * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
+   * Llamado una vez al iniciar el modo autónomo.
+   * Obtiene y programa el comando autónomo seleccionado.
    */
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
   }
 
   /**
-   * This function is called periodically during autonomous.
+   * Llamado periódicamente durante el modo autónomo.
    */
   @Override
   public void autonomousPeriodic() {
   }
 
+  /////////////////////////////////////////////////////////////
+  // MÉTODOS DEL MODO TELEOPERADO
+  /////////////////////////////////////////////////////////////
+
+  /**
+   * Llamado una vez al iniciar el modo teleoperado.
+   * Cancela cualquier comando autónomo en ejecución.
+   */
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
   }
 
   /**
-   * This function is called periodically during operator control.
+   * Llamado periódicamente durante el modo teleoperado.
    */
   @Override
   public void teleopPeriodic() {
   }
 
+  /////////////////////////////////////////////////////////////
+  // MÉTODOS DEL MODO TEST
+  /////////////////////////////////////////////////////////////
+
+  /**
+   * Llamado una vez al iniciar el modo test.
+   * Cancela todos los comandos en ejecución.
+   */
   @Override
   public void testInit() {
-    // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
 
   /**
-   * This function is called periodically during test mode.
+   * Llamado periódicamente durante el modo test.
    */
   @Override
   public void testPeriodic() {
   }
 
+  /////////////////////////////////////////////////////////////
+  // MÉTODOS DE SIMULACIÓN
+  /////////////////////////////////////////////////////////////
+
   /**
-   * This function is called once when the robot is first started up.
+   * Llamado una vez al iniciar la simulación.
    */
   @Override
   public void simulationInit() {
   }
 
   /**
-   * This function is called periodically whilst in simulation.
+   * Llamado periódicamente durante la simulación.
    */
   @Override
   public void simulationPeriodic() {

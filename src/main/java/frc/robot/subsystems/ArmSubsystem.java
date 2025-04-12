@@ -1,3 +1,11 @@
+/*
+ * ArmSubsystem.java
+ * 
+ * Subsistema que controla el brazo/articulación del robot con:
+ * - Control de posición mediante SparkMax
+ * - Límites de movimiento seguros
+ * - Configuración PID para movimiento preciso
+ */
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkBase;
@@ -9,9 +17,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,72 +25,116 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.NEOMotorsConstants;
 
+/////////////////////////////////////////////////////////////
+// SUBSISTEMA DE BRAZO/ARTICULACIÓN
+/////////////////////////////////////////////////////////////
 public class ArmSubsystem extends SubsystemBase implements MovableSubsystem {
-  private final SparkMax motor = new SparkMax(ArmConstants.CAN_ID, MotorType.kBrushless);
-  private final SparkClosedLoopController controller = motor.getClosedLoopController();
-  private final RelativeEncoder armEncoder;
-  public static double UPPER_LIMIT = -1.6;
-  public static double LOWER_LIMIT = -22;
-  public static final String DASH_ARM_POS = "Arm/Pos";
-  public static final String DASH_ARM_TARGET = "Arm/Target";
-  public static final String DASH_RESET_ARM_ENCODER = "Arm/Reset Encoder";
-  private double position;
 
-  public ArmSubsystem() {
-    motor.setCANTimeout(DriveConstants.CAN_TIMEOUT);
-    motor.configure(getLeaderConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    armEncoder = motor.getEncoder();
-    reset();
-    SmartDashboard.putData(DASH_RESET_ARM_ENCODER, new InstantCommand(this::reset));
-  }
+    /////////////////////////////////////////////////////////////
+    // COMPONENTES PRINCIPALES
+    /////////////////////////////////////////////////////////////
+    private final SparkMax motor;                     // Controlador SparkMax
+    private final SparkClosedLoopController controller; // Controlador de lazo cerrado
+    private final RelativeEncoder armEncoder;        // Encoder del brazo
 
-  private static SparkMaxConfig getLeaderConfig() {
-    SparkMaxConfig leaderConfig = new SparkMaxConfig();
+    /////////////////////////////////////////////////////////////
+    // VARIABLES DE ESTADO
+    /////////////////////////////////////////////////////////////
+    private double position;                         // Posición objetivo actual
 
-    leaderConfig.closedLoop
-      .p(0.02)
-      .i(0.00004)
-      .iZone(1.7)
-      .d(0)
-      .maxMotion
-      .maxVelocity(0.4)
-      .allowedClosedLoopError(1)
-      .maxAcceleration(0.05);
+    /////////////////////////////////////////////////////////////
+    // CONSTANTES Y LÍMITES
+    /////////////////////////////////////////////////////////////
+    public static double UPPER_LIMIT = -1.6;         // Límite superior (posición más alta)
+    public static double LOWER_LIMIT = -22;          // Límite inferior (posición más baja)
+    
+    // Nombres para Dashboard
+    public static final String DASH_ARM_POS = "Arm/Pos";
+    public static final String DASH_ARM_TARGET = "Arm/Target";
+    public static final String DASH_RESET_ARM_ENCODER = "Arm/Reset Encoder";
 
-    leaderConfig
-      .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION)
-      .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT)
-      .idleMode(SparkBaseConfig.IdleMode.kBrake);
+    /////////////////////////////////////////////////////////////
+    // CONSTRUCTOR
+    /////////////////////////////////////////////////////////////
+    public ArmSubsystem() {
+        // Configuración del motor
+        motor = new SparkMax(ArmConstants.CAN_ID, MotorType.kBrushless);
+        motor.setCANTimeout(DriveConstants.CAN_TIMEOUT);
+        
+        // Configuración del controlador
+        controller = motor.getClosedLoopController();
+        motor.configure(getLeaderConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        
+        // Configuración del encoder
+        armEncoder = motor.getEncoder();
+        reset();
+        
+        // Botón para resetear encoder en Dashboard
+        SmartDashboard.putData(DASH_RESET_ARM_ENCODER, new InstantCommand(this::reset));
+    }
 
-    return leaderConfig;
-  }
+    /////////////////////////////////////////////////////////////
+    // CONFIGURACIÓN DEL MOTOR
+    /////////////////////////////////////////////////////////////
+    private static SparkMaxConfig getLeaderConfig() {
+        SparkMaxConfig leaderConfig = new SparkMaxConfig();
 
-  @Override
-  public void reset() {
-    armEncoder.setPosition(0);
-    position = 0;
-    controller.setReference(this.position, SparkBase.ControlType.kPosition);
-  }
+        // Configuración de control PID
+        leaderConfig.closedLoop
+            .p(0.02)        // Ganancia proporcional
+            .i(0.00004)     // Ganancia integral (muy pequeña para ajuste fino)
+            .iZone(1.7)     // Zona integral (rango donde actúa el término I)
+            .d(0)           // Ganancia derivativa
+            .maxMotion
+                .maxVelocity(0.4)       // Velocidad máxima (conservadora)
+                .allowedClosedLoopError(1) // Error permitido
+                .maxAcceleration(0.05); // Aceleración máxima
 
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber(DASH_ARM_POS, getActualPosition());
-    SmartDashboard.putNumber(DASH_ARM_TARGET, position);
-    controller.setReference(this.position, SparkBase.ControlType.kPosition);
-  }
+        // Configuración general del motor
+        leaderConfig
+            .voltageCompensation(NEOMotorsConstants.VOLTAGE_COMPENSATION) // Compensación de voltaje
+            .smartCurrentLimit(NEOMotorsConstants.CURRENT_LIMIT)          // Límite de corriente
+            .idleMode(SparkBaseConfig.IdleMode.kBrake);                   // Modo freno
 
-  @Override
-  public double getActualPosition() {
-    return armEncoder.getPosition();
-  }
+        return leaderConfig;
+    }
 
-  @Override
-  public double getTargetPosition() {
-    return position;
-  }
+    /////////////////////////////////////////////////////////////
+    // MÉTODOS DE LA INTERFAZ MOVABLESUBSYSTEM
+    /////////////////////////////////////////////////////////////
+    
+    @Override
+    public void reset() {
+        armEncoder.setPosition(0);
+        position = 0;
+        controller.setReference(this.position, SparkBase.ControlType.kPosition);
+    }
 
-  @Override
-  public void move(double position) {
-    this.position = MathUtil.clamp(position, LOWER_LIMIT, UPPER_LIMIT);
-  }
+    @Override
+    public double getActualPosition() {
+        return armEncoder.getPosition();
+    }
+
+    @Override
+    public double getTargetPosition() {
+        return position;
+    }
+
+    @Override
+    public void move(double position) {
+        this.position = MathUtil.clamp(position, LOWER_LIMIT, UPPER_LIMIT);
+    }
+
+    /////////////////////////////////////////////////////////////
+    // MÉTODOS PERIÓDICOS
+    /////////////////////////////////////////////////////////////
+    @Override
+    public void periodic() {
+        // Actualización de valores en Dashboard
+        SmartDashboard.putNumber(DASH_ARM_POS, getActualPosition());
+        SmartDashboard.putNumber(DASH_ARM_TARGET, position);
+        
+        // Actualizar referencia de posición del controlador
+        controller.setReference(this.position, SparkBase.ControlType.kPosition);
+    }
 }
